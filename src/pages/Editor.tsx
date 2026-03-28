@@ -46,21 +46,7 @@ export function Editor() {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-8rem)] flex flex-col gap-6">
-      {/* Background Aura Blobs */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-[2.5rem]">
-        <motion.div 
-          animate={{ scale: [1, 1.1, 1], rotate: [0, 90, 0] }}
-          transition={{ duration: 20, repeat: Infinity }}
-          className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px]"
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], rotate: [0, -90, 0] }}
-          transition={{ duration: 25, repeat: Infinity }}
-          className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px]"
-        />
-      </div>
-
+    <div className="relative min-h-screen flex flex-col gap-6">
       {/* Editor Header */}
       <div className="relative z-10 flex items-center justify-between px-2">
         <div className="flex items-center gap-4">
@@ -119,7 +105,7 @@ export function Editor() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 flex-1 rounded-[2rem] bg-slate-950/80 border border-white/10 backdrop-blur-xl overflow-hidden shadow-2xl group"
+        className="relative z-10 flex-1 min-h-[500px] h-[65vh] rounded-[2rem] bg-[#020617]/80 border border-white/5 backdrop-blur-xl overflow-hidden shadow-2xl group"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
         
