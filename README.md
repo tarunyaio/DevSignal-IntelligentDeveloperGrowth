@@ -429,7 +429,7 @@ Focused on core editing without terminal or filesystem access.
 # Local Setup
 
 ```bash
-git clone <repo>
+git clone https://github.com/TarunyaProgrammer/DevSignal-IntelligentDeveloperGrowth.git
 cd devplatform
 npm install
 ```
