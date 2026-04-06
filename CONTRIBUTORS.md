@@ -3,7 +3,10 @@
 We are grateful to all the contributors who have helped make DevSignal a success!
 
 ## Maintainers
-- TarunyaProgrammer (Tarunya Kesharwani)
+- [Tarunya](https://github.com/TarunyaProgrammer) 
 
 ## Contributors
-- Antigravity (AI Assistant)
+- [Abhra0404](https://github.com/Abhra0404)
+- [Siddhant-Srivastava-20](https://github.com/Siddhant-Srivastava-20)
+- [Jai Shastri]
+- [Kishan]
