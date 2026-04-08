@@ -8,7 +8,6 @@ DevSignal is built on the passion and talent of developers who believe in better
 | ![Tarunya](https://github.com/TarunyaProgrammer.png?size=40) | **Tarunya Kesharwani** | Founder & Lead Architect |
 
 ## Core Contributors
-- **Antigravity (AI)**: Driving the intelligence and rapid UI modernization.
 - **Abhra0404**: [GitHub Profile](https://github.com/Abhra0404)
 - **Siddhant-Srivastava-20**: [GitHub Profile](https://github.com/Siddhant-Srivastava-20)
 - **Jai Shastri**: [GitHub Profile](https://github.com/knight073)
