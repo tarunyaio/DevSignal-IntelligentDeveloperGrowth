@@ -1,37 +1,31 @@
-# PolyForm Noncommercial License 1.0.0
+# DevSignal Shared Source License v1.0
 
-## Acceptance
+Copyright (c) 2026 Tarunya Kesharwani (@TarunyaProgrammer)
 
-In order to get any license under these terms, you must agree to them as you would any other contract. There were no license terms and conditions for this software before you accepted these terms.
+## 1. Overview
+This license governs the use of the DevSignal software (the "Software"). By using, copying, or distributing the Software, you agree to these terms. This is a **Source Available** license, not an open-source license.
 
-## Noncommercial License
+## 2. Permitted Use
+You are granted a non-exclusive, worldwide, royalty-free license to:
+*   View, copy, and modify the source code for **Personal, Educational, or Research** purposes.
+*   Distribute the Software and your modifications for **Non-Commercial** purposes, provided you include this license and a clear attribution to the original author (Tarunya Kesharwani).
 
-The licensor grants you a non-exclusive, royalty-free, worldwide license to copy, distribute, and make changes to this software for noncommercial purposes. Noncommercial purposes are purposes that do not involve any of the following:
+## 3. Commercial Restrictions
+**You may NOT use the Software for Commercial Purposes without a separate written agreement from the Licensor.** Commercial purposes include, but are not limited to:
+*   Selling, renting, or leasing the Software or a derivative work.
+*   Using the Software to provide a professional service (e.g., as a paid SaaS dashboard for organizations).
+*   Using the Software within a for-profit corporation for internal data tracking.
 
-1. selling, renting, or leasing the software
-2. providing any service for a fee that is based on the use of the software
-3. any other activity for which the primary motivation is a fee or financial gain
+For commercial licensing inquiries, please contact the author via GitHub (@TarunyaProgrammer).
 
-## Patents
+## 4. Derived Works & Contributions
+If you modify the Software, you must clearly state that you have changed it. We encourage you to contribute your improvements back to the main repository via Pull Requests to help the community grow.
 
-The licensor grants you a non-exclusive, royalty-free, worldwide license to use the licensor's patents in the software for noncommercial purposes.
+## 5. Proprietary Notices
+You must retain all copyright, trademark, and other proprietary notices contained in the original Software. The "DevSignal" name and branding are the property of the Licensor.
 
-## No Redistributing License
+## 6. No Warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE.
 
-You may not redistribute your license with any copy or change you make. You must invite the next person to get a license from the licensor instead.
-
-## Notices
-
-You must keep all copyright and other legal notices in the software as-is.
-
-## No Warranty
-
-The software is provided "as is", without any warranty of any kind. The licensor and any other person who makes the software available are not liable for any claims, damages, or other liability related to the software.
-
-## Termination
-
-Your license ends immediately if you sue the licensor for patent infringement.
-
-## Complete Agreement
-
-These terms are the complete agreement between you and the licensor regarding the software.
+---
+*DevSignal — Intelligent Developer Growth Engine*

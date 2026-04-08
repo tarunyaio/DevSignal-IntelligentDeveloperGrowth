@@ -1,4 +1,4 @@
-# DevPlatform (Working Name)
+# DevSignal 🚀
 
 > **A GitHub-native developer intelligence layer that turns activity into actionable growth.**
 
@@ -430,7 +430,7 @@ Focused on core editing without terminal or filesystem access.
 
 ```bash
 git clone https://github.com/TarunyaProgrammer/DevSignal-IntelligentDeveloperGrowth.git
-cd devplatform
+cd DevSignal-IntelligentDeveloperGrowth
 npm install
 ```
 
