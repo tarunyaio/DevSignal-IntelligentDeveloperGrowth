@@ -11,8 +11,8 @@ DevSignal is built on the passion and talent of developers who believe in better
 - **Antigravity (AI)**: Driving the intelligence and rapid UI modernization.
 - **Abhra0404**: [GitHub Profile](https://github.com/Abhra0404)
 - **Siddhant-Srivastava-20**: [GitHub Profile](https://github.com/Siddhant-Srivastava-20)
-- **Jai Shastri**
-- **Kishan**
+- **Jai Shastri**: [GitHub Profile](https://github.com/knight073)
+- **Kishan**: [GitHub Profile](https://github.com/)
 
 ## Future Contributors
 Your name could be here. Check out the contributing guidelines to join us.
