@@ -1,4 +1,4 @@
-# DevSignal 🚀
+# DevSignal
 
 > **A GitHub-native developer intelligence layer that turns activity into actionable growth.**
 
