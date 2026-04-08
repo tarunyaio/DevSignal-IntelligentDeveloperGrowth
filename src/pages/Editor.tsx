@@ -1,66 +1,70 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import MonacoEditor from '@monaco-editor/react';
-import { Code2, Play, Save, ChevronDown, Check } from 'lucide-react';
+import { Code2, Play, Save, ChevronDown, Check, Terminal, X, Zap } from 'lucide-react';
+import { executeCode } from '@/lib/execution';
 
 const LANGUAGES = [
   { id: 'javascript', name: 'JavaScript' },
   { id: 'typescript', name: 'TypeScript' },
   { id: 'python', name: 'Python' },
-  { id: 'html', name: 'HTML' },
-  { id: 'css', name: 'CSS' },
-  { id: 'json', name: 'JSON' },
+  { id: 'rust', name: 'Rust' },
+  { id: 'go', name: 'Go' },
   { id: 'java', name: 'Java' },
   { id: 'cpp', name: 'C++' },
   { id: 'csharp', name: 'C#' },
-  { id: 'go', name: 'Go' },
-  { id: 'ruby', name: 'Ruby' },
-  { id: 'rust', name: 'Rust' },
-  { id: 'php', name: 'PHP' },
-  { id: 'sql', name: 'SQL' },
-  { id: 'markdown', name: 'Markdown' },
-  { id: 'yaml', name: 'YAML' },
-  { id: 'swift', name: 'Swift' },
-  { id: 'kotlin', name: 'Kotlin' },
-  { id: 'shell', name: 'Shell' },
-  { id: 'dockerfile', name: 'Dockerfile' }
+  { id: 'markdown', name: 'Markdown' }
 ];
 
 const DEFAULT_CODE: Record<string, string> = {
-  javascript: "console.log('Hello, DevSignal!');",
+  javascript: "// Yeh simple JS code hai\nconsole.log('Hello, DevSignal!');\n\nconst greet = (name) => `Namaste, ${name}!`;\nconsole.log(greet('User'));",
+  typescript: "// Type safety ke saath code likhein\nconst greeting: string = 'Hello, DevSignal!';\nconsole.log(greeting);",
   python: "print('Hello, DevSignal!')",
   rust: 'fn main() {\n    println!("Hello, DevSignal!");\n}',
   go: 'package main\n\nimport "fmt"\n\nfunc main() {\n    fmt.Println("Hello, DevSignal!")\n}',
-  typescript: "const greeting: string = 'Hello, DevSignal!';\nconsole.log(greeting);"
 };
 
 export function Editor() {
   const [language, setLanguage] = useState(LANGUAGES[0]);
   const [code, setCode] = useState(DEFAULT_CODE[LANGUAGES[0].id] || '');
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Execution states
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [output, setOutput] = useState<string | null>(null);
 
   const handleLanguageChange = (lang: typeof LANGUAGES[0]) => {
     setLanguage(lang);
     setCode(DEFAULT_CODE[lang.id] || '');
     setIsOpen(false);
+    setOutput(null); // Clear output on language change
+  };
+
+  const handleRun = async () => {
+    setIsExecuting(true);
+    // 200ms pause for that "alive" loading feel
+    await new Promise(r => setTimeout(r, 200));
+    const result = await executeCode(code, language.id);
+    setOutput(result);
+    setIsExecuting(false);
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col gap-6">
-      {/* Editor Header */}
+    <div className="relative min-h-[85vh] flex flex-col gap-6 pb-20">
+      {/* Editor Header - Controls aur Branding */}
       <div className="relative z-10 flex items-center justify-between px-2">
         <div className="flex items-center gap-4">
-          <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20">
+          <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
             <Code2 className="text-purple-400" size={24} />
           </div>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Code <span className="italic font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Sandbox</span></h2>
-            <p className="text-xs text-slate-500 font-medium tracking-wider uppercase">V1.0 — Intelligent Environment</p>
+            <h2 className="text-2xl font-bold tracking-tight uppercase">Code <span className="italic font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Sandbox</span></h2>
+            <p className="text-[10px] text-slate-500 font-black tracking-[0.2em] uppercase">V1.0 — Intelligent Environment</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Language Selector */}
+          {/* Language Selector Dropdown */}
           <div className="relative">
             <button 
               onClick={() => setIsOpen(!isOpen)}
@@ -92,47 +96,96 @@ export function Editor() {
             )}
           </div>
 
-          <button className="p-2.5 rounded-xl bg-slate-900/50 border border-white/10 hover:border-green-500/30 hover:bg-green-500/10 transition-all text-slate-400 hover:text-green-400 group">
-            <Play size={20} className="group-hover:fill-current" />
+          {/* Run Button - Iska click event handleRun function call karega */}
+          <button 
+            onClick={handleRun}
+            disabled={isExecuting}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border transition-all font-bold text-sm tracking-wider uppercase ${
+              isExecuting 
+              ? 'bg-slate-800 border-white/5 text-slate-600' 
+              : 'bg-green-500/10 border-green-500/20 text-green-400 hover:bg-green-500/20 hover:border-green-500/40'
+            }`}
+          >
+            {isExecuting ? <Zap size={16} className="animate-spin" /> : <Play size={16} className="fill-current" />}
+            {isExecuting ? 'Running' : 'Run'}
           </button>
+          
           <button className="p-2.5 rounded-xl bg-slate-900/50 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/10 transition-all text-slate-400 hover:text-blue-400">
             <Save size={20} />
           </button>
         </div>
       </div>
 
-      {/* Monaco Container */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 flex-1 min-h-[500px] h-[65vh] rounded-[2rem] bg-[#020617]/80 border border-white/5 backdrop-blur-xl overflow-hidden shadow-2xl group"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-        
-        <MonacoEditor
-          height="100%"
-          language={language.id}
-          theme="vs-dark"
-          value={code}
-          onChange={(value) => setCode(value || '')}
-          options={{
-            fontSize: 14,
-            fontFamily: "'Fira Code', monospace",
-            minimap: { enabled: false },
-            padding: { top: 24, bottom: 24 },
-            scrollBeyondLastLine: false,
-            smoothScrolling: true,
-            cursorBlinking: 'smooth',
-            cursorSmoothCaretAnimation: 'on',
-            lineNumbersMinChars: 3
-          }}
-          loading={
-            <div className="w-full h-full flex items-center justify-center bg-slate-950/50">
-              <div className="w-8 h-8 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
-            </div>
-          }
-        />
-      </motion.div>
+      {/* Monaco Container - Main code editing area */}
+      <div className="relative group flex-1 h-[65vh] flex flex-col">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 flex-1 rounded-[2rem] bg-[#020617]/80 border border-white/5 backdrop-blur-xl overflow-hidden shadow-2xl flex flex-col"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+          
+          <div className="flex-1 min-h-0">
+            <MonacoEditor
+              height="100%"
+              language={language.id}
+              theme="vs-dark"
+              value={code}
+              onChange={(value) => setCode(value || '')}
+              options={{
+                fontSize: 15,
+                fontFamily: "'Fira Code', monospace",
+                minimap: { enabled: false },
+                padding: { top: 24, bottom: 24 },
+                scrollBeyondLastLine: false,
+                smoothScrolling: true,
+                cursorBlinking: 'smooth',
+                cursorSmoothCaretAnimation: 'on',
+                lineNumbersMinChars: 3,
+                automaticLayout: true, // Yeh fix editor ko "squish" hone se bachayega
+              }}
+              loading={
+                <div className="w-full h-full flex items-center justify-center bg-slate-950/50">
+                  <div className="w-8 h-8 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
+                </div>
+              }
+            />
+          </div>
+
+          {/* Output Panel - Yeh niche se slide-up hoga jab code run ho jaye */}
+          <AnimatePresence>
+            {output && (
+              <motion.div 
+                initial={{ height: 0 }}
+                animate={{ height: 'auto', minHeight: '160px' }}
+                exit={{ height: 0 }}
+                className="relative z-20 bg-black/90 border-t border-white/10 backdrop-blur-3xl overflow-hidden flex flex-col"
+              >
+                <div className="flex items-center justify-between px-6 py-3 bg-white/5">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400">
+                    <Terminal size={14} className="text-green-500" /> Output Console
+                  </div>
+                  <button 
+                    onClick={() => setOutput(null)}
+                    className="p-1 rounded-lg hover:bg-white/10 text-slate-500 transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="flex-1 p-6 font-mono text-sm overflow-y-auto max-h-[250px] scrollbar-hide">
+                  <pre className="text-slate-300 leading-relaxed whitespace-pre-wrap">{output}</pre>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
+      {/* Decorative Tips */}
+      <div className="flex items-center gap-4 text-xs text-slate-500 px-2 italic">
+        <Zap size={14} className="text-yellow-500/50" />
+        <span>"Try writing <span className="text-slate-300 font-bold">console.log()</span> to see the results in the output console below."</span>
+      </div>
     </div>
   );
 }
