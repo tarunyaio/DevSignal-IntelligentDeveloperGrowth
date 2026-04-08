@@ -2,6 +2,8 @@
 
 > **A GitHub-native developer intelligence layer that turns activity into actionable growth.**
 
+![DevSignal Preview](src/assets/PreView.png)
+
 ---
 
 ## Problem Statement

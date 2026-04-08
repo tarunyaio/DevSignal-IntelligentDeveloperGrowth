@@ -62,9 +62,9 @@ export function LandingPage() {
             {/* Hero Content */}
             <div className="text-center lg:text-left space-y-8">
               <motion.h1 
-                initial={{ opacity: 0, x: -50 }}
+                initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                transition={{ duration: 0.5, ease: "easeOut" }} // Pehle 0.8 tha, ab faster hai
                 className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tighter"
               >
                 Growth.<br />
@@ -75,7 +75,7 @@ export function LandingPage() {
               <motion.p 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 1 }}
+                transition={{ delay: 0.15, duration: 0.5 }} // Delay half kar diya
                 className="text-xl md:text-2xl text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light"
               >
                 A GitHub-native developer intelligence layer that turns repository activity into <span className="italic font-serif text-white font-medium underline decoration-purple-500/50 underline-offset-4">actionable</span> growth signals.
@@ -100,9 +100,9 @@ export function LandingPage() {
 
             {/* Login Form Card */}
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
+              initial={{ opacity: 0, scale: 0.95, rotateY: -10 }}
               animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ delay: 0.4, type: "spring", stiffness: 60, damping: 15 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 120, damping: 20 }} // Spring tight kar diya for "snappy" feel
               className="w-full max-w-md mx-auto perspective-1000"
             >
               <div className="p-10 rounded-[2.5rem] bg-white/5 backdrop-blur-3xl border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden group">
@@ -190,9 +190,9 @@ export function LandingPage() {
               <motion.div 
                 key={i}
                 whileInView={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: 30 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, y: 20 }}
+                viewport={{ once: true, amount: 0.1 }} // Threshold kam kiya takki jaldi animate ho
+                transition={{ delay: i * 0.05 }} // Staggering faster hai
                 className="p-8 rounded-[2rem] bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-all group"
               >
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
@@ -227,12 +227,13 @@ export function LandingPage() {
               </div>
             </div>
 
-            <motion.div 
-              whileInView={{ x: 0, opacity: 1 }}
-              initial={{ x: 100, opacity: 0 }}
-              viewport={{ once: true }}
-              className="relative aspect-video rounded-3xl bg-slate-900 border border-white/10 shadow-2xl overflow-hidden group shadow-purple-500/10"
-            >
+              <motion.div 
+                whileInView={{ x: 0, opacity: 1 }}
+                initial={{ x: 100, opacity: 0 }}
+                viewport={{ once: true, amount: 0.1 }} // Yeh trigger jaldi karega
+                transition={{ duration: 0.5, ease: "easeOut" }} // Duration thoda fast kar diya
+                className="relative aspect-video rounded-3xl bg-slate-900 border border-white/10 shadow-2xl overflow-hidden group shadow-purple-500/10"
+              >
               <div className="absolute inset-x-0 top-0 h-10 bg-white/5 flex items-center px-4 gap-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
