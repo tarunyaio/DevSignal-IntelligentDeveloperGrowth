@@ -2,8 +2,15 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Brain, Shield, Rocket } from 'lucide-react';
 import { GLOBAL_STATS } from '@/lib/mockData';
 
+// Memoize random data outside takki component pure rahe
+const HEATMAP_DATA = Array.from({ length: 168 }).map(() => ({
+  opacity: Math.random() * 0.8 + 0.1,
+  level: Math.floor(Math.random() * 10)
+}));
+
 // Yeh page global developer insights dikhayega (Contribution Heatmap, Skill Radar, etc.)
 export function Analytics() {
+
   return (
     <div className="relative min-h-screen space-y-12 pb-32">
       <header className="space-y-2">
@@ -61,15 +68,15 @@ export function Analytics() {
           
           <div className="grid grid-cols-24 gap-1.5">
             {/* Yeh loop ek vibrant heatmap grid create karta hai */}
-            {Array.from({ length: 168 }).map((_, i) => (
+            {HEATMAP_DATA.map((data, i) => (
               <motion.div 
                 key={i}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: i * 0.002 }}
                 className="aspect-square rounded-[3px] bg-purple-500/40 hover:bg-purple-400 transition-colors cursor-help"
-                style={{ opacity: Math.random() * 0.8 + 0.1 }}
-                title={`Activity level: ${Math.floor(Math.random() * 10)} commits`}
+                style={{ opacity: data.opacity }}
+                title={`Activity level: ${data.level} commits`}
               />
             ))}
           </div>

@@ -59,12 +59,13 @@ export async function syncRoutes(fastify: FastifyInstance) {
         timestamp: new Date().toISOString()
       };
 
-    } catch (err: any) {
-      fastify.log.error('Global Sync Error:', err);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      fastify.log.error(err, 'Global Sync Error');
       return reply.status(500).send({ 
         success: false, 
         message: 'Sync fail ho gaya. Kripya logs check karein.',
-        error: err.message 
+        error: errorMessage 
       });
     }
   });

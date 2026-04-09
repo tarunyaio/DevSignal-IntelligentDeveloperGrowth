@@ -14,15 +14,15 @@ export async function executeCode(code: string, language: string): Promise<strin
   
   // Custom console object banate hain takki hum output "pakad" sakein
   const mockConsole = {
-    log: (...args: any[]) => {
+    log: (...args: unknown[]) => {
       logs.push(args.map(arg => 
         typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
       ).join(' '));
     },
-    error: (...args: any[]) => {
+    error: (...args: unknown[]) => {
       logs.push(`Error: ${args.join(' ')}`);
     },
-    warn: (...args: any[]) => {
+    warn: (...args: unknown[]) => {
       logs.push(`Warning: ${args.join(' ')}`);
     }
   };
@@ -38,8 +38,9 @@ export async function executeCode(code: string, language: string): Promise<strin
     }
     
     return logs.join('\n');
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Agar syntax error ya runtime error aata hai toh Hinglish mein batayein
-    return `Code mein gadbad hai: \n------------------------\n${error.message}`;
+    const message = error instanceof Error ? error.message : String(error);
+    return `Code mein gadbad hai: \n------------------------\n${message}`;
   }
 }
