@@ -52,9 +52,9 @@ export function Editor() {
   };
 
   return (
-    <div className="relative min-h-[85vh] flex flex-col gap-6 pb-20">
+    <div className="relative h-[calc(100vh-8rem)] flex flex-col gap-6">
       {/* Editor Header - Controls aur Branding */}
-      <div className="relative z-10 flex items-center justify-between px-2">
+      <div className="relative z-20 flex items-center justify-between px-2 shrink-0">
         <div className="flex items-center gap-4">
           <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
             <Code2 className="text-purple-400" size={24} />
@@ -77,11 +77,14 @@ export function Editor() {
             </button>
 
             {isOpen && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                className="absolute right-0 mt-2 w-56 max-h-[400px] overflow-y-auto rounded-2xl bg-slate-900 border border-white/10 shadow-2xl backdrop-blur-3xl z-50 p-2 scrollbar-hide"
-              >
+              <>
+                {/* Backdrop to capture clicks above Monaco */}
+                <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+                <motion.div 
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  className="absolute right-0 mt-2 w-56 max-h-[400px] overflow-y-auto rounded-2xl bg-slate-900 border border-white/10 shadow-2xl backdrop-blur-3xl z-50 p-2 scrollbar-hide"
+                >
                 {LANGUAGES.map((lang) => (
                   <button
                     key={lang.id}
@@ -95,6 +98,7 @@ export function Editor() {
                   </button>
                 ))}
               </motion.div>
+              </>
             )}
           </div>
 
@@ -123,11 +127,11 @@ export function Editor() {
       </div>
 
       {/* Monaco Container - Main code editing area */}
-      <div className="relative group flex-1 h-[65vh] flex flex-col">
+      <div className="relative group flex-1 min-h-0 flex flex-col">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 flex-1 rounded-[2rem] bg-[#020617]/80 border border-white/5 backdrop-blur-xl overflow-hidden shadow-2xl flex flex-col"
+          className="relative z-10 flex-1 min-h-0 rounded-[2rem] bg-[#020617]/80 border border-white/5 backdrop-blur-xl overflow-hidden shadow-2xl flex flex-col"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           
@@ -188,7 +192,7 @@ export function Editor() {
       </div>
 
       {/* Decorative Tips */}
-      <div className="flex items-center gap-4 text-xs text-slate-500 px-2 italic">
+      <div className="flex items-center gap-4 text-xs text-slate-500 px-2 italic shrink-0">
         <Zap size={14} className="text-yellow-500/50" />
         <span>"Try writing <span className="text-slate-300 font-bold">console.log()</span> to see the results in the output console below."</span>
       </div>
