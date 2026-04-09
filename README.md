@@ -351,18 +351,22 @@ Else:
 # Project Structure
 
 ```text
-devplatform/
+devsignal/
 ├── src/
-│   ├── services/
-│   ├── hooks/
-│   ├── stores/
-│   ├── pages/
-│   └── components/
+│   ├── components/   # UI components
+│   ├── contexts/     # Auth context (Supabase GitHub OAuth)
+│   ├── hooks/        # React Query hooks
+│   ├── lib/          # API client, supabase client, utils, sandboxed execution
+│   ├── pages/        # Route pages
+│   └── test/         # Vitest tests
 ├── server/
-│   ├── routes/
-│   └── jobs/
-├── prisma/
+│   └── src/
+│       ├── routes/   # Fastify API routes (sync, repos, analytics, resources, snippets)
+│       ├── env.ts    # Zod-validated environment
+│       ├── server.ts # Entry point with auth middleware + rate limiting
+│       └── types.d.ts
 ├── supabase/
+│   └── migrations/   # SQL schema with RLS policies
 ```
 
 ---

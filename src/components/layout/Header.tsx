@@ -1,6 +1,11 @@
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function Header() {
+  const { user, logout } = useAuth();
+  const avatarUrl = user?.user_metadata?.avatar_url;
+  const displayName = user?.user_metadata?.full_name || user?.user_metadata?.user_name || 'User';
+
   return (
     <header className="h-16 border-b border-slate-800 bg-slate-950/50 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-40">
       <div className="flex items-center gap-4 flex-1">
@@ -17,14 +22,25 @@ export function Header() {
       <div className="flex items-center gap-4">
         <button className="p-2 text-slate-400 hover:text-white transition-colors relative">
           <Bell size={20} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full border-2 border-slate-950"></span>
         </button>
         
-        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center p-[1px]">
-          <div className="h-full w-full rounded-full bg-slate-950 flex items-center justify-center">
-            <User size={16} className="text-white" />
+        <span className="text-sm text-slate-400 hidden md:inline">{displayName}</span>
+        
+        {avatarUrl ? (
+          <img src={avatarUrl} alt={displayName} className="h-8 w-8 rounded-full border border-white/10" />
+        ) : (
+          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">
+            {displayName.charAt(0).toUpperCase()}
           </div>
-        </div>
+        )}
+
+        <button 
+          onClick={logout}
+          className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+          title="Logout"
+        >
+          <LogOut size={18} />
+        </button>
       </div>
     </header>
   );

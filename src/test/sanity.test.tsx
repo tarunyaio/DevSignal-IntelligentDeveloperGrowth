@@ -1,25 +1,81 @@
-import { describe, it, expect, vi } from 'vitest'
+import React from 'react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-describe('DevSignal Sanity Suite', () => {
-  // 1. Frontend Working Check
-  it('Frontend: should render basic React components', () => {
-    render(<div data-testid="sanity-div">Front-end is Active</div>)
-    expect(screen.getByTestId('sanity-div')).toBeDefined()
-    expect(screen.getByText('Front-end is Active')).toBeDefined()
+// Mock Supabase before importing components
+vi.mock('@/lib/supabase', () => ({
+  supabase: {
+    auth: {
+      getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
+      onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
+      signInWithOAuth: vi.fn(),
+      signOut: vi.fn(),
+    },
+  },
+}))
+
+import { AuthProvider, useAuth } from '@/contexts/AuthContext'
+import { NotFound } from '@/pages/NotFound'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+
+function createWrapper() {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return function Wrapper({ children }: { children: React.ReactNode }) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AuthProvider>{children}</AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
+    )
+  }
+}
+
+describe('NotFound page', () => {
+  it('renders 404 text and back link', () => {
+    render(<NotFound />, { wrapper: createWrapper() })
+    expect(screen.getByText('404')).toBeInTheDocument()
+    expect(screen.getByText('Back to Dashboard')).toBeInTheDocument()
+  })
+})
+
+describe('ErrorBoundary', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
-  // 2. Backend Logic Check
-  it('Backend: should handle health check simulation', async () => {
-    const mockHealthCheck = vi.fn().mockResolvedValue({ status: 'alive' })
-    const response = await mockHealthCheck()
-    expect(response.status).toBe('alive')
+  it('renders children when no error', () => {
+    render(
+      <ErrorBoundary>
+        <div>Hello</div>
+      </ErrorBoundary>
+    )
+    expect(screen.getByText('Hello')).toBeInTheDocument()
   })
 
-  // 3. Automation/Linting Hook Check
-  it('Automation: linting and husky hooks are active', () => {
-    // Standard gate check
-    const isQualityGateActive = true 
-    expect(isQualityGateActive).toBe(true)
+  it('renders error UI when child throws', () => {
+    function ThrowingComponent(): React.ReactElement {
+      throw new Error('Test error')
+    }
+    render(
+      <ErrorBoundary>
+        <ThrowingComponent />
+      </ErrorBoundary>
+    )
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument()
+    expect(screen.getByText('Test error')).toBeInTheDocument()
+  })
+})
+
+describe('Auth context', () => {
+  it('provides unauthenticated state by default', async () => {
+    function TestComponent() {
+      const auth = useAuth()
+      return <div data-testid="auth-state">{auth.isAuthenticated ? 'authed' : 'not-authed'}</div>
+    }
+    render(<TestComponent />, { wrapper: createWrapper() })
+    expect(await screen.findByTestId('auth-state')).toBeInTheDocument()
   })
 })

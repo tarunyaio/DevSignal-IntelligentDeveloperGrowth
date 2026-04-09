@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MonacoEditor from '@monaco-editor/react';
 import { Code2, Play, Save, ChevronDown, Check, Terminal, X, Zap } from 'lucide-react';
 import { executeCode } from '@/lib/execution';
+import { useCreateSnippet } from '@/hooks/queries';
 
 const LANGUAGES = [
   { id: 'javascript', name: 'JavaScript' },
@@ -32,6 +33,7 @@ export function Editor() {
   // Execution states
   const [isExecuting, setIsExecuting] = useState(false);
   const [output, setOutput] = useState<string | null>(null);
+  const saveMutation = useCreateSnippet();
 
   const handleLanguageChange = (lang: typeof LANGUAGES[0]) => {
     setLanguage(lang);
@@ -110,7 +112,11 @@ export function Editor() {
             {isExecuting ? 'Running' : 'Run'}
           </button>
           
-          <button className="p-2.5 rounded-xl bg-slate-900/50 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/10 transition-all text-slate-400 hover:text-blue-400">
+          <button 
+            onClick={() => saveMutation.mutate({ title: `${language.name} Snippet`, code, language: language.id })}
+            disabled={saveMutation.isPending}
+            className="p-2.5 rounded-xl bg-slate-900/50 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/10 transition-all text-slate-400 hover:text-blue-400 disabled:opacity-50"
+          >
             <Save size={20} />
           </button>
         </div>

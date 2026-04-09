@@ -1,0 +1,108 @@
+import { supabase } from './supabase';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+async function getAuthHeaders(): Promise<HeadersInit> {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.access_token) {
+    throw new Error('Not authenticated');
+  }
+  return {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${session.access_token}`,
+  };
+}
+
+async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_URL}${path}`, { ...options, headers: { ...headers, ...options?.headers } });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || `API error: ${res.status}`);
+  }
+  if (res.status === 204) return undefined as T;
+  return res.json();
+}
+
+// Repos
+export const fetchRepos = () => apiFetch<{ repos: Repository[] }>('/api/repos');
+export const fetchRepo = (id: string) => apiFetch<{ repo: Repository }>(`/api/repos/${id}`);
+
+// Sync
+export const triggerSync = (body: { github_username?: string; org_name?: string }) =>
+  apiFetch<{ success: boolean; synced: number }>('/api/sync', { method: 'POST', body: JSON.stringify(body) });
+
+// Analytics
+export const fetchAnalytics = () => apiFetch<Analytics>('/api/analytics');
+export const fetchMetrics = () => apiFetch<Metrics>('/api/metrics');
+
+// Resources
+export const fetchResources = () => apiFetch<{ resources: Resource[] }>('/api/resources');
+
+// Snippets
+export const fetchSnippets = () => apiFetch<{ snippets: Snippet[] }>('/api/snippets');
+export const createSnippet = (body: { title: string; code: string; language: string }) =>
+  apiFetch<{ snippet: Snippet }>('/api/snippets', { method: 'POST', body: JSON.stringify(body) });
+export const updateSnippet = (id: string, body: Partial<{ title: string; code: string; language: string }>) =>
+  apiFetch<{ snippet: Snippet }>(`/api/snippets/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+export const deleteSnippet = (id: string) =>
+  apiFetch<void>(`/api/snippets/${id}`, { method: 'DELETE' });
+
+// Types
+export interface Repository {
+  id: string;
+  github_id: number;
+  owner_id: string;
+  name: string;
+  description: string | null;
+  stars: number;
+  forks: number;
+  language: string | null;
+  url: string;
+  open_issues: number;
+  default_branch: string;
+  updated_at: string;
+  last_sync: string;
+  created_at: string;
+}
+
+export interface Analytics {
+  total_repos: number;
+  total_stars: number;
+  total_forks: number;
+  total_issues: number;
+  languages: { name: string; percentage: number }[];
+  last_updated: string;
+}
+
+export interface Metrics {
+  total_repos: number;
+  total_stars: number;
+  total_forks: number;
+  total_issues: number;
+  languages: Record<string, number>;
+  last_updated: string;
+}
+
+export interface Resource {
+  id: string;
+  title: string;
+  description: string;
+  type: 'video' | 'article' | 'repo' | 'course';
+  category: string;
+  duration: string | null;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  url: string;
+  rating: number;
+  created_at: string;
+}
+
+export interface Snippet {
+  id: string;
+  user_id: string;
+  title: string;
+  code: string;
+  language: string;
+  created_at: string;
+  updated_at: string;
+}

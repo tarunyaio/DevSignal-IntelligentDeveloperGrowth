@@ -1,63 +1,80 @@
-# DevSignal — Setup & Intelligence Guide
+# DevSignal — Setup Guide
 
-Welcome to the **DevSignal Engine**. This document explains how to set up the environment and utilize the quality control systems we've implemented to keep the "intelligence" of the codebase at peak performance.
+## Prerequisites
+
+- Node.js 18+
+- A [Supabase](https://supabase.com) project
+- A GitHub OAuth app configured in Supabase (Authentication > Providers > GitHub)
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
-### 1. Installation
-Install dependencies for both frontend and backend.
+### 1. Install dependencies
 
 ```bash
-# Root directory (Frontend)
+# Frontend
 npm install
 
-# Server directory (Backend)
-cd server
-npm install
+# Backend
+cd server && npm install
 ```
 
 ### 2. Environment Variables
-Copy `.env.example` to `.env` in the `server` directory and fill in your Supabase and GitHub credentials.
 
+**Frontend** — create `.env` in root:
 ```bash
-cd server
 cp .env.example .env
+# Fill in VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_API_URL
 ```
 
-### 3. Running Development
+**Backend** — create `.env` in `server/`:
 ```bash
-# Frontend (Root)
+cd server && cp .env.example .env
+# Fill in SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, GITHUB_TOKEN
+```
+
+### 3. Database Setup
+
+Run the SQL migration in your Supabase SQL Editor:
+```
+supabase/migrations/001_initial_schema.sql
+```
+
+This creates all tables (repositories, profiles, snippets, resources, sync_history) with Row Level Security policies and an auto-profile trigger.
+
+### 4. Run Development Servers
+
+```bash
+# Frontend (from root)
 npm run dev
 
-# Backend (server folder)
-npm run dev
+# Backend (from server/)
+cd server && npm run dev
 ```
+
+Frontend: http://localhost:5173  
+Backend: http://localhost:3001
 
 ---
 
-## 🛠 Quality Control Systems
+## Quality Gates
 
-We have implemented a rigorous quality gate to ensure "Visual Excellence" and "Code Integrity."
+### Pre-commit (Husky + lint-staged)
+- Auto-runs `eslint --fix` and `tsc -b` on staged files
+- Blocks commits with lint or type errors
 
-### 1. Automated Checks (Husky + lint-staged)
-We use **Husky** to hook into Git lifecycle events.
-- **Pre-commit**: Every time you commit, `lint-staged` runs.
-- **Actions**: It will automatically run `eslint --fix` and `tsc -b` on your changed files.
-- **Result**: You cannot commit code that has linting errors or type mismatches.
+### Testing (Vitest)
+```bash
+npm run test        # Run all tests once
+npm run test:watch  # Interactive watch mode
+```
 
-### 2. Testing (Vitest)
-We chose **Vitest** for its speed and native Vite integration.
-- **Configuration**: Managed via `vitest.config.ts`.
-- **Setup**: `src/test/setup.ts` configures `jsdom` and `@testing-library/jest-dom` for component testing.
-- **Commands**:
-  - `npm run test`: Run all tests once.
-  - `npm run test:watch`: Interactive test mode.
-
-### 3. Linting & Type Checking
-- `npm run lint`: Scans the codebase for unused variables and stylistic inconsistencies.
-- `npm run type-check`: Runs the TypeScript compiler in build mode to catch deep type errors.
+### Linting & Type Checking
+```bash
+npm run lint        # ESLint
+npm run type-check  # TypeScript compiler check
+```
 
 ---
 

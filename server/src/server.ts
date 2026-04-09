@@ -1,34 +1,60 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
-import * as dotenv from 'dotenv';
+import rateLimit from '@fastify/rate-limit';
+import { env } from './env';
 import { syncRoutes } from './routes/sync';
+import { repoRoutes } from './routes/repos';
+import { analyticsRoutes } from './routes/analytics';
+import { resourceRoutes } from './routes/resources';
+import { snippetRoutes } from './routes/snippets';
+import { createClient } from '@supabase/supabase-js';
 
-// Load environment variables (api keys aur config)
-dotenv.config();
+const fastify = Fastify({ logger: true });
 
-const fastify = Fastify({
-  logger: true // Server activity track karne ke liye
+// Supabase admin client (service role for server-side operations)
+export const supabaseAdmin = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
+
+// Auth middleware — verifies Supabase JWT from Authorization header
+fastify.decorateRequest('userId', '');
+fastify.addHook('onRequest', async (request, reply) => {
+  // Skip auth for health check
+  if (request.url === '/health') return;
+
+  const authHeader = request.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    return reply.status(401).send({ error: 'Missing or invalid authorization header' });
+  }
+
+  const token = authHeader.slice(7);
+  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+
+  if (error || !user) {
+    return reply.status(401).send({ error: 'Invalid or expired token' });
+  }
+
+  request.userId = user.id;
 });
 
-// Register plugins
-fastify.register(cors, {
-  origin: true // Frontend se connectivity allow karein
-});
+// Plugins
+fastify.register(cors, { origin: true });
+fastify.register(rateLimit, { max: 100, timeWindow: '1 minute' });
 
-// Hello world route for health check
+// Health check (no auth required)
 fastify.get('/health', async () => {
-  return { status: 'alive', message: 'DevSignal API is running smoothly!' };
+  return { status: 'alive', timestamp: new Date().toISOString() };
 });
 
-// Synchronizer routes register karein
+// API routes
 fastify.register(syncRoutes, { prefix: '/api' });
+fastify.register(repoRoutes, { prefix: '/api' });
+fastify.register(analyticsRoutes, { prefix: '/api' });
+fastify.register(resourceRoutes, { prefix: '/api' });
+fastify.register(snippetRoutes, { prefix: '/api' });
 
-// Yeh function server ko start karega
 const start = async () => {
   try {
-    const port = Number(process.env.PORT) || 3001;
-    await fastify.listen({ port, host: '0.0.0.0' });
-    console.log(`🚀 DevSignal Engine started on port ${port}`);
+    await fastify.listen({ port: env.PORT, host: '0.0.0.0' });
+    console.log(`DevSignal API started on port ${env.PORT}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
