@@ -11,7 +11,7 @@ DevSignal is built on the passion and talent of developers who believe in better
 - **Abhra0404**: [GitHub Profile](https://github.com/Abhra0404)
 - **Siddhant-Srivastava-20**: [GitHub Profile](https://github.com/Siddhant-Srivastava-20)
 - **Jai Shastri**: [GitHub Profile](https://github.com/knight073)
-- **Kishan**: [GitHub Profile](https://github.com/)
+- **Kishan**: [GitHub Profile](https://github.com/kishan0005)
 
 ## Future Contributors
 Your name could be here. Check out the contributing guidelines to join us.
