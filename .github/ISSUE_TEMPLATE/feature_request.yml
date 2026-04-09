@@ -1,0 +1,23 @@
+name: "✨ Feature Request"
+description: "Have an idea for a new intelligence layer or UI enhancement?"
+labels: ["enhancement", "signals"]
+body:
+  - type: textarea
+    id: feature-idea
+    attributes:
+      label: Idea Description
+      description: What new capability should DevSignal have?
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: How does this help developer growth?
+    validations:
+      required: true
+  - type: textarea
+    id: design-suggestions
+    attributes:
+      label: Aesthetic Concepts
+      description: Any ideas on how this should look or feel (glassmorphism, motion, etc.)?

@@ -1,12 +1,17 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { Octokit } from 'octokit';
 import { createClient } from '@supabase/supabase-js';
+
+interface SyncRequestBody {
+  github_token: string;
+  org_name: string;
+}
 
 // Yeh function sync routes register karta hai
 export async function syncRoutes(fastify: FastifyInstance) {
   
-  fastify.post('/sync', async (request, reply) => {
-    const { github_token, org_name } = request.body as any;
+  fastify.post('/sync', async (request: FastifyRequest<{ Body: SyncRequestBody }>, reply: FastifyReply) => {
+    const { github_token, org_name } = request.body;
 
     if (!github_token) {
       return reply.status(400).send({ error: 'GitHub Token missing hai!' });
@@ -45,7 +50,7 @@ export async function syncRoutes(fastify: FastifyInstance) {
             last_sync: new Date().toISOString()
           }, { onConflict: 'github_id' });
 
-        if (error) fastify.log.error(`Repo sync fail: ${repo.name}`, error);
+        if (error) fastify.log.error(error, `Repo sync fail: ${repo.name}`);
       }
 
       return { 
@@ -75,3 +80,4 @@ export async function syncRoutes(fastify: FastifyInstance) {
     };
   });
 }
+

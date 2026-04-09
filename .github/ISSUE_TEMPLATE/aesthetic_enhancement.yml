@@ -1,0 +1,25 @@
+name: "💎 Aesthetic Enhancement"
+description: "Suggest a polish, animation, or visual refinement for the premium DevSignal feel."
+labels: ["aesthetic", "polish", "framer-motion"]
+body:
+  - type: textarea
+    id: polish-area
+    attributes:
+      label: Target Component/Area
+      description: Where can we make things more beautiful?
+      placeholder: Dashboard Stats Cards, Resource Hover Effects, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: polish-vision
+    attributes:
+      label: The Vision
+      description: Describe the interaction or visual change in detail.
+      placeholder: "e.g., Add a subtle chromatic aberration effect on hover for the Code Editor icons."
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Links to Dribbble, Pinterest, or other inspirations.

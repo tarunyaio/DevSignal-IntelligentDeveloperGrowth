@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, TrendingUp, Target, Brain, Shield, Rocket } from 'lucide-react';
+import { TrendingUp, Brain, Shield, Rocket } from 'lucide-react';
 import { GLOBAL_STATS } from '@/lib/mockData';
 
 // Yeh page global developer insights dikhayega (Contribution Heatmap, Skill Radar, etc.)
@@ -87,8 +86,16 @@ export function Analytics() {
   );
 }
 
-function MetricBox({ title, value, suffix, icon: Icon, color }: any) {
-  const colorMap: any = {
+interface MetricBoxProps {
+  title: string;
+  value: string;
+  suffix: string;
+  icon: React.ElementType;
+  color: 'blue' | 'green' | 'purple';
+}
+
+function MetricBox({ title, value, suffix, icon: Icon, color }: MetricBoxProps) {
+  const colorMap = {
     blue: 'text-blue-400 border-blue-500/20 bg-blue-500/5',
     green: 'text-green-400 border-green-500/20 bg-green-500/5',
     purple: 'text-purple-400 border-purple-500/20 bg-purple-500/5',
@@ -105,3 +112,4 @@ function MetricBox({ title, value, suffix, icon: Icon, color }: any) {
     </div>
   );
 }
+

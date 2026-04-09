@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, BookOpen, Terminal, Shield, Cpu, Layout } from 'lucide-react';
 import { ResourceCard, type ResourceType } from '@/components/resources/ResourceCard';
@@ -11,7 +11,19 @@ const CATEGORIES = [
   { id: 'architecture', name: 'Architecture', icon: BookOpen },
 ];
 
-const MOCK_RESOURCES: any[] = [
+interface Resource {
+  id: string;
+  title: string;
+  description: string;
+  type: ResourceType;
+  category: string;
+  duration: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  url: string;
+  rating: number;
+}
+
+const MOCK_RESOURCES: Resource[] = [
   {
     id: '1',
     title: 'Advanced React Performance',
@@ -40,6 +52,7 @@ const MOCK_RESOURCES: any[] = [
     description: 'A premium starter kit with perfect lighthouse scores and glassmorphic UI integrated.',
     type: 'repo',
     category: 'architecture',
+    duration: 'N/A',
     difficulty: 'Beginner',
     url: 'https://github.com',
     rating: 5.0

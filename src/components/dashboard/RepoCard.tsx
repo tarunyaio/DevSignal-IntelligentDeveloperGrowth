@@ -1,4 +1,3 @@
-import React from 'react';
 import { Star, GitFork, Book, ArrowRight, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';

@@ -2,9 +2,9 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  ArrowLeft, Star, GitFork, Clock, ShieldCheck, 
-  Code2, Users, Activity, ExternalLink, GitCommit,
-  GitPullRequest, AlertCircle, TrendingUp
+  ArrowLeft, ShieldCheck, 
+  Users, Activity, ExternalLink, GitCommit,
+  GitPullRequest, AlertCircle
 } from 'lucide-react';
 import { MOCK_REPOSITORIES } from '@/lib/mockData';
 
@@ -82,7 +82,7 @@ export function RepoDetail() {
             </div>
             
             <div className="flex items-end justify-between h-48 gap-2">
-              {repo.commitData.map((data, i) => (
+              {repo.commitData.map((data) => (
                 <div key={data.day} className="flex-1 flex flex-col items-center gap-3 group">
                   <motion.div 
                     initial={{ height: 0 }}
@@ -113,7 +113,7 @@ export function RepoDetail() {
               <Users className="text-blue-400" /> Builders
             </h3>
             <div className="space-y-6">
-              {repo.contributors.map((c, i) => (
+              {repo.contributors.map((c) => (
                 <div key={c.name} className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
@@ -160,8 +160,15 @@ export function RepoDetail() {
   );
 }
 
-function DetailMetric({ label, value, icon: Icon, color }: any) {
-  const colors: any = {
+interface DetailMetricProps {
+  label: string;
+  value: number | string;
+  icon: React.ElementType;
+  color: 'blue' | 'purple' | 'green';
+}
+
+function DetailMetric({ label, value, icon: Icon, color }: DetailMetricProps) {
+  const colors = {
     blue: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
     purple: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
     green: 'text-green-400 bg-green-500/10 border-green-500/20',
@@ -177,3 +184,4 @@ function DetailMetric({ label, value, icon: Icon, color }: any) {
     </div>
   );
 }
+
