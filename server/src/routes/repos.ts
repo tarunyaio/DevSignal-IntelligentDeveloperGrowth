@@ -27,7 +27,11 @@ export async function repoRoutes(fastify: FastifyInstance) {
       .eq('owner_id', request.userId)
       .single();
 
-    if (error || !data) {
+    if (error) {
+      request.log.error({ err: error, repoId: request.params.id }, 'Failed to fetch repository');
+      return reply.status(500).send({ error: 'Failed to fetch repository' });
+    }
+    if (!data) {
       return reply.status(404).send({ error: 'Repository not found' });
     }
 
