@@ -3,15 +3,32 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, ShieldCheck, 
-  Users, Activity, ExternalLink, GitCommit,
+  Activity, ExternalLink, GitCommit,
   GitPullRequest, AlertCircle
 } from 'lucide-react';
-import { MOCK_REPOSITORIES } from '@/lib/mockData';
+import { useRepo } from '@/hooks/queries';
 
-// Yeh page ek single repository ki "Everything Possible" details dikhayega
 export function RepoDetail() {
   const { id } = useParams();
-  const repo = MOCK_REPOSITORIES.find(r => r.id === id) || MOCK_REPOSITORIES[0];
+  const { data: repo, isLoading, error } = useRepo(id || '');
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error || !repo) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-4 text-slate-400">
+        <AlertCircle size={48} className="text-red-400" />
+        <p>Repository not found.</p>
+        <Link to="/dashboard" className="text-purple-400 font-bold underline">Back to Dashboard</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen space-y-10 pb-32">
@@ -25,7 +42,7 @@ export function RepoDetail() {
         </Link>
 
         <a 
-          href={`https://github.com/${repo.name}`} 
+          href={repo.url} 
           target="_blank" 
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 hover:bg-purple-500/20 transition-all font-bold text-sm"
@@ -34,21 +51,21 @@ export function RepoDetail() {
         </a>
       </div>
 
-      {/* Hero Header - Repo Name aur Overall Health */}
+      {/* Hero Header */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-end">
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center gap-3">
             <span className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black uppercase text-blue-400 tracking-widest">
-              {repo.language}
+              {repo.language || 'Unknown'}
             </span>
           </div>
           <h1 className="text-6xl font-black tracking-tighter uppercase">{repo.name}</h1>
           <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-            {repo.description}
+            {repo.description || 'No description available.'}
           </p>
         </div>
 
-        {/* Health Score Component - Yeh logic PR speed aur issue resolution par depend karti hai */}
+        {/* Stats Score */}
         <div className="lg:col-span-1 p-8 rounded-[2.5rem] bg-gradient-to-br from-purple-500/20 to-blue-500/5 border border-purple-500/20 flex flex-col items-center text-center">
           <div className="relative w-32 h-32 flex items-center justify-center mb-4">
             <svg className="absolute inset-0 w-full h-full -rotate-90">
@@ -58,100 +75,63 @@ export function RepoDetail() {
                 className="text-purple-500"
                 strokeDasharray="377"
                 initial={{ strokeDashoffset: 377 }}
-                animate={{ strokeDashoffset: 377 - (377 * repo.stats.healthScore) / 100 }}
+                animate={{ strokeDashoffset: 377 - (377 * Math.min(repo.stars, 100)) / 100 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
               />
             </svg>
-            <span className="text-4xl font-black tracking-tighter">{repo.stats.healthScore}%</span>
+            <span className="text-4xl font-black tracking-tighter">{repo.stars}</span>
           </div>
-          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Health Index</h4>
+          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Stars</h4>
         </div>
       </section>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column - Commit Pulse aur Metrics */}
         <div className="lg:col-span-8 space-y-8">
-          {/* Commit Pulse Chart */}
-          <div className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <GitCommit className="text-purple-400" /> Commit <span className="italic font-serif">Pulse</span>
-              </h3>
-              <span className="text-xs font-mono text-slate-500">Last 7 Days</span>
-            </div>
-            
-            <div className="flex items-end justify-between h-48 gap-2">
-              {repo.commitData.map((data) => (
-                <div key={data.day} className="flex-1 flex flex-col items-center gap-3 group">
-                  <motion.div 
-                    initial={{ height: 0 }}
-                    animate={{ height: `${data.count * 4}px` }}
-                    className="w-full bg-gradient-to-t from-purple-600/20 to-purple-400 rounded-t-lg relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </motion.div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{data.day}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Detailed Statistics Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <DetailMetric label="Weekly Commits" value={repo.stats.commits} icon={Activity} color="blue" />
-            <DetailMetric label="Open PRs" value={repo.stats.prCount} icon={GitPullRequest} color="purple" />
-            <DetailMetric label="Merged Today" value={Math.floor(repo.stats.prCount / 4)} icon={ShieldCheck} color="green" />
+            <DetailMetric label="Stars" value={repo.stars} icon={Activity} color="blue" />
+            <DetailMetric label="Forks" value={repo.forks} icon={GitPullRequest} color="purple" />
+            <DetailMetric label="Open Issues" value={repo.open_issues} icon={ShieldCheck} color="green" />
           </div>
         </div>
 
-        {/* Right Column - Contributors aur Status */}
         <div className="lg:col-span-4 space-y-8">
-          {/* Contributors List - Impact factor ke saath */}
+          {/* Repo Info */}
           <div className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-              <Users className="text-blue-400" /> Builders
+              <GitCommit className="text-purple-400" /> Details
             </h3>
-            <div className="space-y-6">
-              {repo.contributors.map((c) => (
-                <div key={c.name} className="flex items-center justify-between group">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
-                      {c.avatar ? <img src={c.avatar} alt={c.name} /> : <div className="w-full h-full bg-gradient-to-br from-purple-500/20 to-blue-500/20" />}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-slate-200 group-hover:text-white transition-colors">{c.name}</p>
-                      <p className="text-[10px] font-black uppercase text-slate-500">{c.role}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-mono font-bold text-blue-400">{c.impact}%</span>
-                    <div className="w-12 h-1 bg-white/5 rounded-full mt-1">
-                      <div className="h-full bg-blue-500 rounded-full" style={{ width: `${c.impact}%` }} />
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="space-y-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Branch</span>
+                <span className="text-slate-300 font-mono">{repo.default_branch}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Last Synced</span>
+                <span className="text-slate-300">{repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'Never'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Updated</span>
+                <span className="text-slate-300">{repo.updated_at ? new Date(repo.updated_at).toLocaleDateString() : 'Unknown'}</span>
+              </div>
             </div>
           </div>
 
-          {/* Issues Distribution - Professional breakdown */}
+          {/* Issues */}
           <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-red-500/10 to-transparent border border-white/5 backdrop-blur-3xl">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-              <AlertCircle className="text-red-400" /> Stability
+              <AlertCircle className="text-red-400" /> Issues
             </h3>
             <div className="space-y-4">
               <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
                 <span className="text-slate-500 text-[10px]">Open Issues</span>
-                <span className="text-red-400">{repo.issues.open}</span>
+                <span className="text-red-400">{repo.open_issues}</span>
               </div>
               <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden flex">
-                <div className="h-full bg-red-500" style={{ width: '15%' }} />
-                <div className="h-full bg-green-500/40" style={{ width: '85%' }} />
+                <div className="h-full bg-red-500" style={{ width: `${Math.min((repo.open_issues / Math.max(repo.open_issues + 10, 1)) * 100, 100)}%` }} />
+                <div className="h-full bg-green-500/40 flex-1" />
               </div>
-              <p className="text-[10px] text-slate-500 italic mt-2">
-                "Technical debt is currently <span className="text-green-400 font-bold">Manageable</span>."
-              </p>
             </div>
           </div>
         </div>

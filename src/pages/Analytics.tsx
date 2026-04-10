@@ -1,15 +1,16 @@
 import { motion } from 'framer-motion';
 import { TrendingUp, Brain, Shield, Rocket } from 'lucide-react';
-import { GLOBAL_STATS } from '@/lib/mockData';
+import { useAnalytics } from '@/hooks/queries';
 
-// Memoize random data outside takki component pure rahe
+// Memoize random data outside the component
 const HEATMAP_DATA = Array.from({ length: 168 }).map(() => ({
   opacity: Math.random() * 0.8 + 0.1,
   level: Math.floor(Math.random() * 10)
 }));
 
-// Yeh page global developer insights dikhayega (Contribution Heatmap, Skill Radar, etc.)
 export function Analytics() {
+  const { data: analytics } = useAnalytics();
+  const languages = analytics?.languages || [];
 
   return (
     <div className="relative min-h-screen space-y-12 pb-32">
@@ -30,16 +31,22 @@ export function Analytics() {
           </div>
           <h3 className="text-xl font-bold mb-6">Skill <span className="text-blue-400">Architecture</span></h3>
           <div className="space-y-6">
-            {GLOBAL_STATS.skillRadar.map((skill, index) => (
-              <div key={skill.subject} className="space-y-2">
+            {(languages.length > 0 ? languages : [
+              { name: 'Frontend', percentage: 80 },
+              { name: 'Backend', percentage: 65 },
+              { name: 'Security', percentage: 57 },
+              { name: 'DevOps', percentage: 73 },
+              { name: 'AI/ML', percentage: 50 },
+            ]).map((skill, index) => (
+              <div key={skill.name} className="space-y-2">
                 <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-slate-500">
-                  <span>{skill.subject}</span>
-                  <span>{Math.round((skill.A / skill.fullMark) * 100)}%</span>
+                  <span>{skill.name}</span>
+                  <span>{skill.percentage}%</span>
                 </div>
                 <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
-                    animate={{ width: `${(skill.A / skill.fullMark) * 100}%` }}
+                    animate={{ width: `${skill.percentage}%` }}
                     transition={{ duration: 1, delay: index * 0.1 }}
                     className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
                   />
@@ -85,9 +92,9 @@ export function Analytics() {
 
       {/* Performance Metrics Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <MetricBox title="Commit Velocity" value="42" suffix="daily avg" icon={TrendingUp} color="blue" />
-        <MetricBox title="PR Success Rate" value="98" suffix="%" icon={Shield} color="green" />
-        <MetricBox title="Time to Ship" value="1.2" suffix="days" icon={Rocket} color="purple" />
+        <MetricBox title="Total Repos" value={String(analytics?.total_repos ?? 0)} suffix="synced" icon={TrendingUp} color="blue" />
+        <MetricBox title="Total Stars" value={String(analytics?.total_stars ?? 0)} suffix="earned" icon={Shield} color="green" />
+        <MetricBox title="Open Issues" value={String(analytics?.total_issues ?? 0)} suffix="active" icon={Rocket} color="purple" />
       </div>
     </div>
   );

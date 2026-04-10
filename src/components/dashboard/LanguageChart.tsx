@@ -3,18 +3,39 @@ import { motion } from 'framer-motion';
 interface LanguageData {
   name: string;
   percentage: number;
-  color: string;
 }
 
-const LANGUAGES_DEMO: LanguageData[] = [
-  { name: 'TypeScript', percentage: 45, color: '#3178c6' },
-  { name: 'React', percentage: 25, color: '#61dafb' },
-  { name: 'Node.js', percentage: 20, color: '#339933' },
-  { name: 'Other', percentage: 10, color: '#a97bff' },
+const LANGUAGE_COLORS: Record<string, string> = {
+  TypeScript: '#3178c6',
+  JavaScript: '#f7df1e',
+  Python: '#3776ab',
+  Rust: '#dea584',
+  Go: '#00add8',
+  Java: '#b07219',
+  'C++': '#f34b7d',
+  'C#': '#178600',
+  Ruby: '#cc342d',
+  Swift: '#fa7343',
+  Kotlin: '#a97bff',
+  PHP: '#4f5d95',
+  HTML: '#e34c26',
+  CSS: '#563d7c',
+  Shell: '#89e051',
+};
+
+const DEFAULT_LANGUAGES: LanguageData[] = [
+  { name: 'TypeScript', percentage: 45 },
+  { name: 'JavaScript', percentage: 25 },
+  { name: 'Python', percentage: 20 },
+  { name: 'Other', percentage: 10 },
 ];
 
-// Yeh component languages ka breakdown ek animated bar chart mein dikhayega
-export function LanguageChart() {
+interface LanguageChartProps {
+  languages?: LanguageData[];
+}
+
+export function LanguageChart({ languages }: LanguageChartProps) {
+  const data = languages && languages.length > 0 ? languages : DEFAULT_LANGUAGES;
   return (
     <div className="relative p-6 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl overflow-hidden h-full">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-transparent" />
@@ -27,14 +48,13 @@ export function LanguageChart() {
       </div>
 
       <div className="space-y-6">
-        {LANGUAGES_DEMO.map((lang, index) => (
+        {data.map((lang, index) => (
           <div key={lang.name} className="space-y-2">
             <div className="flex justify-between items-end">
               <span className="text-sm font-bold text-slate-300">{lang.name}</span>
               <span className="text-xs font-mono text-slate-500">{lang.percentage}%</span>
             </div>
             
-            {/* Animated Progress Bar - Iska glow aur animation "alive" feel deta hai */}
             <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
@@ -42,7 +62,7 @@ export function LanguageChart() {
                 transition={{ duration: 1.5, delay: index * 0.1, ease: "easeOut" }}
                 viewport={{ once: true }}
                 className="h-full rounded-full relative"
-                style={{ backgroundColor: lang.color }}
+                style={{ backgroundColor: LANGUAGE_COLORS[lang.name] || '#a97bff' }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
               </motion.div>

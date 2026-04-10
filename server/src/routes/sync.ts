@@ -1,84 +1,93 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import { Octokit } from 'octokit';
-import { createClient } from '@supabase/supabase-js';
+import { z } from 'zod';
+import { supabaseAdmin } from '../server';
+import { env } from '../env';
 
-interface SyncRequestBody {
-  github_token: string;
-  org_name: string;
-}
+const syncBodySchema = z.object({
+  github_username: z.string().min(1).optional(),
+  org_name: z.string().min(1).optional(),
+}).refine(d => d.github_username || d.org_name, {
+  message: 'Either github_username or org_name is required',
+});
 
-// Yeh function sync routes register karta hai
 export async function syncRoutes(fastify: FastifyInstance) {
-  
-  fastify.post('/sync', async (request: FastifyRequest<{ Body: SyncRequestBody }>, reply: FastifyReply) => {
-    const { github_token, org_name } = request.body;
 
-    if (!github_token) {
-      return reply.status(400).send({ error: 'GitHub Token missing hai!' });
+  fastify.post('/sync', async (request, reply) => {
+    const parsed = syncBodySchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: parsed.error.flatten().fieldErrors });
     }
 
-    // Octokit aur Supabase clients initialize karein
-    const octokit = new Octokit({ auth: github_token });
-    const supabase = createClient(
-      process.env.SUPABASE_URL || '',
-      process.env.SUPABASE_ANON_KEY || ''
-    );
+    const { github_username, org_name } = parsed.data;
+    const token = env.GITHUB_TOKEN;
+    if (!token) {
+      return reply.status(500).send({ error: 'Server GitHub token not configured' });
+    }
+
+    const octokit = new Octokit({ auth: token });
 
     try {
-      fastify.log.info(`Sync shuru ho raha hai for: ${org_name}`);
-
-      // 1. Fetch Repositories from GitHub
-      // Yeh logic repositories extract karegi
-      const { data: repos } = await octokit.rest.repos.listForOrg({
-        org: org_name,
-        per_page: 100
-      });
-
-      // 2. Process and Upsert to Supabase
-      // Yeh loop har repo ko database mein sync karega
-      for (const repo of repos) {
-        const { error } = await supabase
-          .from('repositories')
-          .upsert({
-            github_id: repo.id,
-            name: repo.name,
-            description: repo.description,
-            stars: repo.stargazers_count,
-            forks: repo.forks_count,
-            language: repo.language,
-            url: repo.html_url,
-            last_sync: new Date().toISOString()
-          }, { onConflict: 'github_id' });
-
-        if (error) fastify.log.error(error, `Repo sync fail: ${repo.name}`);
+      let repos;
+      if (org_name) {
+        const { data } = await octokit.rest.repos.listForOrg({ org: org_name, per_page: 100, type: 'all' });
+        repos = data;
+      } else {
+        const { data } = await octokit.rest.repos.listForUser({ username: github_username!, per_page: 100, sort: 'updated' });
+        repos = data;
       }
 
-      return { 
-        success: true, 
-        message: `${repos.length} repositories sync ho gayi hain!`,
-        timestamp: new Date().toISOString()
-      };
+      const rows = repos.map(repo => ({
+        github_id: repo.id,
+        owner_id: request.userId,
+        name: repo.full_name,
+        description: repo.description,
+        stars: repo.stargazers_count,
+        forks: repo.forks_count,
+        language: repo.language,
+        url: repo.html_url,
+        open_issues: repo.open_issues_count,
+        default_branch: repo.default_branch,
+        updated_at: repo.updated_at,
+        last_sync: new Date().toISOString(),
+      }));
 
+      const { error } = await supabaseAdmin
+        .from('repositories')
+        .upsert(rows, { onConflict: 'github_id' });
+
+      if (error) {
+        fastify.log.error(error, 'Batch upsert failed');
+        return reply.status(500).send({ error: 'Database sync failed' });
+      }
+
+      return { success: true, synced: rows.length, timestamp: new Date().toISOString() };
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      fastify.log.error(err, 'Global Sync Error');
-      return reply.status(500).send({ 
-        success: false, 
-        message: 'Sync fail ho gaya. Kripya logs check karein.',
-        error: errorMessage 
-      });
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      fastify.log.error(err, 'Sync error');
+      return reply.status(500).send({ error: message });
     }
   });
 
-  // Analytics/Metrics endpoint
-  fastify.get('/metrics', async () => {
-    // Yeh placeholder hai for aggregated intelligence
-    return {
-      total_commits: 1284,
-      active_contributors: 42,
-      average_health_score: 92,
-      last_updated: new Date().toISOString()
-    };
+  fastify.get('/metrics', async (request) => {
+    const { data, error } = await supabaseAdmin
+      .from('repositories')
+      .select('stars, forks, language, open_issues')
+      .eq('owner_id', request.userId);
+
+    if (error) {
+      return { total_repos: 0, total_stars: 0, total_forks: 0, languages: {} };
+    }
+
+    const total_repos = data.length;
+    const total_stars = data.reduce((s, r) => s + (r.stars || 0), 0);
+    const total_forks = data.reduce((s, r) => s + (r.forks || 0), 0);
+    const total_issues = data.reduce((s, r) => s + (r.open_issues || 0), 0);
+    const languages: Record<string, number> = {};
+    for (const r of data) {
+      if (r.language) languages[r.language] = (languages[r.language] || 0) + 1;
+    }
+
+    return { total_repos, total_stars, total_forks, total_issues, languages, last_updated: new Date().toISOString() };
   });
 }
-

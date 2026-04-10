@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, BookOpen, Terminal, Shield, Cpu, Layout } from 'lucide-react';
 import { ResourceCard, type ResourceType } from '@/components/resources/ResourceCard';
+import { useResources } from '@/hooks/queries';
 
 const CATEGORIES = [
   { id: 'all', name: 'All Resources', icon: Layout },
@@ -23,7 +24,7 @@ interface Resource {
   rating: number;
 }
 
-const MOCK_RESOURCES: Resource[] = [
+const FALLBACK_RESOURCES: Resource[] = [
   {
     id: '1',
     title: 'Advanced React Performance',
@@ -38,7 +39,7 @@ const MOCK_RESOURCES: Resource[] = [
   {
     id: '2',
     title: 'Zero Trust Security Guide',
-    description: 'Yeh guide apko batayegi ki kaise modern SaaS apps ko security standards par build karein.',
+    description: 'A guide on building modern SaaS apps to meet security standards.',
     type: 'article',
     category: 'security',
     duration: '15 mins',
@@ -81,19 +82,21 @@ const MOCK_RESOURCES: Resource[] = [
   }
 ];
 
-// Yeh "Library" page resources ko search aur filter karne ki logic handle karega
 export function Resources() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const { data: apiResources } = useResources();
+
+  const resources = (apiResources && apiResources.length > 0 ? apiResources : FALLBACK_RESOURCES) as Resource[];
 
   const filteredResources = useMemo(() => {
-    return MOCK_RESOURCES.filter(res => {
+    return resources.filter(res => {
       const matchesSearch = res.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                            res.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'all' || res.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, resources]);
 
   return (
     <div className="relative min-h-screen space-y-12 pb-32">

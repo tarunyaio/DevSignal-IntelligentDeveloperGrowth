@@ -1,32 +1,25 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Terminal, ArrowRight, ShieldCheck, Zap, BarChart3, Code2, BookOpen, ChevronDown } from 'lucide-react';
+import { useEffect } from 'react';
 
 export function LandingPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { signInWithGitHub, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (login(username, password)) {
+  useEffect(() => {
+    if (isAuthenticated) {
       navigate('/dashboard');
-    } else {
-      setError('Invalid credentials. Use admin / admin.');
     }
-  };
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="relative min-h-screen bg-slate-950 text-white font-sans overflow-x-hidden">
       {/* Background Layer */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 scale-105"
-          style={{ backgroundImage: "url('/Users/tarunyakesh/.gemini/antigravity/brain/f57a6d80-098f-46ab-8ddb-69fa87a0ae9c/devsignal_modern_hero_bg_1774699319356.png')" }}
+          className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-slate-950 to-blue-900/20 opacity-40 scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-slate-950 to-slate-950" />
         
@@ -109,47 +102,23 @@ export function LandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
                 
                 <h2 className="text-2xl font-bold mb-10 flex items-center justify-between">
-                  Log in <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">admin/admin</span>
+                  Get Started
                 </h2>
 
-                <form onSubmit={handleLogin} className="space-y-6 relative z-10">
-                  <div className="space-y-2">
-                    <label className="text-[11px] font-bold uppercase tracking-widest text-slate-500 ml-1">Account ID</label>
-                    <input 
-                      type="text" 
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder="Username"
-                      className="w-full bg-slate-950/50 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all placeholder:text-slate-700 text-lg"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[11px] font-bold uppercase tracking-widest text-slate-500 ml-1">Access Key</label>
-                    <input 
-                      type="password" 
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full bg-slate-950/50 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all placeholder:text-slate-700 text-lg"
-                      required
-                    />
-                  </div>
-
-                  {error && (
-                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-400 text-sm font-medium ml-1">
-                      {error}
-                    </motion.p>
-                  )}
+                <div className="space-y-6 relative z-10">
+                  <p className="text-slate-400 text-sm leading-relaxed">
+                    Connect your GitHub account to unlock real-time repository analytics, developer growth signals, and intelligent insights.
+                  </p>
 
                   <button 
-                    type="submit"
+                    onClick={signInWithGitHub}
                     className="w-full bg-white text-slate-950 font-bold py-5 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group shadow-[0_20px_40px_-10px_rgba(255,255,255,0.2)]"
                   >
-                    Enter Dashboard
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    Continue with GitHub
                     <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform duration-300" />
                   </button>
-                </form>
+                </div>
               </div>
             </motion.div>
           </div>
