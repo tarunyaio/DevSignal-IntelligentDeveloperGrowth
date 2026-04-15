@@ -325,36 +325,48 @@ export function Profile() {
           <div className="md:col-span-1 relative flex items-center justify-center overflow-hidden h-[400px] rounded-[2rem] bg-white/[0.02] border border-white/5">
              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#10b98110_0%,_transparent_70%)]" />
              
-             <div className="relative w-full h-[300px] flex items-center justify-center">
-               {Object.entries(data?.stats.languages || {}).slice(0, 10).map(([lang, count], i) => {
-                  const orbitRadius = 100 + (i * 15); // Staggered orbits
-                  const duration = 15 + (i * 2);      // Staggered speeds
+             <div className="relative w-full h-[400px] flex items-center justify-center perspective-[1000px]">
+               {Object.entries(data?.stats.languages || {}).slice(0, 12).map(([lang, count], i) => {
+                  const orbitX = 140 + (i % 3) * 30; // Varied widths
+                  const orbitY = orbitX * 0.4;        // Elliptical ratio
+                  const duration = 20 + (i * 3);      // Varied speeds
                   
                   return (
                     <motion.div
                       key={lang}
-                      animate={{ rotate: 360 }}
-                      transition={{ 
-                        duration, 
-                        repeat: Infinity, 
-                        ease: "linear",
-                        delay: i * -2 // Start at different positions
+                      animate={{ 
+                        rotate: 360,
+                        x: [0, Math.sin(i) * 20, 0], // Subtle organic wobble
+                        y: [0, Math.cos(i) * 20, 0],
                       }}
-                      style={{ width: orbitRadius * 2, height: orbitRadius * 2 }}
+                      transition={{ 
+                        rotate: { duration, repeat: Infinity, ease: "linear", delay: i * -3 },
+                        x: { duration: duration/2, repeat: Infinity, ease: "easeInOut" },
+                        y: { duration: duration/3, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                      style={{ width: orbitX * 2, height: orbitY * 2 }}
                       className="absolute flex items-center justify-center pointer-events-none"
                     >
                       <motion.div
-                        whileHover={{ scale: 1.2, zIndex: 100 }}
-                        animate={{ rotate: -360 }} // Keep text upright
-                        transition={{ duration, repeat: Infinity, ease: "linear", delay: i * -2 }}
+                        whileHover={{ scale: 1.3, zIndex: 100 }}
+                        animate={{ 
+                          rotate: -360,
+                          scale: [1, 1.2, 1, 0.8, 1], // 3D Perspective simulation
+                          opacity: [0.7, 1, 1, 0.4, 0.7] // Depth opacity
+                        }}
+                        transition={{ 
+                          rotate: { duration, repeat: Infinity, ease: "linear", delay: i * -3 },
+                          scale: { duration, repeat: Infinity, ease: "linear", delay: i * -3 },
+                          opacity: { duration, repeat: Infinity, ease: "linear", delay: i * -3 }
+                        }}
                         className={cn(
-                          "absolute pointer-events-auto px-5 py-2.5 rounded-2xl backdrop-blur-xl border font-black text-xs cursor-default shadow-lg transition-all",
+                          "absolute pointer-events-auto px-5 py-2.5 rounded-2xl backdrop-blur-2xl border font-black text-xs cursor-default shadow-2xl transition-all",
                           i % 4 === 0 ? "bg-emerald-500/30 border-emerald-500/50 text-emerald-300 shadow-emerald-500/20" :
                           i % 4 === 1 ? "bg-purple-500/30 border-purple-500/50 text-purple-300 shadow-purple-500/20" :
                           i % 4 === 2 ? "bg-blue-500/30 border-blue-500/50 text-blue-300 shadow-blue-500/20" :
                           "bg-amber-500/30 border-amber-500/50 text-amber-300 shadow-amber-500/20"
                         )}
-                        style={{ x: orbitRadius }}
+                        style={{ x: orbitX }}
                       >
                         {lang}
                       </motion.div>
@@ -362,8 +374,8 @@ export function Profile() {
                   );
                })}
                
-               <div className="text-center relative z-20 pointer-events-none p-5 rounded-[2.5rem] bg-slate-900/90 backdrop-blur-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
-                  <p className="text-[9px] font-black tracking-widest text-emerald-500/60 uppercase">System_Core</p>
+               <div className="text-center relative z-20 pointer-events-none p-6 rounded-[3rem] bg-slate-900/90 backdrop-blur-3xl border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.9)] scale-110">
+                  <p className="text-[10px] font-black tracking-widest text-emerald-500/40 uppercase">System_Core</p>
                   <h3 className="text-2xl font-black tracking-tighter italic leading-none text-white">TECH_STACK</h3>
                </div>
              </div>
