@@ -64,6 +64,20 @@ export interface Repository {
   updated_at: string;
   last_sync: string;
   created_at: string;
+  // Extended details
+  languages?: Record<string, number>;
+  contributors?: {
+    login: string;
+    avatar_url: string;
+    contributions: number;
+    html_url: string;
+  }[];
+  activity?: {
+    total: number;
+    week: number;
+    days: number[];
+  }[];
+  readme?: string;
 }
 
 export interface Analytics {

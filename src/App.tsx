@@ -9,6 +9,7 @@ import { Analytics } from './pages/Analytics';
 import { Resources } from './pages/Resources';
 import { Editor } from './pages/Editor';
 import { RepoDetail } from './pages/RepoDetail';
+import { Profile } from './pages/Profile';
 import { NotFound } from './pages/NotFound';
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
               <Route path="/repo/:id" element={<RepoDetail />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/editor" element={<Editor />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

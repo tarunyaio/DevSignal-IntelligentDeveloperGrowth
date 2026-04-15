@@ -4,9 +4,14 @@ import { motion } from 'framer-motion';
 import { 
   ArrowLeft, ShieldCheck, 
   Activity, ExternalLink, GitCommit,
-  GitPullRequest, AlertCircle
+  GitPullRequest, AlertCircle,
+  Users, Code
 } from 'lucide-react';
 import { useRepo } from '@/hooks/queries';
+import { ActivityChart } from '@/components/dashboard/ActivityChart';
+import { ContributorGrid } from '@/components/dashboard/ContributorGrid';
+import { LanguageStats } from '@/components/dashboard/LanguageStats';
+import { ReadmePreview } from '@/components/dashboard/ReadmePreview';
 
 export function RepoDetail() {
   const { id } = useParams();
@@ -31,11 +36,11 @@ export function RepoDetail() {
   }
 
   return (
-    <div className="relative min-h-screen space-y-10 pb-32">
+    <div className="relative min-h-screen space-y-12 pb-32">
       {/* Navigation aur Back Button */}
       <div className="flex items-center justify-between">
         <Link to="/dashboard" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
-          <div className="p-2 rounded-xl bg-white/5 border border-white/10 group-hover:border-white/20">
+          <div className="p-2 rounded-xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-all">
             <ArrowLeft size={18} />
           </div>
           <span className="text-sm font-bold uppercase tracking-wider">Back to Dashboard</span>
@@ -45,97 +50,164 @@ export function RepoDetail() {
           href={repo.url} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 hover:bg-purple-500/20 transition-all font-bold text-sm"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-white/5 text-white hover:border-white/20 hover:scale-105 transition-all font-bold text-sm shadow-xl shadow-purple-500/5 backdrop-blur-xl"
         >
           View on GitHub <ExternalLink size={16} />
         </a>
       </div>
 
       {/* Hero Header */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-end">
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center gap-3">
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-end">
+        <div className="lg:col-span-2 space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3"
+          >
             <span className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black uppercase text-blue-400 tracking-widest">
               {repo.language || 'Unknown'}
             </span>
-          </div>
-          <h1 className="text-6xl font-black tracking-tighter">{repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}</h1>
-          <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-            {repo.description || 'No description available.'}
-          </p>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-7xl font-black tracking-tighter"
+          >
+            {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-2xl text-slate-400 max-w-3xl leading-relaxed"
+          >
+            {repo.description || 'No description available for this repository.'}
+          </motion.p>
         </div>
 
-        {/* Stats Score */}
-        <div className="lg:col-span-1 p-8 rounded-[2.5rem] bg-gradient-to-br from-purple-500/20 to-blue-500/5 border border-purple-500/20 flex flex-col items-center text-center">
-          <div className="relative w-32 h-32 flex items-center justify-center mb-4">
+        {/* Stars Score Card */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="lg:col-span-1 p-10 rounded-[3rem] bg-gradient-to-br from-purple-500/30 to-blue-500/5 border border-white/10 flex flex-col items-center text-center shadow-2xl relative overflow-hidden group"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="relative w-40 h-40 flex items-center justify-center mb-6">
             <svg className="absolute inset-0 w-full h-full -rotate-90">
-              <circle cx="64" cy="64" r="60" fill="none" stroke="currentColor" strokeWidth="8" className="text-white/5" />
+              <circle cx="80" cy="80" r="76" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
               <motion.circle 
-                cx="64" cy="64" r="60" fill="none" stroke="currentColor" strokeWidth="8" 
-                className="text-purple-500"
-                strokeDasharray="377"
-                initial={{ strokeDashoffset: 377 }}
-                animate={{ strokeDashoffset: 377 - (377 * Math.min(repo.stars, 100)) / 100 }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
+                cx="80" cy="80" r="76" fill="none" stroke="currentColor" strokeWidth="6" 
+                className="text-purple-400"
+                strokeDasharray="478"
+                initial={{ strokeDashoffset: 478 }}
+                animate={{ strokeDashoffset: 478 - (478 * Math.min(repo.stars, 100)) / 100 }}
+                transition={{ duration: 2, ease: "easeOut" }}
               />
             </svg>
-            <span className="text-4xl font-black tracking-tighter">{repo.stars}</span>
+            <span className="text-6xl font-black tracking-tighter">{repo.stars}</span>
           </div>
-          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Stars</h4>
-        </div>
+          <h4 className="text-sm font-black uppercase tracking-[0.3em] text-slate-300">Stars</h4>
+        </motion.div>
       </section>
 
-      {/* Main Content Grid */}
+      {/* Analytics aur Visuals Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* Activity Graph Section (left, full or 2/3) */}
         <div className="lg:col-span-8 space-y-8">
-          {/* Detailed Statistics Grid */}
+          <div className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl hover:border-white/10 transition-all">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-bold flex items-center gap-3">
+                <Activity className="text-purple-400" /> Pulse & Activity
+              </h3>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Last 12 Weeks</span>
+            </div>
+            <ActivityChart data={repo.activity} />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <DetailMetric label="Stars" value={repo.stars} icon={Activity} color="blue" />
             <DetailMetric label="Forks" value={repo.forks} icon={GitPullRequest} color="purple" />
-            <DetailMetric label="Open Issues" value={repo.open_issues} icon={ShieldCheck} color="green" />
+            <DetailMetric label="Issues" value={repo.open_issues} icon={AlertCircle} color="red" />
           </div>
         </div>
 
+        {/* Sidebar Info Section (right) */}
         <div className="lg:col-span-4 space-y-8">
-          {/* Repo Info */}
-          <div className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl">
-            <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-              <GitCommit className="text-purple-400" /> Details
+          {/* Language Breakdown */}
+          <div className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl hover:border-white/10 transition-all">
+            <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
+              <Code className="text-blue-400" /> Technologies
             </h3>
-            <div className="space-y-4 text-sm">
-              <div className="flex justify-between">
-                <span className="text-slate-500">Branch</span>
-                <span className="text-slate-300 font-mono">{repo.default_branch}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Last Synced</span>
-                <span className="text-slate-300">{repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'Never'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Updated</span>
-                <span className="text-slate-300">{repo.updated_at ? new Date(repo.updated_at).toLocaleDateString() : 'Unknown'}</span>
-              </div>
-            </div>
+            <LanguageStats languages={repo.languages} />
           </div>
 
-          {/* Issues */}
-          <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-red-500/10 to-transparent border border-white/5 backdrop-blur-3xl">
-            <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-              <AlertCircle className="text-red-400" /> Issues
+          {/* Repo Info */}
+          <div className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl">
+            <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
+              <GitCommit className="text-purple-400" /> Source Stats
             </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
-                <span className="text-slate-500 text-[10px]">Open Issues</span>
-                <span className="text-red-400">{repo.open_issues}</span>
+            <div className="space-y-6 text-sm">
+              <div className="flex justify-between items-center group">
+                <span className="text-slate-500 group-hover:text-slate-300 transition-colors">Main Branch</span>
+                <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-slate-300 font-mono text-xs">{repo.default_branch}</span>
               </div>
-              <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden flex">
-                <div className="h-full bg-red-500" style={{ width: `${Math.min((repo.open_issues / Math.max(repo.open_issues + 10, 1)) * 100, 100)}%` }} />
-                <div className="h-full bg-green-500/40 flex-1" />
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500">Last Synced</span>
+                <span className="text-slate-300 font-bold">
+                  {repo.last_sync ? new Date(repo.last_sync).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Never'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500">Updated GitHub</span>
+                <span className="text-slate-300 font-bold">
+                  {repo.updated_at ? new Date(repo.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown'}
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Community Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-5">
+          <div className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl h-full">
+            <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
+              <Users className="text-green-400" /> Community
+            </h3>
+            <ContributorGrid contributors={repo.contributors} />
+          </div>
+        </div>
+
+        <div className="lg:col-span-7">
+          <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-red-500/10 to-transparent border border-white/5 backdrop-blur-3xl">
+            <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+              <AlertCircle className="text-red-400" /> Health & Issues
+            </h3>
+            <div className="space-y-4">
+              <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
+                <span className="text-slate-500 text-[10px]">Backlog Intensity</span>
+                <span className="text-red-400">{repo.open_issues} active issues</span>
+              </div>
+              <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden flex border border-white/5 p-0.5">
+                <div 
+                  className="h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.3)] transition-all duration-1000" 
+                  style={{ width: `${Math.min((repo.open_issues / Math.max(repo.open_issues + 10, 1)) * 100, 100)}%` }} 
+                />
+                <div className="h-full bg-green-500/10 flex-1" />
+              </div>
+              <p className="text-[10px] text-slate-500 font-bold uppercase py-2">System Status: {repo.open_issues > 10 ? 'ATTENTION REQUIRED' : 'STABLE'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Documentation Section */}
+      <section>
+        <ReadmePreview content={repo.readme} />
+      </section>
     </div>
   );
 }
@@ -144,24 +216,33 @@ interface DetailMetricProps {
   label: string;
   value: number | string;
   icon: React.ElementType;
-  color: 'blue' | 'purple' | 'green';
+  color: 'blue' | 'purple' | 'green' | 'red';
 }
 
 function DetailMetric({ label, value, icon: Icon, color }: DetailMetricProps) {
   const colors = {
-    blue: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-    purple: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
-    green: 'text-green-400 bg-green-500/10 border-green-500/20',
+    blue: 'text-blue-400 bg-blue-500/10 border-blue-500/20 shadow-blue-500/5',
+    purple: 'text-purple-400 bg-purple-500/10 border-purple-500/20 shadow-purple-500/5',
+    green: 'text-green-400 bg-green-500/10 border-green-500/20 shadow-green-500/5',
+    red: 'text-red-400 bg-red-500/10 border-red-500/20 shadow-red-500/5',
   };
 
   return (
-    <div className={`p-6 rounded-[2rem] border backdrop-blur-xl ${colors[color]} group hover:bg-white/5 transition-all`}>
-      <Icon size={20} className="mb-4" />
-      <div className="space-y-1">
-        <p className="text-2xl font-black tracking-tighter">{value}</p>
-        <p className="text-[10px] font-black uppercase tracking-widest opacity-60">{label}</p>
+    <motion.div 
+      whileHover={{ y: -5, scale: 1.02 }}
+      className={`p-6 rounded-[2.5rem] border backdrop-blur-xl ${colors[color]} group hover:bg-white/5 transition-all shadow-2xl`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className={`p-2 rounded-xl bg-current/10`}>
+          <Icon size={20} />
+        </div>
+        <div className="w-1.5 h-1.5 rounded-full bg-current opacity-30 shadow-[0_0_10px_currentColor]" />
       </div>
-    </div>
+      <div className="space-y-1">
+        <p className="text-3xl font-black tracking-tighter text-white">{value}</p>
+        <p className="text-[10px] font-black uppercase tracking-widest opacity-60 text-slate-400">{label}</p>
+      </div>
+    </motion.div>
   );
 }
 

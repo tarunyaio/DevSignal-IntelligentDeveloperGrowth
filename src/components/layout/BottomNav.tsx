@@ -56,14 +56,20 @@ export function BottomNav() {
         
         <div className="w-px h-6 bg-white/10 mx-2" />
         
-        <button className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center p-[1px] hover:scale-105 transition-transform group relative">
+        <NavLink 
+          to="/profile"
+          className={({ isActive }) => cn(
+            "w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center p-[1px] hover:scale-105 transition-transform group relative",
+            isActive && "ring-2 ring-purple-500 ring-offset-2 ring-offset-slate-950"
+          )}
+        >
           <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden">
              <User size={18} className="text-white" />
           </div>
           <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-white text-[10px] rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-white/5">
             Profile
           </span>
-        </button>
+        </NavLink>
       </motion.nav>
     </div>
   );
