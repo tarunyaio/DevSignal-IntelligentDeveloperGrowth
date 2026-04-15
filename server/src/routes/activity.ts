@@ -57,9 +57,28 @@ export async function activityRoutes(fastify: FastifyInstance) {
           switch (event.type) {
             case 'PushEvent':
               type = 'commit';
-              const commits = (event.payload as any).commits || [];
-              const lastCommit = commits[commits.length - 1]; // Get latest commit in this push
-              title = lastCommit?.message || 'Pushed commits';
+              const payload = event.payload as any;
+              const commits = payload.commits || [];
+              
+              // DEBUG: Log to stdout so it shows up in terminal
+              console.log('--- GITHUB PUSH EVENT DEBUG ---');
+              console.log('Repo:', event.repo.name);
+              console.log('Payload Keys:', Object.keys(payload));
+              console.log('Commits Count:', commits.length);
+              if (commits.length > 0) console.log('First Commit Msg:', commits[0].message);
+
+              if (Array.isArray(commits) && commits.length > 0) {
+                // Get the message of the most recent commit in this push
+                title = commits[commits.length - 1].message || 'Updated repository';
+              } else if (payload.head) {
+                // Use head SHA as a fallback if message is missing
+                title = `Push: ${payload.head.substring(0, 7)}`;
+              } else {
+                // Fallback: Use the ref
+                const branch = payload.ref?.replace('refs/heads/', '') || 'main';
+                title = `Pushed to ${branch}`;
+              }
+              
               description = `Pushed to ${event.repo.name}`;
               break;
             case 'PullRequestEvent':
