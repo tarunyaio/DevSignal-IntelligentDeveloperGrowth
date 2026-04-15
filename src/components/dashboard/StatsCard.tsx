@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface StatsCardProps {
   title: string;
@@ -10,53 +11,52 @@ interface StatsCardProps {
     value: number;
     isPositive: boolean;
   };
-  color: 'purple' | 'blue' | 'pink' | 'cyan';
+  color: 'blue' | 'orange' | 'purple' | 'emerald';
 }
 
 const colorMap = {
-  purple: 'from-purple-500/20 to-purple-600/5 border-purple-500/20 text-purple-400',
-  blue: 'from-blue-500/20 to-blue-600/5 border-blue-500/20 text-blue-400',
-  pink: 'from-pink-500/20 to-pink-600/5 border-pink-500/20 text-pink-400',
-  cyan: 'from-cyan-500/20 to-cyan-600/5 border-cyan-500/20 text-cyan-400',
+  blue: 'text-neo-accent-blue shadow-neo-accent-blue/5',
+  orange: 'text-neo-accent-orange shadow-neo-accent-orange/5',
+  purple: 'text-purple-400 shadow-purple-400/5',
+  emerald: 'text-emerald-400 shadow-emerald-400/5',
 };
 
-// Yeh StatsCard component stats ko ek premium glassmorphic box mein dikhayega
 export function StatsCard({ title, value, suffix, icon: Icon, trend, color }: StatsCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
       viewport={{ once: true }}
-      className={`relative group overflow-hidden rounded-[2rem] border p-6 bg-gradient-to-br ${colorMap[color]} backdrop-blur-xl`}
+      className="neo-flat rounded-[2.5rem] p-7 group relative border border-white/[0.01]"
     >
-      {/* Background Glow Effect - Light shadow jaisa feel dene ke liye */}
-      <div className="absolute -right-4 -top-4 w-24 h-24 bg-current opacity-10 blur-3xl group-hover:opacity-20 transition-opacity" />
-      
-      <div className="flex justify-between items-start mb-4">
-        <div className={`p-3 rounded-2xl bg-white/5 border border-white/10`}>
-          <Icon size={24} strokeWidth={1.5} />
+      <div className="flex justify-between items-start mb-6">
+        <div className={cn("w-14 h-14 neo-icon transition-shadow duration-500", colorMap[color])}>
+          <Icon size={24} strokeWidth={2} />
         </div>
         
         {trend && (
-          <div className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border ${
-            trend.isPositive ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
-          }`}>
+          <div className={cn(
+            "neo-pressed px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-white/[0.02] uppercase",
+            trend.isPositive ? 'text-neo-accent-blue' : 'text-neo-accent-orange'
+          )}>
             {trend.isPositive ? '+' : '-'}{trend.value}%
           </div>
         )}
       </div>
 
-      <div>
-        <p className="text-sm font-medium text-slate-400 mb-1">{title}</p>
+      <div className="space-y-1">
+        <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">{title}</p>
         <div className="flex items-baseline gap-2">
-          <h3 className="text-3xl font-bold tracking-tight">{value}</h3>
-          {suffix && <span className="text-sm text-slate-500 font-medium">{suffix}</span>}
+          <h3 className="text-4xl font-black tracking-tighter text-slate-200">{value}</h3>
+          {suffix && <span className="text-xs text-slate-600 font-bold uppercase">{suffix}</span>}
         </div>
       </div>
 
-      {/* Subtle bottom line for that "alive" look */}
-      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-current to-transparent opacity-20" />
+      {/* Subtle Glow */}
+      <div className={cn(
+        "absolute -bottom-1 left-1/2 -translate-x-1/2 w-1/2 h-[1px] blur-sm transition-opacity duration-500",
+        color === 'blue' ? "bg-neo-accent-blue/30" : "bg-neo-accent-orange/30"
+      )} />
     </motion.div>
   );
 }

@@ -1,5 +1,6 @@
 import { Bell, Search, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -7,39 +8,46 @@ export function Header() {
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.user_name || 'User';
 
   return (
-    <header className="h-16 border-b border-slate-800 bg-slate-950/50 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-40">
-      <div className="flex items-center gap-4 flex-1">
-        <div className="relative w-full max-w-md hidden sm:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search repositories..." 
-            className="w-full bg-slate-900 border border-slate-800 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-blue-500 transition-colors"
-          />
+    <header className="h-20 bg-neo-bg flex items-center justify-between px-8 sticky top-0 z-40 border-b border-white/[0.02]">
+      <div className="flex items-center gap-6 flex-1">
+        <div className="relative w-full max-w-sm hidden sm:block">
+          <div className="neo-pressed rounded-full flex items-center px-4 py-1.5 border border-white/[0.01]">
+            <Search className="text-slate-500 mr-3" size={16} />
+            <input 
+              type="text" 
+              placeholder="Search intelligence..." 
+              className="bg-transparent border-none text-sm focus:outline-none w-full text-slate-300 placeholder:text-slate-600 font-medium"
+            />
+          </div>
         </div>
       </div>
       
       <div className="flex items-center gap-4">
-        <button className="p-2 text-slate-400 hover:text-white transition-colors relative">
-          <Bell size={20} />
+        <button className="w-10 h-10 neo-icon group">
+          <Bell size={18} className="text-slate-500 group-hover:text-neo-accent-blue transition-colors" />
         </button>
         
-        <span className="text-sm text-slate-400 hidden md:inline">{displayName}</span>
+        <div className="h-8 w-px bg-white/[0.05] mx-2" />
         
-        {avatarUrl ? (
-          <img src={avatarUrl} alt={displayName} className="h-8 w-8 rounded-full border border-white/10" />
-        ) : (
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">
-            {displayName.charAt(0).toUpperCase()}
-          </div>
-        )}
+        <div className="flex items-center gap-3 pr-2">
+           <span className="text-xs font-bold uppercase tracking-widest text-slate-500 hidden md:inline">{displayName}</span>
+           {avatarUrl ? (
+             <div className="w-9 h-9 neo-icon p-[2px]">
+               <img src={avatarUrl} alt={displayName} className="w-full h-full rounded-full object-cover" />
+             </div>
+           ) : (
+             <div className="w-9 h-9 neo-icon text-[10px] font-black text-neo-accent-blue">
+               {displayName.charAt(0).toUpperCase()}
+             </div>
+           )}
+        </div>
 
         <button 
           onClick={logout}
-          className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+          className="w-10 h-10 neo-icon group"
           title="Logout"
         >
-          <LogOut size={18} />
+          <LogOut size={16} className="text-slate-500 group-hover:text-neo-accent-orange transition-colors" />
         </button>
       </div>
     </header>

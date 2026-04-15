@@ -1,37 +1,36 @@
 import { motion } from 'framer-motion';
 import { GitCommit, GitPullRequest, GitMerge, AlertCircle, Terminal } from 'lucide-react';
 import { useActivity } from '@/hooks/queries';
+import { cn } from '@/lib/utils';
 
 const iconMap = {
-  commit: { Icon: GitCommit, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
-  pr: { Icon: GitPullRequest, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
-  merge: { Icon: GitMerge, color: 'text-green-400', bg: 'bg-green-500/10 border-green-500/20' },
-  issue: { Icon: AlertCircle, color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' },
-  other: { Icon: Terminal, color: 'text-slate-400', bg: 'bg-slate-500/10 border-slate-500/20' },
+  commit: { Icon: GitCommit, color: 'text-neo-accent-blue', bg: 'neo-icon' },
+  pr: { Icon: GitPullRequest, color: 'text-purple-400', bg: 'neo-icon' },
+  merge: { Icon: GitMerge, color: 'text-emerald-400', bg: 'neo-icon' },
+  issue: { Icon: AlertCircle, color: 'text-neo-accent-orange', bg: 'neo-icon' },
+  other: { Icon: Terminal, color: 'text-slate-400', bg: 'neo-icon' },
 };
 
 export function ActivityFeed() {
   const { data: activities, isLoading } = useActivity();
 
   return (
-    <div className="relative p-6 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl overflow-hidden h-full min-h-[400px]">
-      <div className="flex justify-between items-center mb-8">
+    <div className="neo-flat p-8 rounded-[3rem] h-full min-h-[450px] relative border border-white/[0.01]">
+      <div className="flex justify-between items-center mb-10">
         <div>
-          <h3 className="text-xl font-bold tracking-tight">Recent <span className="italic font-serif font-bold text-blue-400">Signals</span></h3>
-          <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mt-1">Live Activity Stream</p>
+          <h3 className="text-xl font-black tracking-tight text-slate-200">Recent <span className="italic font-serif font-black text-neo-accent-blue underline decoration-neo-accent-blue/30 underline-offset-8">Signals</span></h3>
+          <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em] font-black mt-2">Live Activity Stream</p>
         </div>
       </div>
 
-      <div className="relative space-y-8 before:absolute before:inset-0 before:left-[19px] before:w-[1px] before:bg-gradient-to-b before:from-purple-500/50 before:via-blue-500/50 before:to-transparent">
+      <div className="relative space-y-10 before:absolute before:inset-0 before:left-[17px] before:w-[2px] before:bg-gradient-to-b before:from-neo-accent-blue/30 before:via-slate-800 before:to-transparent">
         {isLoading ? (
-          // Skeleton State
           [...Array(4)].map((_, i) => (
-            <div key={i} className="relative pl-12 animate-pulse">
-               <div className="absolute left-0 w-10 h-10 rounded-xl bg-white/5 border border-white/10" />
-               <div className="space-y-2 mt-2">
-                 <div className="h-2 w-24 bg-white/5 rounded" />
-                 <div className="h-4 w-full bg-white/10 rounded" />
-                 <div className="h-2 w-3/4 bg-white/5 rounded" />
+            <div key={i} className="relative pl-14 animate-pulse">
+               <div className="absolute left-0 w-9 h-9 neo-icon bg-white/5 opacity-50" />
+               <div className="space-y-3 mt-1">
+                 <div className="h-2 w-20 bg-white/5 rounded-full" />
+                 <div className="h-4 w-full bg-white/10 rounded-full" />
                </div>
             </div>
           ))
@@ -42,28 +41,30 @@ export function ActivityFeed() {
             return (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="relative pl-12 group"
+                className="relative pl-14 group"
               >
                 {/* Timeline Indicator */}
-                <div className={`absolute left-0 p-2 rounded-xl scale-90 group-hover:scale-100 transition-transform ${bg} border z-10`}>
-                  <Icon size={16} className={color} />
+                <div className={cn("absolute left-0 w-9 h-9 transition-transform duration-300 group-hover:scale-110 z-10", bg)}>
+                  <Icon size={16} className={color} strokeWidth={2.5} />
                 </div>
 
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-slate-500">{item.time}</span>
-                    <span className="text-[10px] font-bold text-purple-400 uppercase tracking-tighter bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="neo-pressed px-2 py-0.5 rounded-md text-[9px] font-black text-slate-500 uppercase tracking-tighter">
+                      {item.time}
+                    </span>
+                    <span className="neo-pressed px-2 py-0.5 rounded-md text-[9px] font-black text-neo-accent-blue uppercase tracking-tighter border border-white/[0.01]">
                       {item.repo}
                     </span>
                   </div>
-                  <h4 className="text-sm font-bold text-slate-200 group-hover:text-white transition-colors">
+                  <h4 className="text-sm font-black text-slate-200 group-hover:text-neo-accent-blue transition-colors leading-tight">
                     {item.title}
                   </h4>
-                  <p className="text-xs text-slate-500 line-clamp-1 italic">
+                  <p className="text-[11px] text-slate-500 font-medium italic opacity-70 group-hover:opacity-100 transition-opacity">
                     {item.description}
                   </p>
                 </div>
@@ -71,8 +72,13 @@ export function ActivityFeed() {
             );
           })
         ) : (
-          <div className="py-12 text-center">
-            <p className="text-sm text-slate-500 italic">No recent activity signals detected.</p>
+          <div className="py-20 text-center">
+            <div className="w-16 h-16 neo-icon mx-auto mb-4 opacity-20">
+              <Terminal size={32} />
+            </div>
+            <p className="text-xs font-black text-slate-600 uppercase tracking-widest leading-loose">
+              No recent activity signals <br/>detected in this sector.
+            </p>
           </div>
         )}
       </div>
