@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchRepos, fetchRepo, triggerSync, fetchAnalytics, fetchResources, fetchSnippets, createSnippet, updateSnippet, deleteSnippet } from '@/lib/api';
+import { fetchRepos, fetchRepo, triggerSync, fetchAnalytics, fetchResources, fetchSnippets, createSnippet, updateSnippet, deleteSnippet, fetchActivity } from '@/lib/api';
 
 export function useRepos() {
   return useQuery({
@@ -70,5 +70,13 @@ export function useDeleteSnippet() {
   return useMutation({
     mutationFn: deleteSnippet,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['snippets'] }),
+  });
+}
+
+export function useActivity() {
+  return useQuery({
+    queryKey: ['activity'],
+    queryFn: () => fetchActivity().then(d => d.activities),
+    refetchInterval: 60000, // Refresh every minute
   });
 }

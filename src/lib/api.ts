@@ -48,6 +48,9 @@ export const updateSnippet = (id: string, body: Partial<{ title: string; code: s
 export const deleteSnippet = (id: string) =>
   apiFetch<void>(`/api/snippets/${id}`, { method: 'DELETE' });
 
+// Activity
+export const fetchActivity = () => apiFetch<{ activities: ActivityItem[] }>('/api/activity');
+
 // Types
 export interface Repository {
   id: string;
@@ -119,4 +122,13 @@ export interface Snippet {
   language: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface ActivityItem {
+  id: string;
+  type: 'commit' | 'pr' | 'merge' | 'issue' | 'other';
+  title: string;
+  repo: string;
+  time: string;
+  description: string;
 }

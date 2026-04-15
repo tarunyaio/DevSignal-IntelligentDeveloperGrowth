@@ -8,6 +8,7 @@ import { analyticsRoutes } from './routes/analytics';
 import { resourceRoutes } from './routes/resources';
 import { snippetRoutes } from './routes/snippets';
 import { profileRoutes } from './routes/profile';
+import { activityRoutes } from './routes/activity';
 import { createClient } from '@supabase/supabase-js';
 
 const fastify = Fastify({ logger: true });
@@ -58,6 +59,7 @@ fastify.register(analyticsRoutes, { prefix: '/api' });
 fastify.register(resourceRoutes, { prefix: '/api' });
 fastify.register(snippetRoutes, { prefix: '/api' });
 fastify.register(profileRoutes, { prefix: '/api' });
+fastify.register(activityRoutes, { prefix: '/api' });
 
 const start = async () => {
   try {
