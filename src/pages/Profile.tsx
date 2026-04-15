@@ -263,112 +263,94 @@ export function Profile() {
         </TiltCard>
 
         {/* Floating Galaxy Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-[32rem] relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[24rem] relative">
           
           {/* Constellation Background (Canvas simulation) */}
           <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
              <svg className="w-full h-full">
                 <motion.line 
                   initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
+                  whileInView={{ pathLength: 1 }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                   x1="10%" y1="10%" x2="40%" y2="60%" stroke="#10b981" strokeWidth="1" 
-                />
-                <motion.line 
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-                  x1="80%" y1="20%" x2="60%" y2="80%" stroke="#a855f7" strokeWidth="1" 
                 />
              </svg>
           </div>
 
           {/* Left Stats Node */}
-          <div className="flex flex-col gap-8 h-full">
-            <TiltCard className="flex-1">
-               <div className="h-full rounded-[2.5rem] bg-white/5 border border-white/10 p-8 flex flex-col justify-between group">
+          <div className="flex flex-col gap-6 h-full">
+            <TiltCard className="h-1/2">
+               <div className="h-full rounded-[2rem] bg-white/5 border border-white/10 p-6 flex flex-col justify-between group overflow-hidden">
                   <div className="flex justify-between items-center">
-                     <div className="p-3 rounded-xl bg-purple-500/20 text-purple-400">
-                        <Star size={24} />
+                     <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-400">
+                        <Star size={20} />
                      </div>
-                     <div className="text-[10px] font-mono text-slate-500 uppercase">Impact_Factor</div>
+                     <div className="text-[8px] font-mono text-slate-500 uppercase">Impact_Factor</div>
                   </div>
                   <div>
-                     <motion.div 
-                       initial={{ scale: 0.5, opacity: 0 }}
-                       whileInView={{ scale: 1, opacity: 1 }}
-                       className="text-7xl font-black tracking-tighter group-hover:text-purple-400 transition-colors"
-                     >
+                     <div className="text-5xl font-black tracking-tighter group-hover:text-purple-400 transition-colors">
                        {data?.stats.totalStars}
-                     </motion.div>
-                     <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Global Stars Earned</p>
+                     </div>
+                     <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Global Stars</p>
                   </div>
-                  <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-1 rounded-full bg-white/5 overflow-hidden">
                      <motion.div 
                       initial={{ width: 0 }}
                       whileInView={{ width: "85%" }}
-                      className="h-full bg-purple-500" 
+                      className="h-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]" 
                      />
                   </div>
                </div>
             </TiltCard>
              
-            <TiltCard className="flex-1">
-               <div className="h-full rounded-[2.5rem] bg-white/5 border border-white/10 p-8 flex flex-col justify-between group">
+            <TiltCard className="h-1/2">
+               <div className="h-full rounded-[2rem] bg-white/5 border border-white/10 p-6 flex flex-col justify-between group overflow-hidden">
                   <div className="flex justify-between items-center">
-                     <div className="p-3 rounded-xl bg-emerald-500/20 text-emerald-400">
-                        <GitFork size={24} />
+                     <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400">
+                        <GitFork size={20} />
                      </div>
-                     <div className="text-[10px] font-mono text-slate-500 uppercase">Architecture_Duplication</div>
+                     <div className="text-[8px] font-mono text-slate-500 uppercase">Re_Use</div>
                   </div>
                   <div>
-                     <motion.div 
-                       initial={{ scale: 0.5, opacity: 0 }}
-                       whileInView={{ scale: 1, opacity: 1 }}
-                       className="text-7xl font-black tracking-tighter group-hover:text-emerald-400 transition-colors"
-                     >
+                     <div className="text-5xl font-black tracking-tighter group-hover:text-emerald-400 transition-colors">
                        {data?.stats.totalForks}
-                     </motion.div>
-                     <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Repositories Forked</p>
+                     </div>
+                     <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Global Forks</p>
                   </div>
                </div>
             </TiltCard>
           </div>
 
           {/* Center: The Flying Tech Constellation */}
-          <div className="md:col-span-1 relative flex items-center justify-center overflow-hidden min-h-[30rem]">
-             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-emerald-500/10" />
+          <div className="md:col-span-1 relative flex items-center justify-center overflow-hidden h-full rounded-[2rem] bg-white/[0.02] border border-white/5">
+             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#10b98110_0%,_transparent_70%)]" />
              
              <div className="relative w-full h-full flex items-center justify-center">
-               {Object.entries(data?.stats.languages || {}).slice(0, 8).map(([lang, count], i) => (
+               {Object.entries(data?.stats.languages || {}).slice(0, 7).map(([lang, count], i) => (
                   <motion.div
                     key={lang}
-                    initial={{ 
-                      x: Math.random() * 100 - 50, 
-                      y: Math.random() * 100 - 50,
-                      scale: 0 
-                    }}
+                    initial={{ scale: 0 }}
                     animate={{ 
                       x: [
-                        Math.random() * 120 - 60,
-                        Math.random() * -120 + 60,
-                        Math.random() * 120 - 60
+                        Math.random() * 80 - 40,
+                        Math.random() * -80 + 40,
+                        Math.random() * 80 - 40
                       ],
                       y: [
-                        Math.random() * -120 + 60,
-                        Math.random() * 120 - 60,
-                        Math.random() * -120 + 60
+                        Math.random() * -80 + 40,
+                        Math.random() * 80 - 40,
+                        Math.random() * -80 + 40
                       ],
                       scale: 1
                     }}
                     transition={{ 
-                      duration: 12 + Math.random() * 8,
+                      duration: 8 + Math.random() * 8,
                       repeat: Infinity,
                       ease: "easeInOut"
                     }}
-                    whileHover={{ scale: 1.2, zIndex: 50 }}
+                    whileHover={{ scale: 1.1, zIndex: 50 }}
                     className={cn(
-                      "absolute px-6 py-3 rounded-2xl backdrop-blur-md border font-black text-sm cursor-default shadow-2xl transition-shadow",
+                      "absolute px-4 py-2 rounded-xl backdrop-blur-md border font-bold text-xs cursor-default shadow-lg",
                       i === 0 ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400" :
                       i === 1 ? "bg-purple-500/20 border-purple-500/40 text-purple-400" :
                       "bg-white/5 border-white/10 text-white"
@@ -378,49 +360,47 @@ export function Profile() {
                   </motion.div>
                ))}
                
-               <div className="text-center relative z-10 pointer-events-none bg-slate-950/40 p-4 rounded-3xl backdrop-blur-sm border border-white/5">
-                  <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase">Galaxy_Core</p>
-                  <h3 className="text-2xl font-black tracking-tighter">TECH_STACK</h3>
+               <div className="text-center relative z-10 pointer-events-none p-4 rounded-2xl bg-slate-950/60 backdrop-blur-xl border border-white/10 shadow-2xl">
+                  <p className="text-[8px] font-black tracking-widest text-slate-500 uppercase">System_Core</p>
+                  <h3 className="text-xl font-black tracking-tighter italic">TECH_STACK</h3>
                </div>
              </div>
           </div>
 
           {/* Right: Rhythm Node */}
           <TiltCard className="h-full">
-            <div className="h-full rounded-[2.5rem] bg-white/5 border border-white/10 p-8 flex flex-col justify-between relative group overflow-hidden">
+            <div className="h-full rounded-[2rem] bg-white/5 border border-white/10 p-6 flex flex-col justify-between relative group overflow-hidden">
                <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                
                <div className="flex justify-between items-center relative z-10">
-                  <div className="p-3 rounded-xl bg-slate-800 text-emerald-400">
-                     <Clock size={24} />
+                  <div className="p-2.5 rounded-xl bg-slate-800 text-emerald-400">
+                     <Clock size={20} />
                   </div>
-                  <div className="text-[10px] font-mono text-slate-500 uppercase">Sync_Frequency</div>
+                  <div className="text-[8px] font-mono text-slate-500 uppercase">Frequency</div>
                </div>
 
-               <div className="space-y-6 relative z-10 py-12 text-center">
+               <div className="space-y-4 relative z-10 py-4 text-center">
                   <motion.div 
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ repeat: Infinity, duration: 4 }}
-                    className="w-24 h-24 mx-auto rounded-full bg-slate-800 border-2 border-emerald-500/30 flex items-center justify-center text-5xl shadow-[0_0_40px_rgba(16,185,129,0.1)]"
+                    animate={{ scale: [1, 1.05, 1], rotate: [0, 5, -5, 0] }}
+                    transition={{ repeat: Infinity, duration: 6 }}
+                    className="w-16 h-16 mx-auto rounded-2xl bg-slate-800 border-2 border-emerald-500/30 flex items-center justify-center text-3xl shadow-[0_0_30px_rgba(16,185,129,0.1)]"
                   >
                     {data?.rhythm.type === "Night Owl" ? "🌙" : "☀️"}
                   </motion.div>
                   <div>
-                     <h3 className="text-3xl font-black tracking-tighter italic uppercase">{data?.rhythm.type}</h3>
-                     <p className="text-sm text-slate-400 mt-2 font-mono leading-relaxed px-4">
+                     <h3 className="text-2xl font-black tracking-tighter italic uppercase">{data?.rhythm.type}</h3>
+                     <p className="text-[10px] text-slate-400 mt-1 font-mono leading-tight px-4 opacity-70">
                        {data?.rhythm.description}
                      </p>
                   </div>
                </div>
 
-               <div className="grid grid-cols-7 gap-1 relative z-10">
+               <div className="grid grid-cols-7 gap-1 relative z-10 mt-auto">
                   {[...Array(21)].map((_, i) => (
                      <motion.div 
                        key={i}
-                       initial={{ opacity: 0.1 }}
-                       animate={{ opacity: [0.1, Math.random(), 0.1] }}
-                       transition={{ duration: 2, repeat: Infinity, delay: i * 0.1 }}
-                       className="aspect-square rounded-sm bg-emerald-500/40"
+                       className="aspect-square rounded-[1px] bg-emerald-500/30"
+                       style={{ opacity: 0.2 + (Math.random() * 0.8) }}
                      />
                   ))}
                </div>
