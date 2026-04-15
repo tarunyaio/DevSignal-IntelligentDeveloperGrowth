@@ -263,7 +263,7 @@ export function Profile() {
         </TiltCard>
 
         {/* Floating Galaxy Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[24rem] relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[400px] relative">
           
           {/* Constellation Background (Canvas simulation) */}
           <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
@@ -278,8 +278,8 @@ export function Profile() {
           </div>
 
           {/* Left Stats Node */}
-          <div className="flex flex-col gap-6 h-full">
-            <TiltCard className="h-1/2">
+          <div className="flex flex-col gap-6 h-[400px]">
+            <TiltCard className="h-[188px]">
                <div className="h-full rounded-[2rem] bg-white/5 border border-white/10 p-6 flex flex-col justify-between group overflow-hidden">
                   <div className="flex justify-between items-center">
                      <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-400">
@@ -297,13 +297,13 @@ export function Profile() {
                      <motion.div 
                       initial={{ width: 0 }}
                       whileInView={{ width: "85%" }}
-                      className="h-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]" 
+                      className="h-full bg-purple-500" 
                      />
                   </div>
                </div>
             </TiltCard>
              
-            <TiltCard className="h-1/2">
+            <TiltCard className="h-[188px]">
                <div className="h-full rounded-[2rem] bg-white/5 border border-white/10 p-6 flex flex-col justify-between group overflow-hidden">
                   <div className="flex justify-between items-center">
                      <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400">
@@ -322,11 +322,11 @@ export function Profile() {
           </div>
 
           {/* Center: The Flying Tech Constellation */}
-          <div className="md:col-span-1 relative flex items-center justify-center overflow-hidden h-full rounded-[2rem] bg-white/[0.02] border border-white/5">
+          <div className="md:col-span-1 relative flex items-center justify-center overflow-hidden h-[400px] rounded-[2rem] bg-white/[0.02] border border-white/5">
              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#10b98110_0%,_transparent_70%)]" />
              
-             <div className="relative w-full h-full flex items-center justify-center">
-               {Object.entries(data?.stats.languages || {}).slice(0, 7).map(([lang, count], i) => (
+             <div className="relative w-full h-[200px] flex items-center justify-center">
+               {Object.entries(data?.stats.languages || {}).slice(0, 5).map(([lang, count], i) => (
                   <motion.div
                     key={lang}
                     initial={{ scale: 0 }}
@@ -350,7 +350,7 @@ export function Profile() {
                     }}
                     whileHover={{ scale: 1.1, zIndex: 50 }}
                     className={cn(
-                      "absolute px-4 py-2 rounded-xl backdrop-blur-md border font-bold text-xs cursor-default shadow-lg",
+                      "absolute px-3 py-1.5 rounded-xl backdrop-blur-md border font-bold text-[10px] cursor-default shadow-lg",
                       i === 0 ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400" :
                       i === 1 ? "bg-purple-500/20 border-purple-500/40 text-purple-400" :
                       "bg-white/5 border-white/10 text-white"
@@ -362,15 +362,15 @@ export function Profile() {
                
                <div className="text-center relative z-10 pointer-events-none p-4 rounded-2xl bg-slate-950/60 backdrop-blur-xl border border-white/10 shadow-2xl">
                   <p className="text-[8px] font-black tracking-widest text-slate-500 uppercase">System_Core</p>
-                  <h3 className="text-xl font-black tracking-tighter italic">TECH_STACK</h3>
+                  <h3 className="text-xl font-black tracking-tighter italic leading-none">TECH_STACK</h3>
                </div>
              </div>
           </div>
 
           {/* Right: Rhythm Node */}
-          <TiltCard className="h-full">
-            <div className="h-full rounded-[2rem] bg-white/5 border border-white/10 p-6 flex flex-col justify-between relative group overflow-hidden">
-               <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <TiltCard className="h-[400px]">
+            <div className="h-[400px] rounded-[2rem] bg-white/5 border border-white/10 p-6 flex flex-col justify-between relative group overflow-hidden">
+               <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                
                <div className="flex justify-between items-center relative z-10">
                   <div className="p-2.5 rounded-xl bg-slate-800 text-emerald-400">
@@ -388,8 +388,8 @@ export function Profile() {
                     {data?.rhythm.type === "Night Owl" ? "🌙" : "☀️"}
                   </motion.div>
                   <div>
-                     <h3 className="text-2xl font-black tracking-tighter italic uppercase">{data?.rhythm.type}</h3>
-                     <p className="text-[10px] text-slate-400 mt-1 font-mono leading-tight px-4 opacity-70">
+                     <h3 className="text-2xl font-black tracking-tighter italic uppercase leading-none">{data?.rhythm.type}</h3>
+                     <p className="text-[10px] text-slate-400 mt-2 font-mono leading-tight px-4 opacity-70">
                        {data?.rhythm.description}
                      </p>
                   </div>
