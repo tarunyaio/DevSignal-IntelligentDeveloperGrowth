@@ -4,48 +4,55 @@
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   
-  /* Neomorphic Colors */
-  --color-neo-bg: #1a1c20;
-  --color-neo-surface: #1a1c20;
-  --color-neo-accent-blue: #00aced;
+  /* Neomorphic Colors - Deeper and Darker */
+  --color-neo-bg: #0a0a0b;
+  --color-neo-surface: #0a0a0b;
+  --color-neo-accent-blue: #6366f1;
+  --color-neo-accent-emerald: #10b981;
   --color-neo-accent-orange: #ff4d00;
 }
 
 @layer base {
   body {
-    @apply font-sans bg-neo-bg text-slate-200 selection:bg-neo-accent-blue/30;
+    @apply font-sans bg-neo-bg text-slate-200 selection:bg-neo-accent-blue/20;
+    min-height: 100vh;
   }
 }
 
 @layer utilities {
-  /* Raised Surface */
+  /* 3D Perspective Context */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  /* Refined Raised Surface */
   .neo-flat {
     @apply bg-neo-surface;
     box-shadow: 
-      8px 8px 16px rgba(0, 0, 0, 0.35),
-      -8px -8px 16px rgba(255, 255, 255, 0.02);
+      10px 10px 20px rgba(0, 0, 0, 0.5),
+      -10px -10px 20px rgba(255, 255, 255, 0.03);
   }
 
-  /* Pressed Surface */
+  /* Refined Pressed Surface */
   .neo-pressed {
     @apply bg-neo-surface;
     box-shadow: 
-      inset 8px 8px 16px rgba(0, 0, 0, 0.35),
-      inset -8px -8px 16px rgba(255, 255, 255, 0.02);
+      inset 10px 10px 20px rgba(0, 0, 0, 0.5),
+      inset -10px -10px 20px rgba(255, 255, 255, 0.03);
   }
 
   /* Circular Icon Buttons */
   .neo-icon {
     @apply flex items-center justify-center rounded-full bg-neo-surface transition-all active:scale-95;
     box-shadow: 
-      5px 5px 10px rgba(0, 0, 0, 0.3),
-      -5px -5px 10px rgba(255, 255, 255, 0.02);
+      6px 6px 12px rgba(0, 0, 0, 0.4),
+      -6px -6px 12px rgba(255, 255, 255, 0.03);
   }
   
   .neo-icon-pressed {
     @apply flex items-center justify-center rounded-full bg-neo-surface;
     box-shadow: 
-      inset 4px 4px 8px rgba(0, 0, 0, 0.3),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.02);
+      inset 5px 5px 10px rgba(0, 0, 0, 0.4),
+      inset -5px -5px 10px rgba(255, 255, 255, 0.03);
   }
 }

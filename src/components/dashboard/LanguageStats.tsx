@@ -22,13 +22,14 @@ export function LanguageStats({ languages }: LanguageStatsProps) {
 
   const colors: Record<string, string> = {
     TypeScript: 'bg-neo-accent-blue',
-    JavaScript: 'bg-yellow-400',
+    JavaScript: 'bg-yellow-500',
     HTML: 'bg-neo-accent-orange',
     CSS: 'bg-purple-500',
-    Python: 'bg-blue-600',
-    Go: 'bg-cyan-500',
+    Python: 'bg-blue-500',
+    Go: 'bg-neo-accent-blue',
     Rust: 'bg-orange-700',
     Java: 'bg-red-600',
+    Shell: 'bg-neo-accent-emerald',
   };
 
   const getLanguageColor = (lang: string) => colors[lang] || 'bg-slate-400';

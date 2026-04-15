@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, BookOpen, Terminal, Shield, Cpu, Layout } from 'lucide-react';
 import { ResourceCard, type ResourceType } from '@/components/resources/ResourceCard';
 import { useResources } from '@/hooks/queries';
+import { cn } from '@/lib/utils';
 
 const CATEGORIES = [
   { id: 'all', name: 'All Resources', icon: Layout },
@@ -99,28 +100,33 @@ export function Resources() {
   }, [searchQuery, selectedCategory, resources]);
 
   return (
-    <div className="relative min-h-screen space-y-12 pb-32">
+    <div className="relative min-h-screen space-y-16 pb-32">
       {/* Header Section - Title aur Search Bar */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-bold tracking-tight uppercase">Resource <span className="italic font-serif text-purple-400">Library</span></h2>
-          <p className="text-slate-400 font-medium">Curated intelligence to accelerate your developer growth.</p>
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+        <div className="space-y-4 text-center md:text-left">
+          <h2 className="text-6xl font-black tracking-tighter uppercase italic text-slate-200">
+            Resource <span className="text-neo-accent-blue not-italic underline decoration-neo-accent-blue/30 underline-offset-8">Archive</span>
+          </h2>
+          <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em] mt-3">Curated intelligence modules for developer growth.</p>
         </div>
 
-        <div className="relative w-full md:w-[400px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-          <input 
-            type="text"
-            placeholder="Search for intelligence..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500/50 focus:outline-none transition-all placeholder:text-slate-600 font-bold text-sm shadow-xl backdrop-blur-md"
-          />
+        <div className="relative w-full md:w-[450px]">
+          <div className="absolute inset-0 neo-pressed rounded-3xl" />
+          <div className="relative flex items-center px-6 py-5">
+            <Search className="text-neo-accent-blue" size={20} strokeWidth={3} />
+            <input 
+              type="text"
+              placeholder="Query archive..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-transparent px-4 focus:outline-none placeholder:text-slate-700 font-bold text-sm tracking-wide text-slate-200"
+            />
+          </div>
         </div>
       </header>
 
-      {/* Category Tabs - Navigation for different resource types */}
-      <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide">
+      {/* Category Tabs - Tactile Navigation */}
+      <div className="flex items-center gap-6 overflow-x-auto pb-6 scrollbar-hide">
         {CATEGORIES.map((cat) => {
           const Icon = cat.icon;
           const isActive = selectedCategory === cat.id;
@@ -128,13 +134,17 @@ export function Resources() {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-2xl border transition-all whitespace-nowrap font-bold text-sm ${
+              className={cn(
+                "flex items-center gap-4 px-8 py-4 rounded-2xl transition-all whitespace-nowrap text-xs font-black uppercase tracking-widest border border-white/[0.01]",
                 isActive 
-                ? 'bg-purple-500/20 border-purple-500/40 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.1)]' 
-                : 'bg-white/5 border-white/10 text-slate-500 hover:border-white/20 hover:text-slate-300'
-              }`}
+                ? "neo-pressed text-neo-accent-blue shadow-[inset_0_0_15px_rgba(99,102,241,0.15)]" 
+                : "neo-flat text-slate-500 hover:text-slate-300 hover:neo-pressed"
+              )}
             >
-              <Icon size={16} /> {cat.name}
+              <div className={cn("w-6 h-6 flex items-center justify-center rounded-lg", isActive ? "text-neo-accent-blue" : "text-slate-600")}>
+                <Icon size={16} strokeWidth={2.5} />
+              </div>
+              {cat.name}
             </button>
           );
         })}

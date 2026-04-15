@@ -55,12 +55,12 @@ export function ActivityChart({ data }: ActivityChartProps) {
 
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-48 drop-shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+        className="w-full h-52 drop-shadow-[0_0_20px_rgba(16,185,129,0.25)]"
         preserveAspectRatio="none"
       >
         <defs>
           <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.2" />
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
             <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
           </linearGradient>
         </defs>
@@ -79,7 +79,7 @@ export function ActivityChart({ data }: ActivityChartProps) {
           d={linePath}
           fill="none"
           stroke="#10b981"
-          strokeWidth="3"
+          strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
           initial={{ pathLength: 0 }}
@@ -93,7 +93,7 @@ export function ActivityChart({ data }: ActivityChartProps) {
             key={i}
             cx={p.x}
             cy={p.y}
-            r="4"
+            r="5"
             className="fill-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"
             style={{ transitionDelay: `${i * 20}ms` }}
           />

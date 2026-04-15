@@ -1,5 +1,7 @@
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ExternalLink, Play, BookOpen, Star, Clock, Trophy } from 'lucide-react';
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 export type ResourceType = 'video' | 'article' | 'repo' | 'course';
 
@@ -15,69 +17,95 @@ interface ResourceCardProps {
 }
 
 const typeConfig = {
-  video: { icon: Play, color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' },
-  article: { icon: BookOpen, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
-  repo: { icon: Star, color: 'text-yellow-400', bg: 'bg-yellow-500/10 border-yellow-500/20' },
-  course: { icon: Trophy, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
+  video: { icon: Play, color: 'text-red-400' },
+  article: { icon: BookOpen, color: 'text-neo-accent-blue' },
+  repo: { icon: Star, color: 'text-neo-accent-emerald' },
+  course: { icon: Trophy, color: 'text-neo-accent-orange' },
 };
 
-// Yeh ResourceCard ek individual learning resource ko glassmorphic style mein dikhata hai
 export function ResourceCard({ title, description, type, category, duration, difficulty, url, rating }: ResourceCardProps) {
-  const { icon: Icon, color, bg } = typeConfig[type];
+  const { icon: Icon, color } = typeConfig[type];
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+  
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["6deg", "-6deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-6deg", "6deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -5 }}
-      viewport={{ once: true }}
-      className="group relative p-6 rounded-[2rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl overflow-hidden shadow-2xl flex flex-col h-full"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      className="perspective-1000 h-full"
     >
-      {/* Background Decorative Gradient */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-current opacity-[0.03] blur-3xl pointer-events-none group-hover:opacity-[0.08] transition-opacity" style={{ color: color.split('-')[1] }} />
+      <div 
+        className="neo-flat rounded-[3rem] p-9 group relative border border-white/[0.01] flex flex-col gap-8 h-full transition-shadow duration-500 hover:shadow-2xl"
+        style={{ transform: "translateZ(20px)" }}
+      >
+        {/* Header: Type Icon aur Duration */}
+        <div className="flex justify-between items-start" style={{ transform: "translateZ(40px)" }}>
+          <div className={cn("w-14 h-14 neo-icon", color)}>
+            <Icon size={24} strokeWidth={2.5} />
+          </div>
+          
+          <div className="neo-pressed px-4 py-2 rounded-xl border border-white/[0.01] flex items-center gap-2 text-[10px] font-black tracking-widest text-slate-500 uppercase" style={{ transform: "translateZ(50px)" }}>
+            <Clock size={12} strokeWidth={3} /> {duration || 'Self-paced'}
+          </div>
+        </div>
 
-      <div className="flex justify-between items-start mb-4">
-        <div className={`p-2.5 rounded-xl border ${bg} ${color}`}>
-          <Icon size={20} />
+        {/* Content Section */}
+        <div className="space-y-4 flex-1" style={{ transform: "translateZ(30px)" }}>
+          <div className="flex items-center gap-4">
+            <span className="neo-pressed px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest text-neo-accent-blue border border-white/[0.01]">
+              {category}
+            </span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-slate-600">
+              • {difficulty}
+            </span>
+          </div>
+          
+          <h3 className="text-2xl font-black tracking-tighter text-slate-200 group-hover:text-neo-accent-blue transition-colors leading-tight italic">
+            {title}
+          </h3>
+          <p className="text-sm text-slate-500 font-medium leading-[1.6] italic opacity-80 group-hover:opacity-100 transition-opacity">
+            {description}
+          </p>
         </div>
-        <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-slate-400">
-          <Clock size={10} /> {duration || 'Self-paced'}
-        </div>
-      </div>
 
-      <div className="space-y-2 mb-4 flex-1">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-black uppercase tracking-tighter text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">
-            {category}
-          </span>
-          <span className="text-[10px] font-black uppercase tracking-tighter text-slate-500">
-            • {difficulty}
-          </span>
+        {/* Footer: Rating aur Explore CTA */}
+        <div className="flex items-center justify-between mt-auto pt-8 border-t border-white/[0.03]" style={{ transform: "translateZ(45px)" }}>
+          <div className="flex items-center gap-1.5 grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star 
+                key={i} 
+                size={12} 
+                className={i < Math.floor(rating) ? 'text-neo-accent-orange fill-neo-accent-orange' : 'text-slate-800'} 
+                strokeWidth={3}
+              />
+            ))}
+            <span className="text-[10px] font-black text-slate-400 ml-2 tracking-tighter">{rating}</span>
+          </div>
+          
+          <a 
+            href={url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-12 h-12 neo-icon hover:neo-icon-pressed text-slate-500 hover:text-neo-accent-blue transition-all border border-white/[0.01]"
+          >
+            <ExternalLink size={20} />
+          </a>
         </div>
-        <h3 className="text-xl font-bold tracking-tight text-white group-hover:text-purple-300 transition-colors">
-          {title}
-        </h3>
-        <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed italic">
-          {description}
-        </p>
-      </div>
-
-      <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
-        <div className="flex items-center gap-1">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} size={10} className={i < Math.floor(rating) ? 'text-yellow-500 fill-yellow-500' : 'text-slate-700'} />
-          ))}
-          <span className="text-[10px] font-bold text-slate-500 ml-1">{rating}</span>
-        </div>
-        
-        <a 
-          href={url} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 py-2 px-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold uppercase transition-all"
-        >
-          Explore <ExternalLink size={12} />
-        </a>
       </div>
     </motion.div>
   );

@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 const iconMap = {
   commit: { Icon: GitCommit, color: 'text-neo-accent-blue', bg: 'neo-icon' },
   pr: { Icon: GitPullRequest, color: 'text-purple-400', bg: 'neo-icon' },
-  merge: { Icon: GitMerge, color: 'text-emerald-400', bg: 'neo-icon' },
+  merge: { Icon: GitMerge, color: 'text-neo-accent-emerald', bg: 'neo-icon' },
   issue: { Icon: AlertCircle, color: 'text-neo-accent-orange', bg: 'neo-icon' },
   other: { Icon: Terminal, color: 'text-slate-400', bg: 'neo-icon' },
 };
@@ -15,20 +15,20 @@ export function ActivityFeed() {
   const { data: activities, isLoading } = useActivity();
 
   return (
-    <div className="neo-flat p-8 rounded-[3rem] h-full min-h-[450px] relative border border-white/[0.01]">
-      <div className="flex justify-between items-center mb-10">
+    <div className="neo-flat p-10 rounded-[3rem] h-full min-h-[480px] relative border border-white/[0.01]">
+      <div className="flex justify-between items-center mb-12">
         <div>
-          <h3 className="text-xl font-black tracking-tight text-slate-200">Recent <span className="italic font-serif font-black text-neo-accent-blue underline decoration-neo-accent-blue/30 underline-offset-8">Signals</span></h3>
-          <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em] font-black mt-2">Live Activity Stream</p>
+          <h3 className="text-2xl font-black tracking-tighter text-slate-200 uppercase">Recent <span className="italic font-serif text-neo-accent-blue underline decoration-neo-accent-blue/30 underline-offset-8">Activity</span></h3>
+          <p className="text-[10px] text-slate-500 uppercase tracking-[0.4em] font-black mt-3">Verified Project Telemetry</p>
         </div>
       </div>
 
-      <div className="relative space-y-10 before:absolute before:inset-0 before:left-[17px] before:w-[2px] before:bg-gradient-to-b before:from-neo-accent-blue/30 before:via-slate-800 before:to-transparent">
+      <div className="relative space-y-12 before:absolute before:inset-0 before:left-[17px] before:w-[2px] before:bg-gradient-to-b before:from-neo-accent-blue/40 before:via-white/5 before:to-transparent">
         {isLoading ? (
           [...Array(4)].map((_, i) => (
             <div key={i} className="relative pl-14 animate-pulse">
                <div className="absolute left-0 w-9 h-9 neo-icon bg-white/5 opacity-50" />
-               <div className="space-y-3 mt-1">
+               <div className="space-y-4 mt-1">
                  <div className="h-2 w-20 bg-white/5 rounded-full" />
                  <div className="h-4 w-full bg-white/10 rounded-full" />
                </div>
@@ -48,23 +48,23 @@ export function ActivityFeed() {
                 className="relative pl-14 group"
               >
                 {/* Timeline Indicator */}
-                <div className={cn("absolute left-0 w-9 h-9 transition-transform duration-300 group-hover:scale-110 z-10", bg)}>
+                <div className={cn("absolute left-0 w-9 h-9 transition-transform duration-300 group-hover:scale-110 z-10 border border-white/[0.01]", bg)}>
                   <Icon size={16} className={color} strokeWidth={2.5} />
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <span className="neo-pressed px-2 py-0.5 rounded-md text-[9px] font-black text-slate-500 uppercase tracking-tighter">
+                  <div className="flex items-center gap-4">
+                    <span className="neo-pressed px-2.5 py-1 rounded-md text-[9px] font-black text-slate-500 uppercase tracking-widest">
                       {item.time}
                     </span>
-                    <span className="neo-pressed px-2 py-0.5 rounded-md text-[9px] font-black text-neo-accent-blue uppercase tracking-tighter border border-white/[0.01]">
+                    <span className="neo-pressed px-2.5 py-1 rounded-md text-[9px] font-black text-neo-accent-blue uppercase tracking-widest border border-white/[0.01]">
                       {item.repo}
                     </span>
                   </div>
-                  <h4 className="text-sm font-black text-slate-200 group-hover:text-neo-accent-blue transition-colors leading-tight">
+                  <h4 className="text-base font-black text-slate-200 group-hover:text-neo-accent-blue transition-colors leading-tight tracking-tight">
                     {item.title}
                   </h4>
-                  <p className="text-[11px] text-slate-500 font-medium italic opacity-70 group-hover:opacity-100 transition-opacity">
+                  <p className="text-sm text-slate-400 font-medium italic opacity-70 group-hover:opacity-100 transition-opacity">
                     {item.description}
                   </p>
                 </div>
@@ -72,12 +72,12 @@ export function ActivityFeed() {
             );
           })
         ) : (
-          <div className="py-20 text-center">
-            <div className="w-16 h-16 neo-icon mx-auto mb-4 opacity-20">
-              <Terminal size={32} />
+          <div className="py-24 text-center">
+            <div className="w-20 h-20 neo-icon mx-auto mb-6 opacity-20">
+              <Terminal size={36} />
             </div>
-            <p className="text-xs font-black text-slate-600 uppercase tracking-widest leading-loose">
-              No recent activity signals <br/>detected in this sector.
+            <p className="text-xs font-black text-slate-600 uppercase tracking-[0.3em] leading-loose">
+              No recent activity detected.
             </p>
           </div>
         )}

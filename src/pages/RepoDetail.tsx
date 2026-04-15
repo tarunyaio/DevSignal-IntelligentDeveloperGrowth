@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { 
   ArrowLeft, ShieldCheck, 
   Activity, ExternalLink, GitCommit,
@@ -13,6 +13,47 @@ import { ContributorGrid } from '@/components/dashboard/ContributorGrid';
 import { LanguageStats } from '@/components/dashboard/LanguageStats';
 import { ReadmePreview } from '@/components/dashboard/ReadmePreview';
 import { cn } from '@/lib/utils';
+
+function TiltMetric({ label, value, icon: Icon, color }: any) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  const colorClass = {
+    blue: 'text-neo-accent-blue',
+    purple: 'text-purple-400',
+    orange: 'text-neo-accent-orange',
+  }[color as 'blue' | 'purple' | 'orange'];
+
+  return (
+    <motion.div 
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x.set((e.clientX - rect.left) / rect.width - 0.5);
+        y.set((e.clientY - rect.top) / rect.height - 0.5);
+      }}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      className="perspective-1000"
+    >
+      <div className="neo-flat p-9 rounded-[3rem] border border-white/[0.01] group transition-all" style={{ transform: "translateZ(20px)" }}>
+        <div className="flex items-center justify-between mb-8" style={{ transform: "translateZ(40px)" }}>
+          <div className={cn("neo-icon w-14 h-14", colorClass)}>
+            <Icon size={24} strokeWidth={2.5} />
+          </div>
+          <div className="w-12 h-[1px] neo-pressed opacity-40" />
+        </div>
+        <div className="space-y-2" style={{ transform: "translateZ(50px)" }}>
+          <p className="text-5xl font-black tracking-tighter text-slate-200">{value}</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">{label}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export function RepoDetail() {
   const { id } = useParams();
@@ -34,51 +75,51 @@ export function RepoDetail() {
 
   if (error || !repo) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-6 text-slate-400">
-        <div className="w-20 h-20 neo-icon text-neo-accent-orange">
-          <AlertCircle size={32} />
+      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-8 text-slate-400">
+        <div className="w-24 h-24 neo-icon text-neo-accent-orange">
+          <AlertCircle size={40} />
         </div>
-        <p className="font-bold uppercase tracking-widest text-xs">Node not found in local sector</p>
-        <Link to="/dashboard" className="neo-flat px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-neo-accent-blue">Back to Terminal</Link>
+        <p className="font-black uppercase tracking-[0.3em] text-xs">Repository connection lost</p>
+        <Link to="/dashboard" className="neo-flat px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] text-neo-accent-blue">Return to Dashboard</Link>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen space-y-16 pb-32">
+    <div className="relative min-h-screen space-y-20 pb-40">
       {/* Navigation aur Back Button */}
       <div className="flex items-center justify-between">
         <Link 
           to="/dashboard" 
-          className="neo-flat px-6 py-3 rounded-2xl flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-white transition-all hover:neo-pressed"
+          className="neo-flat px-8 py-4 rounded-2xl flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-white transition-all hover:neo-pressed border border-white/[0.01]"
         >
-          <ArrowLeft size={16} />
-          Back to Terminal
+          <ArrowLeft size={18} />
+          Back to Dashboard
         </Link>
 
         <a 
           href={repo.url} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="neo-flat px-8 py-4 rounded-[2rem] flex items-center gap-4 text-xs font-black uppercase tracking-[0.2em] text-neo-accent-blue hover:neo-pressed transition-all border border-white/[0.01]"
+          className="neo-flat px-10 py-5 rounded-[2.5rem] flex items-center gap-5 text-sm font-black uppercase tracking-[0.3em] text-neo-accent-blue hover:neo-pressed transition-all border border-white/[0.05]"
         >
-          Access Codebase <ExternalLink size={18} />
+          View on GitHub <ExternalLink size={20} />
         </a>
       </div>
 
       {/* Hero Header */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-16 items-end">
-        <div className="lg:col-span-2 space-y-8">
-          <div className="flex items-center gap-4">
-            <span className="neo-pressed px-4 py-1.5 rounded-full text-[10px] font-black uppercase text-neo-accent-blue tracking-widest border border-white/[0.01]">
-              {repo.language || 'Hybrid_Node'}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-end">
+        <div className="lg:col-span-8 space-y-10">
+          <div className="flex items-center gap-5">
+            <span className="neo-pressed px-5 py-2 rounded-full text-[11px] font-black uppercase text-neo-accent-blue tracking-widest border border-white/[0.01]">
+              {repo.language || 'Multi-Stack'}
             </span>
           </div>
-          <h1 className="text-7xl md:text-8xl font-black tracking-tighter text-slate-200">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-slate-200 opacity-95 leading-[1.1] max-w-5xl break-words">
             {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
           </h1>
-          <p className="text-2xl text-slate-500 max-w-3xl font-medium leading-[1.6]">
-            {repo.description || 'Autonomous node operating within the synchronized developer grid. Analyzing growth vectors and architectural influence.'}
+          <p className="text-2xl text-slate-500 max-w-3xl font-medium leading-relaxed italic border-l-4 border-neo-accent-blue/20 pl-8">
+            {repo.description || 'Comprehensive repository synchronized for architectural analysis and development tracking.'}
           </p>
         </div>
 
@@ -86,26 +127,26 @@ export function RepoDetail() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="lg:col-span-1 neo-flat p-12 rounded-[4rem] flex flex-col items-center text-center border border-white/[0.01] relative overflow-hidden group"
+          className="lg:col-span-4 neo-flat p-14 rounded-[4rem] flex flex-col items-center text-center border border-white/[0.01] relative overflow-hidden group shadow-2xl"
         >
-          <div className="relative w-44 h-44 flex items-center justify-center mb-10">
+          <div className="relative w-52 h-52 flex items-center justify-center mb-12">
             <div className="absolute inset-0 neo-pressed rounded-full" />
-            <svg className="absolute inset-0 w-full h-full -rotate-90 scale-95">
-              <circle cx="88" cy="88" r="82" fill="none" stroke="rgba(255,255,255,0.02)" strokeWidth="8" />
+            <svg className="absolute inset-0 w-full h-full -rotate-90 scale-[1.05]">
+              <circle cx="104" cy="104" r="98" fill="none" stroke="rgba(255,255,255,0.01)" strokeWidth="12" />
               <motion.circle 
-                cx="88" cy="88" r="82" fill="none" stroke="currentColor" strokeWidth="8" 
+                cx="104" cy="104" r="98" fill="none" stroke="currentColor" strokeWidth="12" 
                 className="text-neo-accent-blue"
-                strokeDasharray="515"
-                initial={{ strokeDashoffset: 515 }}
-                animate={{ strokeDashoffset: 515 - (515 * Math.min(repo.stars, 100)) / 100 }}
+                strokeDasharray="615"
+                initial={{ strokeDashoffset: 615 }}
+                animate={{ strokeDashoffset: 615 - (615 * Math.min(repo.stars, 100)) / 100 }}
                 transition={{ duration: 2, ease: "easeOut" }}
               />
             </svg>
-            <div className="text-center">
-              <span className="text-6xl font-black tracking-tighter text-slate-200">{repo.stars}</span>
+            <div className="text-center relative z-10">
+              <span className="text-7xl font-black tracking-tighter text-slate-200">{repo.stars}</span>
             </div>
           </div>
-          <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-500">Signal_Stars</h4>
+          <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-slate-500">Total Stars</h4>
         </motion.div>
       </section>
 
@@ -114,52 +155,52 @@ export function RepoDetail() {
         
         {/* Activity Graph Section */}
         <div className="lg:col-span-8 space-y-12">
-          <div className="neo-flat p-10 rounded-[3rem] border border-white/[0.01]">
-            <div className="flex items-center justify-between mb-10">
-              <h3 className="text-xl font-black flex items-center gap-4 text-slate-200 uppercase tracking-tight">
-                <div className="neo-icon w-10 h-10 text-neo-accent-blue"><Activity size={18} /></div> Activity_Pulse
+          <div className="neo-flat p-12 rounded-[3.5rem] border border-white/[0.01]">
+            <div className="flex items-center justify-between mb-12">
+              <h3 className="text-2xl font-black flex items-center gap-5 text-slate-200 uppercase tracking-tighter italic">
+                <div className="neo-icon w-12 h-12 text-neo-accent-blue"><Activity size={22} /></div> Recent <span className="text-neo-accent-blue not-italic underline decoration-neo-accent-blue/30 underline-offset-8">Activity</span>
               </h3>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600">Sync [Last_12_Nodes]</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">Last 12 Months Sync</span>
             </div>
             <ActivityChart data={repo.activity} />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <DetailMetric label="Pulse" value={repo.stars} icon={Activity} color="blue" />
-            <DetailMetric label="Logical_Forks" value={repo.forks} icon={GitPullRequest} color="purple" />
-            <DetailMetric label="Sector_Issues" value={repo.open_issues} icon={AlertCircle} color="orange" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <TiltMetric label="Stars" value={repo.stars} icon={Activity} color="blue" />
+            <TiltMetric label="Forks" value={repo.forks} icon={GitPullRequest} color="purple" />
+            <TiltMetric label="Issues" value={repo.open_issues} icon={AlertCircle} color="orange" />
           </div>
         </div>
 
         {/* Sidebar Info Section */}
         <div className="lg:col-span-4 space-y-12">
           {/* Language Breakdown */}
-          <div className="neo-flat p-10 rounded-[3rem] border border-white/[0.01]">
-            <h3 className="text-xl font-black mb-10 flex items-center gap-4 text-slate-200 uppercase tracking-tight">
-              <div className="neo-icon w-10 h-10 text-neo-accent-orange"><Code size={18} /></div> Architecture
+          <div className="neo-flat p-12 rounded-[3.5rem] border border-white/[0.01]">
+            <h3 className="text-2xl font-black mb-12 flex items-center gap-5 text-slate-200 uppercase tracking-tighter italic">
+              <div className="neo-icon w-12 h-12 text-neo-accent-orange"><Code size={22} /></div> Languages
             </h3>
             <LanguageStats languages={repo.languages} />
           </div>
 
           {/* Repo Info */}
-          <div className="neo-flat p-10 rounded-[3rem] border border-white/[0.01]">
-            <h3 className="text-xl font-black mb-10 flex items-center gap-4 text-slate-200 uppercase tracking-tight">
-              <div className="neo-icon w-10 h-10 text-purple-400"><GitCommit size={18} /></div> Node_Log
+          <div className="neo-flat p-12 rounded-[3.5rem] border border-white/[0.01]">
+            <h3 className="text-2xl font-black mb-12 flex items-center gap-5 text-slate-200 uppercase tracking-tighter italic">
+              <div className="neo-icon w-12 h-12 text-purple-400"><GitCommit size={22} /></div> Repo Info
             </h3>
-            <div className="space-y-8 text-xs font-black">
+            <div className="space-y-10 text-xs font-black">
               <div className="flex justify-between items-center group">
-                <span className="text-slate-600 uppercase tracking-widest">Master Node</span>
-                <span className="neo-pressed px-4 py-2 rounded-lg text-slate-300 font-mono italic">{repo.default_branch}</span>
+                <span className="text-slate-600 uppercase tracking-[0.3em]">Default Branch</span>
+                <span className="neo-pressed px-5 py-2.5 rounded-xl text-neo-accent-blue font-mono italic border border-white/[0.01]">{repo.default_branch}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-600 uppercase tracking-widest">Last Sync</span>
-                <span className="text-slate-200">
+                <span className="text-slate-600 uppercase tracking-[0.3em]">Last Sync</span>
+                <span className="text-slate-200 tracking-widest">
                   {repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'NEVER'}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-600 uppercase tracking-widest">Grid Update</span>
-                <span className="text-slate-200">
+                <span className="text-slate-600 uppercase tracking-[0.3em]">Updated At</span>
+                <span className="text-slate-200 tracking-widest">
                   {repo.updated_at ? new Date(repo.updated_at).toLocaleDateString() : 'UNKNOWN'}
                 </span>
               </div>
@@ -171,9 +212,9 @@ export function RepoDetail() {
       {/* Community Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-12">
-          <div className="neo-flat p-12 rounded-[4rem] border border-white/[0.01]">
-            <h3 className="text-xl font-black mb-10 flex items-center gap-4 text-slate-200 uppercase tracking-tight">
-              <div className="neo-icon w-12 h-12 text-emerald-400"><Users size={22} /></div> Neural_Contributors
+          <div className="neo-flat p-14 rounded-[4rem] border border-white/[0.01]">
+            <h3 className="text-2xl font-black mb-12 flex items-center gap-5 text-slate-200 uppercase tracking-tighter italic">
+              <div className="neo-icon w-14 h-14 text-neo-accent-emerald"><Users size={26} /></div> Top Contributors
             </h3>
             <ContributorGrid contributors={repo.contributors} />
           </div>
@@ -185,39 +226,6 @@ export function RepoDetail() {
         <ReadmePreview content={repo.readme} />
       </section>
     </div>
-  );
-}
-
-interface DetailMetricProps {
-  label: string;
-  value: number | string;
-  icon: React.ElementType;
-  color: 'blue' | 'purple' | 'orange';
-}
-
-function DetailMetric({ label, value, icon: Icon, color }: DetailMetricProps) {
-  const colorClass = {
-    blue: 'text-neo-accent-blue',
-    purple: 'text-purple-400',
-    orange: 'text-neo-accent-orange',
-  }[color];
-
-  return (
-    <motion.div 
-      whileHover={{ y: -5 }}
-      className="neo-flat p-8 rounded-[3rem] border border-white/[0.01] group transition-all"
-    >
-      <div className="flex items-center justify-between mb-6">
-        <div className={cn("neo-icon w-12 h-12", colorClass)}>
-          <Icon size={20} strokeWidth={2.5} />
-        </div>
-        <div className="w-10 h-[1px] neo-pressed opacity-50" />
-      </div>
-      <div className="space-y-1">
-        <p className="text-4xl font-black tracking-tighter text-slate-200">{value}</p>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">{label}</p>
-      </div>
-    </motion.div>
   );
 }
 

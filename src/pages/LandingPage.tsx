@@ -1,8 +1,35 @@
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Terminal, ArrowRight, ShieldCheck, Zap, BarChart3, Code2, BookOpen, ChevronDown } from 'lucide-react';
 import { useEffect } from 'react';
+import { cn } from '@/lib/utils';
+
+function TiltWrapper({ children, className }: { children: React.ReactNode, className?: string }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  return (
+    <motion.div
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x.set((e.clientX - rect.left) / rect.width - 0.5);
+        y.set((e.clientY - rect.top) / rect.height - 0.5);
+      }}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      className={cn("perspective-1000", className)}
+    >
+      <div style={{ transform: "translateZ(30px)" }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+}
 
 export function LandingPage() {
   const { signInWithGitHub, isAuthenticated } = useAuth();
@@ -15,241 +42,180 @@ export function LandingPage() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="relative min-h-screen bg-slate-950 text-white font-sans overflow-x-hidden">
-      {/* Background Layer */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div 
-          className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-slate-950 to-blue-900/20 opacity-40 scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-slate-950 to-slate-950" />
+    <div className="relative min-h-screen bg-neo-bg text-slate-200 font-sans overflow-x-hidden selection:bg-neo-accent-blue/20">
+      <div className="relative z-10 px-6">
         
-        {/* Animated Aura Blobs */}
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, -30, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px]"
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.3, 1], x: [0, -40, 0], y: [0, 60, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[20%] right-[-5%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[140px]"
-        />
-      </div>
-
-      <div className="relative z-10">
-        {/* Hero Section */}
-        <section className="min-h-screen flex flex-col items-center px-6 pt-12 pb-32 md:pt-24">
-          {/* Navbar/Logo */}
+        {/* Navbar-ish Logo */}
+        <header className="max-w-7xl mx-auto pt-16 flex items-center justify-center lg:justify-start">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 mb-20"
+            className="flex items-center gap-4"
           >
-            <div className="p-2.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl shadow-purple-500/5">
-              <Terminal size={24} className="text-purple-400" />
+            <div className="w-14 h-14 neo-icon text-neo-accent-blue border border-white/[0.01]">
+              <Terminal size={24} strokeWidth={2.5} />
             </div>
-            <span className="text-2xl font-bold tracking-tight">DevSignal</span>
+            <div>
+              <span className="text-3xl font-black tracking-tighter uppercase italic text-slate-200">DevSignal</span>
+              <p className="text-[10px] text-neo-accent-blue font-black tracking-[0.4em] uppercase opacity-70">Intelligence Engine // v1.0</p>
+            </div>
           </motion.div>
+        </header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl w-full">
+        {/* Hero Section */}
+        <section className="min-h-[90vh] flex flex-col items-center justify-center py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center max-w-7xl w-full">
+            
             {/* Hero Content */}
-            <div className="text-center lg:text-left space-y-8">
-              <motion.h1 
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }} // Pehle 0.8 tha, ab faster hai
-                className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tighter"
-              >
-                Growth.<br />
-                <span className="italic font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
-                  Accelerated.
-                </span>
-              </motion.h1>
+            <div className="lg:col-span-7 text-center lg:text-left space-y-12">
+              <div className="space-y-6">
+                <motion.div 
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="neo-pressed inline-flex items-center gap-4 px-6 py-2.5 rounded-full text-[10px] font-black tracking-[0.4em] uppercase text-neo-accent-blue border border-white/[0.01]"
+                >
+                  <Zap size={14} className="fill-neo-accent-blue" />
+                  Network Synchronized
+                </motion.div>
+                <motion.h1 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-7xl md:text-9xl font-black leading-none tracking-tighter italic text-slate-200"
+                >
+                  Growth.<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-neo-accent-blue via-purple-500 to-indigo-600 non-italic underline decoration-neo-accent-blue/20 underline-offset-8">
+                    Accelerated.
+                  </span>
+                </motion.h1>
+              </div>
+
               <motion.p 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.15, duration: 0.5 }} // Delay half kar diya
-                className="text-xl md:text-2xl text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light"
+                className="text-2xl md:text-3xl text-slate-500 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium italic"
               >
-                A GitHub-native developer intelligence layer that turns repository activity into <span className="italic font-serif text-white font-medium underline decoration-purple-500/50 underline-offset-4">actionable</span> growth signals.
+                A GitHub-native developer intelligence layer that turns repository activity into <span className="text-slate-200 font-black not-italic">actionable</span> growth signals.
               </motion.p>
               
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-wrap gap-4 justify-center lg:justify-start pt-4"
-              >
-                <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-slate-300 backdrop-blur-md">
-                  <ShieldCheck size={18} className="text-green-400" />
-                  <span>Private by Design</span>
+              <div className="flex flex-wrap gap-6 justify-center lg:justify-start pt-4">
+                <div className="flex items-center gap-4 px-8 py-4 rounded-2xl neo-flat border border-white/[0.01] text-xs font-black text-slate-400 uppercase tracking-widest">
+                  <ShieldCheck size={20} className="text-neo-accent-emerald" />
+                  Private by Design
                 </div>
-                <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-slate-300 backdrop-blur-md">
-                  <Zap size={18} className="text-yellow-400" />
-                  <span>Real-time Sync</span>
+                <div className="flex items-center gap-4 px-8 py-4 rounded-2xl neo-flat border border-white/[0.01] text-xs font-black text-slate-400 uppercase tracking-widest">
+                  <Zap size={20} className="text-neo-accent-orange" />
+                  Real-time Sync
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             {/* Login Form Card */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, rotateY: -10 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 120, damping: 20 }} // Spring tight kar diya for "snappy" feel
-              className="w-full max-w-md mx-auto perspective-1000"
-            >
-              <div className="p-10 rounded-[2.5rem] bg-white/5 backdrop-blur-3xl border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
-                
-                <h2 className="text-2xl font-bold mb-10 flex items-center justify-between">
-                  Get Started
-                </h2>
+            <div className="lg:col-span-5 w-full max-w-md mx-auto">
+              <TiltWrapper>
+                <div className="neo-flat p-14 rounded-[4.5rem] border border-white/[0.01] relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-neo-accent-blue/10 blur-[80px] pointer-events-none" />
+                  
+                  <div className="relative z-10 space-y-12">
+                    <div className="space-y-4">
+                      <h2 className="text-4xl font-black italic tracking-tighter uppercase text-slate-200">
+                        Get <span className="text-neo-accent-blue">Started</span>
+                      </h2>
+                      <p className="text-slate-500 text-sm font-bold leading-relaxed uppercase tracking-widest">
+                        Sector Authentication Required
+                      </p>
+                    </div>
 
-                <div className="space-y-6 relative z-10">
-                  <p className="text-slate-400 text-sm leading-relaxed">
-                    Connect your GitHub account to unlock real-time repository analytics, developer growth signals, and intelligent insights.
-                  </p>
+                    <p className="text-slate-400 text-base leading-relaxed font-medium italic">
+                      Connect your GitHub account to unlock real-time intelligence arrays and architectural insights.
+                    </p>
 
-                  <button 
-                    onClick={signInWithGitHub}
-                    className="w-full bg-white text-slate-950 font-bold py-5 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group shadow-[0_20px_40px_-10px_rgba(255,255,255,0.2)]"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                    Continue with GitHub
-                    <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-                  </button>
+                    <button 
+                      onClick={signInWithGitHub}
+                      className="w-full neo-flat px-6 py-7 rounded-[2rem] !bg-neo-accent-blue !text-neo-bg font-black text-sm uppercase tracking-[0.4em] hover:neo-pressed active:scale-95 transition-all flex items-center justify-center gap-6 border border-white/[0.1] shadow-2xl shadow-neo-accent-blue/20"
+                    >
+                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                      Continue with GitHub
+                      <ArrowRight size={22} strokeWidth={3} />
+                    </button>
+                    
+                    <div className="flex justify-center">
+                       <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-700 animate-pulse">Awaiting Signal</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </TiltWrapper>
+            </div>
           </div>
-
-          {/* Scroll Indicator */}
-          <motion.div 
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="mt-auto pt-16"
-          >
-            <ChevronDown size={32} className="text-slate-600" />
-          </motion.div>
         </section>
 
         {/* Features Section */}
-        <section className="py-32 px-6 max-w-7xl mx-auto">
-          <div className="text-center space-y-4 mb-20">
+        <section className="py-40 max-w-7xl mx-auto">
+          <div className="text-center space-y-6 mb-24">
             <motion.h2 
               whileInView={{ opacity: 1, y: 0 }}
               initial={{ opacity: 0, y: 20 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-bold"
+              className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase text-slate-200"
             >
-              Engineered for <span className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Excellence</span>.
+              Excellence. <span className="text-neo-accent-blue not-italic">Engineered.</span>
             </motion.h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-              We've replaced manual tracking with automated intelligence. Focus on the code; we'll handle the signals.
+            <p className="text-slate-500 text-xl max-w-3xl mx-auto font-medium leading-relaxed italic border-t border-white/[0.03] pt-6">
+              Automated intelligence streams for the modern developer. Focus on the code; we'll handle the architectural signals.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             {[
-              { icon: BarChart3, title: 'Deep Analytics', desc: 'Real-time repository pulse and contributor workload visualization.' },
-              { icon: Code2, title: 'Growth Editor', desc: 'Secure environment to test snippets and document your learning flow.' },
-              { icon: BookOpen, title: 'Resource Hub', desc: 'Smart organization for your technical bookmarks and documentation.' },
-              { icon: ShieldCheck, title: 'Enterprise Privacy', desc: 'Your data stays yours. Local-first architecture with secure cloud-sync.' }
+              { icon: BarChart3, title: 'Deep Analytics', desc: 'Real-time repository pulse and contributor workload visualization.', color: 'text-neo-accent-blue' },
+              { icon: Code2, title: 'Growth Editor', desc: 'Secure environment to test snippets and document learning logic.', color: 'text-purple-400' },
+              { icon: BookOpen, title: 'Resource Hub', desc: 'Smart organization for your technical archives and libraries.', color: 'text-neo-accent-orange' },
+              { icon: ShieldCheck, title: 'Active Privacy', desc: 'Your data stays yours. Local-first architecture with crypt-sync.', color: 'text-neo-accent-emerald' }
             ].map((f, i) => (
-              <motion.div 
-                key={i}
-                whileInView={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: 20 }}
-                viewport={{ once: true, amount: 0.1 }} // Threshold kam kiya takki jaldi animate ho
-                transition={{ delay: i * 0.05 }} // Staggering faster hai
-                className="p-8 rounded-[2rem] bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-all group"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <f.icon className="text-purple-400" size={24} />
+              <TiltWrapper key={i}>
+                <div className="h-full neo-flat p-10 rounded-[3rem] border border-white/[0.01] group hover:neo-pressed transition-all">
+                  <div className={cn("w-16 h-16 neo-icon mb-10 transition-transform group-hover:scale-110", f.color)}>
+                    <f.icon size={28} strokeWidth={2.5} />
+                  </div>
+                  <h3 className="text-2xl font-black italic mb-4 uppercase tracking-tighter text-slate-200">{f.title}</h3>
+                  <p className="text-slate-500 font-medium italic text-sm leading-relaxed">{f.desc}</p>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{f.title}</h3>
-                <p className="text-slate-400 leading-relaxed text-sm">{f.desc}</p>
-              </motion.div>
+              </TiltWrapper>
             ))}
           </div>
         </section>
 
-        {/* Product Preview Section */}
-        <section className="py-32 px-6 bg-white/[0.02] border-y border-white/5 overflow-hidden">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-8 text-center lg:text-left">
-              <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-                The Interface of <br />
-                <span className="italic font-serif text-pink-400">Developer Growth</span>.
-              </h2>
-              <div className="space-y-6">
-                {[
-                  'Unified dashboard for all repository signals.',
-                  'Integrated editor for rapid prototyping.',
-                  'Structured learning pathways for long-term growth.'
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 text-slate-300 text-lg justify-center lg:justify-start font-light">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-              <motion.div 
-                whileInView={{ x: 0, opacity: 1 }}
-                initial={{ x: 100, opacity: 0 }}
-                viewport={{ once: true, amount: 0.1 }} // Yeh trigger jaldi karega
-                transition={{ duration: 0.5, ease: "easeOut" }} // Duration thoda fast kar diya
-                className="relative aspect-video rounded-3xl bg-slate-900 border border-white/10 shadow-2xl overflow-hidden group shadow-purple-500/10"
-              >
-              <div className="absolute inset-x-0 top-0 h-10 bg-white/5 flex items-center px-4 gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
-                <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
-              </div>
-              <div className="p-8 pt-16 space-y-6">
-                <div className="h-6 w-1/3 bg-white/10 rounded-full" />
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="h-32 bg-white/5 rounded-3xl border border-white/5" />
-                  <div className="h-32 bg-white/5 rounded-3xl border border-white/5" />
-                </div>
-                <div className="h-40 bg-white/5 rounded-3xl border border-white/5" />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent flex items-center justify-center">
-                 <div className="px-6 py-3 rounded-full bg-white text-slate-950 font-bold shadow-2xl scale-0 group-hover:scale-100 transition-transform cursor-default">
-                    Coming Soon — v1.0
-                 </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
         {/* Footer */}
-        <footer className="py-20 px-6 border-t border-white/5 relative bg-slate-950">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-            <div className="flex flex-col items-center md:items-start gap-4">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-xl bg-white/10 border border-white/10">
-                  <Terminal size={18} className="text-purple-400" />
+        <footer className="py-24 max-w-7xl mx-auto border-t border-white/[0.03]">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-16">
+            <div className="flex flex-col items-center md:items-start gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 neo-icon text-neo-accent-blue">
+                  <Terminal size={22} strokeWidth={2.5} />
                 </div>
-                <span className="text-xl font-bold tracking-tight">DevSignal</span>
+                <div>
+                  <span className="text-xl font-black uppercase italic tracking-tighter">DevSignal</span>
+                </div>
               </div>
-              <p className="text-slate-500 text-sm">Elevating the developer intelligence experience.</p>
+              <p className="text-slate-600 text-xs font-black uppercase tracking-widest">Elevating the developer intelligence experience.</p>
             </div>
 
-            <div className="flex gap-12 text-sm text-slate-500 font-medium font-serif">
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-white transition-colors">Security</a>
-              <a href="#" className="hover:text-white transition-colors">Documentation</a>
-              <a href="#" className="hover:text-white transition-colors italic">Contributing</a>
+            <div className="flex gap-12 text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">
+              <a href="#" className="hover:text-neo-accent-blue transition-colors">Privacy</a>
+              <a href="#" className="hover:text-neo-accent-blue transition-colors">Security</a>
+              <a href="#" className="hover:text-neo-accent-blue transition-colors italic border-b border-neo-accent-blue/20 pb-1">Documentation</a>
             </div>
 
-            <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-700">
-              DevSignal © 2026 — All Rights Reserved
+            <div className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-700">
+              DEVSIGNAL © 2026 // GRID SECTOR 07
             </div>
           </div>
         </footer>
+      </div>
+
+      {/* Background Decor */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-neo-accent-blue/5 blur-[160px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/5 blur-[160px] rounded-full" />
       </div>
     </div>
   );
