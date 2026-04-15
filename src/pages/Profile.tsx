@@ -66,9 +66,9 @@ function TiltCard({ children, className }: { children: React.ReactNode, classNam
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className={cn("relative transition-colors duration-500", className)}
+      className={cn("relative transition-colors duration-500 h-full", className)}
     >
-      <div style={{ transform: "translateZ(50px)" }}>
+      <div className="h-full" style={{ transform: "translateZ(50px)" }}>
         {children}
       </div>
     </motion.div>
@@ -263,7 +263,7 @@ export function Profile() {
         </TiltCard>
 
         {/* Floating Galaxy Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 min-h-[30rem] relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-[32rem] relative">
           
           {/* Constellation Background (Canvas simulation) */}
           <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
@@ -284,7 +284,7 @@ export function Profile() {
           </div>
 
           {/* Left Stats Node */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-8 h-full">
             <TiltCard className="flex-1">
                <div className="h-full rounded-[2.5rem] bg-white/5 border border-white/10 p-8 flex flex-col justify-between group">
                   <div className="flex justify-between items-center">
