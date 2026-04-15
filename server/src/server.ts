@@ -13,18 +13,28 @@ import { createClient } from '@supabase/supabase-js';
 
 const fastify = Fastify({ logger: true });
 
+// Type definitions for decorated request
+declare module 'fastify' {
+  interface FastifyRequest {
+    userId: string;
+    githubUsername: string;
+  }
+}
+
 // Supabase admin client (service role for server-side operations)
 export const supabaseAdmin = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
 
 // Auth middleware — verifies Supabase JWT from Authorization header
 fastify.decorateRequest('userId', '');
+fastify.decorateRequest('githubUsername', '');
 fastify.addHook('onRequest', async (request, reply) => {
   // Skip auth for health check and CORS preflight
   if (request.url === '/health' || request.method === 'OPTIONS') return;
 
   // AI Debug Bypass (Temporary for layout inspection)
   if (request.headers['x-ai-debug'] === 'ai-magic-2026') {
-    request.userId = 'ai-debug-session'; // We'll map this to your real data if needed
+    request.userId = 'ai-debug-session';
+    request.githubUsername = 'ai-debug-session';
     return;
   }
 
@@ -41,6 +51,8 @@ fastify.addHook('onRequest', async (request, reply) => {
   }
 
   request.userId = user.id;
+  // Get GitHub username from metadata (usually 'user_name' or 'preferred_username')
+  request.githubUsername = user.user_metadata?.user_name || user.user_metadata?.preferred_username || '';
 });
 
 // Plugins

@@ -14,27 +14,38 @@ export async function activityRoutes(fastify: FastifyInstance) {
     const octokit = new Octokit({ auth: token });
 
     try {
-      // 1. Find the GitHub username for this userId
-      // We check the repositories table for the first repo owned by this user
-      const { data: repos, error: repoError } = await supabaseAdmin
-        .from('repositories')
-        .select('name')
-        .eq('owner_id', request.userId)
-        .limit(1);
+      // 1. Identify GitHub Username
+      let githubUsername = request.githubUsername;
+      
+      fastify.log.info({ userId: request.userId, metadataUsername: githubUsername }, 'Starting activity fetch');
 
-      if (repoError || !repos || repos.length === 0) {
-        // Fallback or empty state if no repos synced yet
+      if (!githubUsername || githubUsername === 'ai-debug-session') {
+        // Fallback: Check repositories table
+        const { data: repos, error: repoError } = await supabaseAdmin
+          .from('repositories')
+          .select('name')
+          .eq('owner_id', request.userId)
+          .limit(1);
+
+        if (!repoError && repos && repos.length > 0) {
+          githubUsername = repos[0].name.split('/')[0];
+          fastify.log.info({ githubUsername }, 'Username found via repository fallback');
+        }
+      }
+
+      if (!githubUsername) {
+        fastify.log.warn({ userId: request.userId }, 'No GitHub username identified for activity fetch');
         return { activities: [] };
       }
 
-      // name is in 'owner/repo' format
-      const githubUsername = repos[0].name.split('/')[0];
-
       // 2. Fetch Public Events from GitHub
+      fastify.log.info({ githubUsername }, 'Fetching events from GitHub');
       const { data: events } = await octokit.rest.activity.listPublicEventsForUser({
         username: githubUsername,
         per_page: 20
       });
+
+      fastify.log.info({ eventCount: events.length }, 'GitHub events retrieved');
 
       // 3. Map to ActivityItem format
       const activities = events
@@ -46,8 +57,9 @@ export async function activityRoutes(fastify: FastifyInstance) {
           switch (event.type) {
             case 'PushEvent':
               type = 'commit';
-              const commit = (event.payload as any).commits?.[0];
-              title = commit?.message || 'Pushed commits';
+              const commits = (event.payload as any).commits || [];
+              const lastCommit = commits[commits.length - 1]; // Get latest commit in this push
+              title = lastCommit?.message || 'Pushed commits';
               description = `Pushed to ${event.repo.name}`;
               break;
             case 'PullRequestEvent':
@@ -75,7 +87,7 @@ export async function activityRoutes(fastify: FastifyInstance) {
           };
         })
         .filter(Boolean)
-        .slice(0, 10);
+        .slice(0, 4);
 
       return { activities };
     } catch (err: unknown) {
