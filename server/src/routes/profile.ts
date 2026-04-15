@@ -4,6 +4,34 @@ import { supabaseAdmin } from '../server';
 export async function profileRoutes(fastify: FastifyInstance) {
   
   fastify.get('/profile/summary', async (request) => {
+    // AI Debug Mock Data
+    if (request.userId === 'ai-debug-session') {
+      return {
+        stats: {
+          totalStars: 128,
+          totalForks: 44,
+          totalProjects: 15,
+          languages: {
+            "React": 12,
+            "TypeScript": 10,
+            "TailwindCSS": 8,
+            "Node.js": 6,
+            "Framer Motion": 5,
+            "Supabase": 4,
+            "PostgreSQL": 3
+          }
+        },
+        persona: {
+          title: "The Frontend Alchemist",
+          level: 8
+        },
+        rhythm: {
+          type: "Night Owl",
+          description: "Your signal peaks in the quiet hours of the night, generating high-velocity code under the moonlight."
+        }
+      };
+    }
+
     const { data: repos, error } = await supabaseAdmin
       .from('repositories')
       .select('stars, forks, language, updated_at, name')

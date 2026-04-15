@@ -27,9 +27,9 @@ export default function App() {
               <Route path="/repo/:id" element={<RepoDetail />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/editor" element={<Editor />} />
-              <Route path="/profile" element={<Profile />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
           </Routes>
         </AnimatePresence>
       </AuthProvider>

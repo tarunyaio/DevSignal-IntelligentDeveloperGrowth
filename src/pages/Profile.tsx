@@ -325,44 +325,46 @@ export function Profile() {
           <div className="md:col-span-1 relative flex items-center justify-center overflow-hidden h-[400px] rounded-[2rem] bg-white/[0.02] border border-white/5">
              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#10b98110_0%,_transparent_70%)]" />
              
-             <div className="relative w-full h-[200px] flex items-center justify-center">
-               {Object.entries(data?.stats.languages || {}).slice(0, 5).map(([lang, count], i) => (
+             <div className="relative w-full h-[240px] flex items-center justify-center">
+               {Object.entries(data?.stats.languages || {}).slice(0, 8).map(([lang, count], i) => (
                   <motion.div
                     key={lang}
                     initial={{ scale: 0 }}
                     animate={{ 
                       x: [
-                        Math.random() * 80 - 40,
-                        Math.random() * -80 + 40,
-                        Math.random() * 80 - 40
+                        Math.random() * 140 - 70,
+                        Math.random() * -140 + 70,
+                        Math.random() * 140 - 70
                       ],
                       y: [
-                        Math.random() * -80 + 40,
-                        Math.random() * 80 - 40,
-                        Math.random() * -80 + 40
+                        Math.random() * -140 + 70,
+                        Math.random() * 140 - 70,
+                        Math.random() * -140 + 70
                       ],
                       scale: 1
                     }}
                     transition={{ 
-                      duration: 8 + Math.random() * 8,
+                      duration: 12 + Math.random() * 8,
                       repeat: Infinity,
                       ease: "easeInOut"
                     }}
                     whileHover={{ scale: 1.1, zIndex: 50 }}
                     className={cn(
-                      "absolute px-3 py-1.5 rounded-xl backdrop-blur-md border font-bold text-[10px] cursor-default shadow-lg",
-                      i === 0 ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400" :
-                      i === 1 ? "bg-purple-500/20 border-purple-500/40 text-purple-400" :
-                      "bg-white/5 border-white/10 text-white"
+                      "absolute px-5 py-2.5 rounded-2xl backdrop-blur-xl border font-black text-sm cursor-default shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all",
+                      i === 0 ? "bg-emerald-500/30 border-emerald-500/50 text-emerald-300 shadow-emerald-500/20" :
+                      i === 1 ? "bg-purple-500/30 border-purple-500/50 text-purple-300 shadow-purple-500/20" :
+                      i === 2 ? "bg-blue-500/30 border-blue-500/50 text-blue-300 shadow-blue-500/20" :
+                      i === 3 ? "bg-amber-500/30 border-amber-500/50 text-amber-300 shadow-amber-500/20" :
+                      "bg-white/10 border-white/20 text-white shadow-white/5"
                     )}
                   >
                     {lang}
                   </motion.div>
                ))}
                
-               <div className="text-center relative z-10 pointer-events-none p-4 rounded-2xl bg-slate-950/60 backdrop-blur-xl border border-white/10 shadow-2xl">
-                  <p className="text-[8px] font-black tracking-widest text-slate-500 uppercase">System_Core</p>
-                  <h3 className="text-xl font-black tracking-tighter italic leading-none">TECH_STACK</h3>
+               <div className="text-center relative z-10 pointer-events-none p-5 rounded-[2rem] bg-slate-900/80 backdrop-blur-2xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                  <p className="text-[9px] font-black tracking-widest text-emerald-500/60 uppercase">System_Core</p>
+                  <h3 className="text-2xl font-black tracking-tighter italic leading-none text-white">TECH_STACK</h3>
                </div>
              </div>
           </div>
