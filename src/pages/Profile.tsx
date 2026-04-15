@@ -71,6 +71,23 @@ export function Profile() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    async function fetchProfile() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      try {
+        const res = await fetch('http://localhost:3001/api/profile/summary', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` }
+        });
+        const result = await res.json();
+        setData(result);
+      } catch (err) {
+        console.error('Failed to fetch profile:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchProfile();
+
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
     window.addEventListener('resize', checkMobile);
