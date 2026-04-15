@@ -17,8 +17,8 @@ export const supabaseAdmin = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE
 // Auth middleware — verifies Supabase JWT from Authorization header
 fastify.decorateRequest('userId', '');
 fastify.addHook('onRequest', async (request, reply) => {
-  // Skip auth for health check
-  if (request.url === '/health') return;
+  // Skip auth for health check and CORS preflight
+  if (request.url === '/health' || request.method === 'OPTIONS') return;
 
   const authHeader = request.headers.authorization;
   if (!authHeader?.startsWith('Bearer ')) {

@@ -59,7 +59,7 @@ export function RepoDetail() {
               {repo.language || 'Unknown'}
             </span>
           </div>
-          <h1 className="text-6xl font-black tracking-tighter uppercase">{repo.name}</h1>
+          <h1 className="text-6xl font-black tracking-tighter">{repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}</h1>
           <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
             {repo.description || 'No description available.'}
           </p>

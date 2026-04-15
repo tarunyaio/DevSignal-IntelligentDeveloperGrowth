@@ -29,8 +29,8 @@ export function RepoCard({ id, name, description, stars, forks, language, lastUp
             <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
               <Book size={20} />
             </div>
-            <h3 className="text-xl font-bold tracking-tight text-white group-hover:text-purple-300 transition-colors uppercase truncate max-w-[200px]">
-              {name}
+            <h3 className="text-xl font-bold tracking-tight text-white group-hover:text-purple-300 transition-colors truncate max-w-[200px]">
+              {name.includes('/') ? name.split('/')[1] : name}
             </h3>
           </div>
           
@@ -55,7 +55,7 @@ export function RepoCard({ id, name, description, stars, forks, language, lastUp
             <GitFork size={16} />
             <span className="text-xs font-bold">{forks}</span>
           </div>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-2 group-hover:opacity-0 transition-opacity duration-300">
             <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
             <span className="text-xs font-bold text-slate-300">{language}</span>
           </div>
