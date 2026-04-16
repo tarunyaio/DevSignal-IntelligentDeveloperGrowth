@@ -10,7 +10,7 @@ export function Layout() {
       <div className="relative z-10 flex flex-col min-h-screen">
         <Header />
         
-        <main className="flex-1 p-5 md:p-10 pb-16 transition-all duration-500">
+        <main className="flex-1 p-5 md:p-10 pb-28 md:pb-16 transition-all duration-500">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>

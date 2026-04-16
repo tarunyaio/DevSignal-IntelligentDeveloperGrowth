@@ -50,7 +50,7 @@ export function StatsCard({ title, value, suffix, icon: Icon, trend, color }: St
       className="perspective-1000"
     >
       <div 
-        className="neo-flat rounded-[3rem] p-8 group relative border border-white/[0.01] transition-shadow duration-500 hover:shadow-2xl"
+        className="neo-flat rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-8 group relative border border-white/[0.01] transition-shadow duration-500 hover:shadow-2xl"
         style={{ transform: "translateZ(20px)" }}
       >
         <div className="flex justify-between items-start mb-8" style={{ transform: "translateZ(40px)" }}>
@@ -71,7 +71,7 @@ export function StatsCard({ title, value, suffix, icon: Icon, trend, color }: St
         <div className="space-y-2" style={{ transform: "translateZ(50px)" }}>
           <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em]">{cleanTitle}</p>
           <div className="flex items-baseline gap-2">
-            <h3 className="text-5xl font-black tracking-tighter text-slate-200">{value}</h3>
+            <h3 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-200">{value}</h3>
             {suffix && <span className="text-xs text-slate-600 font-bold uppercase">{suffix}</span>}
           </div>
         </div>

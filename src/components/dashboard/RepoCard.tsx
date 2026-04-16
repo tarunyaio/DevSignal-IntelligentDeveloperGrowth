@@ -39,7 +39,7 @@ export function RepoCard({ id, name, description, stars, forks, language, lastUp
       className="perspective-1000 h-full"
     >
       <div 
-        className="neo-flat rounded-[3rem] p-9 group relative border border-white/[0.01] flex flex-col gap-6 h-full transition-shadow duration-500 hover:shadow-2xl"
+        className="neo-flat rounded-[2rem] md:rounded-[3rem] p-6 md:p-9 group relative border border-white/[0.01] flex flex-col gap-6 h-full transition-shadow duration-500 hover:shadow-2xl"
         style={{ transform: "translateZ(20px)" }}
       >
         <div className="flex justify-between items-start" style={{ transform: "translateZ(40px)" }}>

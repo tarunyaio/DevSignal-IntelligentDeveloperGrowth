@@ -4,6 +4,7 @@ import { Search, Filter, BookOpen, Terminal, Shield, Cpu, Layout } from 'lucide-
 import { ResourceCard, type ResourceType } from '@/components/resources/ResourceCard';
 import { useResources } from '@/hooks/queries';
 import { cn } from '@/lib/utils';
+import { SEO } from '@/components/layout/SEO';
 
 const CATEGORIES = [
   { id: 'all', name: 'All Resources', icon: Layout },
@@ -100,12 +101,13 @@ export function Resources() {
   }, [searchQuery, selectedCategory, resources]);
 
   return (
-    <div className="relative min-h-screen space-y-16 pb-32">
+    <div className="relative min-h-screen space-y-10 md:space-y-16 pb-28 md:pb-32">
+      <SEO title="Resource Archive" description="Curated intelligence modules and architectural guides for modern developers." />
       {/* Header Section - Title aur Search Bar */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-12">
         <div className="space-y-4 text-center md:text-left">
-          <h2 className="text-6xl font-black tracking-tighter uppercase italic text-slate-200">
-            Resource <span className="text-neo-accent-blue not-italic underline decoration-neo-accent-blue/30 underline-offset-8">Archive</span>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase italic text-slate-200">
+            Resource <span className="text-neo-accent-blue not-italic underline decoration-neo-accent-blue/30 underline-offset-4 md:underline-offset-8">Archive</span>
           </h2>
           <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em] mt-3">Curated intelligence modules for developer growth.</p>
         </div>
@@ -151,7 +153,7 @@ export function Resources() {
       </div>
 
       {/* Resource Grid - Filtered resources card layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 relative">
         <AnimatePresence mode="popLayout">
           {filteredResources.map((resource) => (
             <motion.div

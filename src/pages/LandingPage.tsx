@@ -5,6 +5,7 @@
  import { footerLinks } from '../lib/footerLinks';
  import { Terminal, ArrowRight, ShieldCheck, Zap, BarChart3, Code2, BookOpen } from 'lucide-react';
  import { cn } from '@/lib/utils';
+import { SEO } from '../components/layout/SEO';
 
 function TiltWrapper({ children, className }: { children: React.ReactNode, className?: string }) {
   const x = useMotionValue(0);
@@ -44,21 +45,24 @@ export function LandingPage() {
 
   return (
     <div className="relative min-h-screen bg-neo-bg text-slate-200 font-sans overflow-x-hidden selection:bg-neo-accent-blue/20">
+      <SEO 
+        description="DevSignal turns your GitHub activity into actionable growth signals. Experience premium developer intelligence."
+      />
       <div className="relative z-10 px-6">
         
         {/* Navbar-ish Logo */}
-        <header className="max-w-7xl mx-auto pt-16 flex items-center justify-center lg:justify-start">
+        <header className="max-w-7xl mx-auto pt-8 md:pt-16 flex items-center justify-center lg:justify-start">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-4"
           >
-            <div className="w-14 h-14 neo-icon text-neo-accent-blue border border-white/[0.01]">
-              <Terminal size={24} strokeWidth={2.5} />
+            <div className="w-12 h-12 md:w-14 md:h-14 neo-icon text-neo-accent-blue border border-white/[0.01]">
+              <Terminal size={22} strokeWidth={2.5} />
             </div>
             <div>
-              <span className="text-3xl font-black tracking-tighter uppercase italic text-slate-200">DevSignal</span>
-              <p className="text-[10px] text-neo-accent-blue font-black tracking-[0.4em] uppercase opacity-70">Intelligence Engine // v1.0</p>
+              <span className="text-2xl md:text-3xl font-black tracking-tighter uppercase italic text-slate-200">DevSignal</span>
+              <p className="text-[8px] md:text-[10px] text-neo-accent-blue font-black tracking-[0.4em] uppercase opacity-70">Intelligence Engine // v1.0</p>
             </div>
           </motion.div>
         </header>
@@ -81,10 +85,10 @@ export function LandingPage() {
                 <motion.h1 
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-7xl md:text-9xl font-black leading-none tracking-tighter italic text-slate-200"
+                  className="text-5xl md:text-9xl font-black leading-tight md:leading-none tracking-tighter italic text-slate-200"
                 >
                   Growth.<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-neo-accent-blue via-purple-500 to-indigo-600 non-italic underline decoration-neo-accent-blue/20 underline-offset-8">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-neo-accent-blue via-purple-500 to-indigo-600 non-italic underline decoration-neo-accent-blue/20 underline-offset-4 md:underline-offset-8">
                     Accelerated.
                   </span>
                 </motion.h1>
@@ -93,7 +97,7 @@ export function LandingPage() {
               <motion.p 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-2xl md:text-3xl text-slate-500 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium italic"
+                className="text-lg md:text-3xl text-slate-500 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium italic"
               >
                 A GitHub-native developer intelligence layer that turns repository activity into <span className="text-slate-200 font-black not-italic">actionable</span> growth signals.
               </motion.p>
@@ -113,7 +117,7 @@ export function LandingPage() {
             {/* Login Form Card */}
             <div className="lg:col-span-5 w-full max-w-md mx-auto">
               <TiltWrapper>
-                <div className="neo-flat p-14 rounded-[4.5rem] border border-white/[0.01] relative overflow-hidden group">
+                <div className="neo-flat p-8 md:p-14 rounded-[3rem] md:rounded-[4.5rem] border border-white/[0.01] relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-neo-accent-blue/10 blur-[80px] pointer-events-none" />
                   
                   <div className="relative z-10 space-y-12">
@@ -132,11 +136,11 @@ export function LandingPage() {
 
                     <button 
                       onClick={signInWithGitHub}
-                      className="w-full neo-flat px-6 py-7 rounded-[2rem] !bg-neo-accent-blue !text-neo-bg font-black text-sm uppercase tracking-[0.4em] hover:neo-pressed active:scale-95 transition-all flex items-center justify-center gap-6 border border-white/[0.1] shadow-2xl shadow-neo-accent-blue/20"
+                      className="w-full neo-flat px-6 py-5 md:py-7 rounded-[1.5rem] md:rounded-[2rem] !bg-neo-accent-blue !text-neo-bg font-black text-xs md:text-sm uppercase tracking-[0.4em] hover:neo-pressed active:scale-95 transition-all flex items-center justify-center gap-4 md:gap-6 border border-white/[0.1] shadow-2xl shadow-neo-accent-blue/20"
                     >
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                      <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                       Continue with GitHub
-                      <ArrowRight size={22} strokeWidth={3} />
+                      <ArrowRight size={20} strokeWidth={3} className="hidden sm:block" />
                     </button>
                     
                     <div className="flex justify-center">
@@ -156,7 +160,7 @@ export function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               initial={{ opacity: 0, y: 20 }}
               viewport={{ once: true }}
-              className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase text-slate-200"
+              className="text-4xl md:text-7xl font-black italic tracking-tighter uppercase text-slate-200"
             >
               Excellence. <span className="text-neo-accent-blue not-italic">Engineered.</span>
             </motion.h2>

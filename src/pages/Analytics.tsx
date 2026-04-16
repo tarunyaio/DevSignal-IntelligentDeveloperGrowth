@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { TrendingUp, Brain, Shield, Rocket } from 'lucide-react';
 import { useAnalytics } from '@/hooks/queries';
+import { SEO } from '@/components/layout/SEO';
 
 // Memoize random data outside the component
 const HEATMAP_DATA = Array.from({ length: 168 }).map(() => ({
@@ -13,13 +14,14 @@ export function Analytics() {
   const languages = analytics?.languages || [];
 
   return (
-    <div className="relative min-h-screen space-y-12 pb-32">
+    <div className="relative min-h-screen space-y-8 md:space-y-16 pb-28 md:pb-32">
+      <SEO title="Intelligence Hub" description="Global mapping of your technical evolution and performance." />
       <header className="space-y-2">
-        <h2 className="text-4xl font-bold tracking-tight">Intelligence <span className="italic font-serif text-purple-400">Hub</span></h2>
+        <h2 className="text-2xl md:text-4xl font-bold tracking-tight">Intelligence <span className="italic font-serif text-purple-400">Hub</span></h2>
         <p className="text-slate-400 font-medium">Global mapping of your technical evolution and performance.</p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Skill Radar - Custom CSS and SVG breakdown */}
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
@@ -91,7 +93,7 @@ export function Analytics() {
       </div>
 
       {/* Performance Metrics Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
         <MetricBox title="Total Repos" value={String(analytics?.total_repos ?? 0)} suffix="synced" icon={TrendingUp} color="blue" />
         <MetricBox title="Total Stars" value={String(analytics?.total_stars ?? 0)} suffix="earned" icon={Shield} color="green" />
         <MetricBox title="Open Issues" value={String(analytics?.total_issues ?? 0)} suffix="active" icon={Rocket} color="purple" />
