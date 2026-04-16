@@ -1,9 +1,10 @@
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
-import { footerLinks } from '../lib/footerLinks';
-import { Terminal, ArrowRight, ShieldCheck, Zap, BarChart3, Code2, BookOpen } from 'lucide-react';
-import { cn } from '@/lib/utils';
+ import React, { useEffect } from 'react';
+ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+ import { useAuth } from '../contexts/AuthContext';
+ import { useNavigate, Link } from 'react-router-dom';
+ import { footerLinks } from '../lib/footerLinks';
+ import { Terminal, ArrowRight, ShieldCheck, Zap, BarChart3, Code2, BookOpen } from 'lucide-react';
+ import { cn } from '@/lib/utils';
 
 function TiltWrapper({ children, className }: { children: React.ReactNode, className?: string }) {
   const x = useMotionValue(0);
