@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { footerLinks } from '../lib/footerLinks';
 import { Terminal, ArrowRight, ShieldCheck, Zap, BarChart3, Code2, BookOpen, ChevronDown } from 'lucide-react';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -200,9 +201,27 @@ export function LandingPage() {
             </div>
 
             <div className="flex gap-12 text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">
-              <a href="#" className="hover:text-neo-accent-blue transition-colors">Privacy</a>
-              <a href="#" className="hover:text-neo-accent-blue transition-colors">Security</a>
-              <a href="#" className="hover:text-neo-accent-blue transition-colors italic border-b border-neo-accent-blue/20 pb-1">Documentation</a>
+              {footerLinks.map((link) =>
+                link.internal ? (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className={`hover:text-neo-accent-blue transition-colors${link.italic ? ' italic border-b border-neo-accent-blue/20 pb-1' : ''}`}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`hover:text-neo-accent-blue transition-colors${link.italic ? ' italic border-b border-neo-accent-blue/20 pb-1' : ''}`}
+                  >
+                    {link.label}
+                  </a>
+                )
+              )}
             </div>
 
             <div className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-700">
