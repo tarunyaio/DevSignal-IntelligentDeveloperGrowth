@@ -39,23 +39,23 @@ export function RepoCard({ id, name, description, stars, forks, language, lastUp
       className="perspective-1000 h-full"
     >
       <div 
-        className="neo-flat rounded-[2rem] md:rounded-[3rem] p-6 md:p-9 group relative border border-white/[0.01] flex flex-col gap-6 h-full transition-shadow duration-500 hover:shadow-2xl"
+        className="neo-flat rounded-[2rem] md:rounded-[3rem] p-5 md:p-9 group relative border border-white/[0.01] flex flex-col gap-6 h-full transition-shadow duration-500 hover:shadow-2xl"
         style={{ transform: "translateZ(20px)" }}
       >
-        <div className="flex justify-between items-start" style={{ transform: "translateZ(40px)" }}>
-          <div className="flex items-center gap-5">
-            <div className="w-14 h-14 neo-icon text-neo-accent-blue shadow-neo-accent-blue/10">
-              <Book size={24} strokeWidth={2.5} />
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-0" style={{ transform: "translateZ(40px)" }}>
+          <div className="flex items-center gap-4 md:gap-5">
+            <div className="w-10 h-10 md:w-14 md:h-14 neo-icon text-neo-accent-blue shadow-neo-accent-blue/10">
+              <Book size={18} className="md:size-[24px]" strokeWidth={2.5} />
             </div>
-            <div>
-              <h3 className="text-xl font-black tracking-tight text-slate-200 group-hover:text-neo-accent-blue transition-colors truncate max-w-[160px]">
+            <div className="min-w-0">
+              <h3 className="text-lg md:text-xl font-black tracking-tight text-slate-200 group-hover:text-neo-accent-blue transition-colors truncate max-w-[120px] md:max-w-[160px]">
                 {name.includes('/') ? name.split('/')[1] : name}
               </h3>
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{lastUpdated}</p>
+              <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest">{lastUpdated}</p>
             </div>
           </div>
           
-          <div className="neo-pressed px-4 py-2 rounded-xl border border-white/[0.01] text-[10px] font-black tracking-widest text-neo-accent-blue uppercase" style={{ transform: "translateZ(50px)" }}>
+          <div className="neo-pressed px-3 py-1.5 md:px-4 md:py-2 rounded-xl border border-white/[0.01] text-[9px] md:text-[10px] font-black tracking-widest text-neo-accent-blue uppercase shrink-0" style={{ transform: "translateZ(50px)" }}>
             {language}
           </div>
         </div>
