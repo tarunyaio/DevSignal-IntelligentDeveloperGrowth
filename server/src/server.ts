@@ -1,7 +1,7 @@
-import Fastify from 'fastify';
-import cors from '@fastify/cors';
-import rateLimit from '@fastify/rate-limit';
-import { env } from './env';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { env as honoEnv } from 'hono/adapter';
+import { createClient } from '@supabase/supabase-js';
 import { syncRoutes } from './routes/sync';
 import { repoRoutes } from './routes/repos';
 import { analyticsRoutes } from './routes/analytics';
@@ -9,78 +9,74 @@ import { resourceRoutes } from './routes/resources';
 import { snippetRoutes } from './routes/snippets';
 import { profileRoutes } from './routes/profile';
 import { activityRoutes } from './routes/activity';
-import { createClient } from '@supabase/supabase-js';
 
-const fastify = Fastify({ logger: true });
+type Bindings = {
+  SUPABASE_URL: string;
+  SUPABASE_SERVICE_ROLE_KEY: string;
+  GITHUB_TOKEN: string;
+};
 
-// Type definitions for decorated request
-declare module 'fastify' {
-  interface FastifyRequest {
-    userId: string;
-    githubUsername: string;
+type Variables = {
+  userId: string;
+  githubUsername: string;
+  supabaseAdmin: any;
+};
+
+const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+
+// 1. Plugins / Middleware
+app.use('*', cors());
+
+// 2. Auth Middleware & Supabase Admin Initialization
+app.use('*', async (c, next) => {
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = honoEnv<Bindings>(c);
+  
+  // Initialize Supabase Admin for this request
+  const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+  c.set('supabaseAdmin', supabaseAdmin);
+
+  // Skip auth for health check and options
+  if (c.req.path === '/health' || c.req.method === 'OPTIONS') {
+    return next();
   }
-}
 
-// Supabase admin client (service role for server-side operations)
-export const supabaseAdmin = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
-
-// Auth middleware — verifies Supabase JWT from Authorization header
-fastify.decorateRequest('userId', '');
-fastify.decorateRequest('githubUsername', '');
-fastify.addHook('onRequest', async (request, reply) => {
-  // Skip auth for health check and CORS preflight
-  if (request.url === '/health' || request.method === 'OPTIONS') return;
-
-  // AI Debug Bypass (Temporary for layout inspection)
-  if (request.headers['x-ai-debug'] === 'ai-magic-2026') {
-    request.userId = 'ai-debug-session';
-    request.githubUsername = 'ai-debug-session';
-    return;
+  // AI Debug Bypass
+  if (c.req.header('x-ai-debug') === 'ai-magic-2026') {
+    c.set('userId', 'ai-debug-session');
+    c.set('githubUsername', 'ai-debug-session');
+    return next();
   }
 
-  const authHeader = request.headers.authorization;
+  const authHeader = c.req.header('Authorization');
   if (!authHeader?.startsWith('Bearer ')) {
-    return reply.status(401).send({ error: 'Missing or invalid authorization header' });
+    return c.json({ error: 'Missing or invalid authorization header' }, 401);
   }
 
   const token = authHeader.slice(7);
   const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
 
   if (error || !user) {
-    return reply.status(401).send({ error: 'Invalid or expired token' });
+    return c.json({ error: 'Invalid or expired token' }, 401);
   }
 
-  request.userId = user.id;
-  // Get GitHub username from metadata (usually 'user_name' or 'preferred_username')
-  request.githubUsername = user.user_metadata?.user_name || user.user_metadata?.preferred_username || '';
+  c.set('userId', user.id);
+  c.set('githubUsername', user.user_metadata?.user_name || user.user_metadata?.preferred_username || '');
+  
+  await next();
 });
 
-// Plugins
-fastify.register(cors, { origin: true });
-fastify.register(rateLimit, { max: 100, timeWindow: '1 minute' });
-
-// Health check (no auth required)
-fastify.get('/health', async () => {
-  return { status: 'alive', timestamp: new Date().toISOString() };
+// 3. Health Check
+app.get('/health', (c) => {
+  return c.json({ status: 'alive', timestamp: new Date().toISOString() });
 });
 
-// API routes
-fastify.register(syncRoutes, { prefix: '/api' });
-fastify.register(repoRoutes, { prefix: '/api' });
-fastify.register(analyticsRoutes, { prefix: '/api' });
-fastify.register(resourceRoutes, { prefix: '/api' });
-fastify.register(snippetRoutes, { prefix: '/api' });
-fastify.register(profileRoutes, { prefix: '/api' });
-fastify.register(activityRoutes, { prefix: '/api' });
+// 4. API Routes
+app.route('/api', syncRoutes);
+app.route('/api', repoRoutes);
+app.route('/api', analyticsRoutes);
+app.route('/api', resourceRoutes);
+app.route('/api', snippetRoutes);
+app.route('/api', profileRoutes);
+app.route('/api', activityRoutes);
 
-const start = async () => {
-  try {
-    await fastify.listen({ port: env.PORT, host: '0.0.0.0' });
-    console.log(`DevSignal API started on port ${env.PORT}`);
-  } catch (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-};
-
-start();
+export default app;

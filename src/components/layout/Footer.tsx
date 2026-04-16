@@ -1,6 +1,4 @@
-import React from 'react';
 import { Shield, Lock, Cpu } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export function Footer() {
   return (

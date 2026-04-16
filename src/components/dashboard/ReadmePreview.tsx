@@ -1,7 +1,5 @@
-import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { BookOpen } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface ReadmePreviewProps {
   content?: string;
