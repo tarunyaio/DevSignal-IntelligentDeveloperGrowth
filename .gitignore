@@ -29,3 +29,6 @@ dist-ssr
 AUDIT.md
 IMPLEMENT.md 
 
+# Build/Dev tools
+.wrangler
+server/.wrangler
