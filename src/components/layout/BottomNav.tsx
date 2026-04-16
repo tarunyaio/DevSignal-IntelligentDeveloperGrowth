@@ -29,7 +29,7 @@ export function BottomNav() {
             <NavLink
               key={item.href}
               to={item.href}
-              className={({ isActive }) => cn(
+              className={() => cn(
                 "relative group transition-all duration-300",
                 "w-16 h-16"
               )}

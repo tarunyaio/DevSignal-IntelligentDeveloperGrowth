@@ -1,8 +1,7 @@
-import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { 
-  ArrowLeft, ShieldCheck, 
+  ArrowLeft, 
   Activity, ExternalLink, GitCommit,
   GitPullRequest, AlertCircle,
   Users, Code, Cpu

@@ -1,8 +1,8 @@
-import { Star, GitFork, Book, ArrowRight, Clock } from 'lucide-react';
+import { Star, GitFork, Book, ArrowRight } from 'lucide-react';
 import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
+
 
 interface RepoCardProps {
   id: string;

@@ -3,29 +3,29 @@
   "version": "1.0.0",
   "description": "DevSignal API - Synchronizer for GitHub & Supabase",
   "main": "dist/server.js",
+  "type": "module",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "wrangler dev src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "deploy": "wrangler deploy src/server.ts",
     "prepare": "husky"
   },
   "dependencies": {
-    "@fastify/cors": "^9.0.1",
-    "@fastify/rate-limit": "^9.1.0",
     "@supabase/supabase-js": "^2.42.0",
     "dotenv": "^16.4.5",
-    "fastify": "^4.26.2",
-    "node-cache": "^5.1.2",
+    "hono": "^4.0.0",
     "octokit": "^3.2.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240405.0",
     "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^8.58.1",
     "@typescript-eslint/parser": "^8.58.1",
     "eslint": "^10.2.0",
-    "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.4",
+    "wrangler": "^4.83.0"
   }
 }

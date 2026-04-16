@@ -1,26 +1,31 @@
-import NodeCache from 'node-cache';
-
-// Cache for 1 hour (3600 seconds), check for expired keys every 10 minutes
-const cache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
+// Simple in-memory cache for Cloudflare Workers (persists as long as isolate is warm)
+const cacheMap = new Map<string, { value: any; expires: number }>();
 
 export const getCache = <T>(key: string): T | undefined => {
-  return cache.get<T>(key);
+  const item = cacheMap.get(key);
+  if (!item) return undefined;
+  
+  if (Date.now() > item.expires) {
+    cacheMap.delete(key);
+    return undefined;
+  }
+  
+  return item.value as T;
 };
 
-export const setCache = <T>(key: string, value: T, ttl?: number): void => {
-  if (ttl) {
-    cache.set(key, value, ttl);
-  } else {
-    cache.set(key, value);
-  }
+export const setCache = <T>(key: string, value: T, ttlSeconds: number = 3600): void => {
+  cacheMap.set(key, {
+    value,
+    expires: Date.now() + (ttlSeconds * 1000)
+  });
 };
 
 export const deleteCache = (key: string): void => {
-  cache.del(key);
+  cacheMap.delete(key);
 };
 
 export const clearCache = (): void => {
-  cache.flushAll();
+  cacheMap.clear();
 };
 
-export default cache;
+export default cacheMap;

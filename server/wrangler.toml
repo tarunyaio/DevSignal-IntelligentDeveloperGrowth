@@ -1,0 +1,11 @@
+name = "devsignal-api"
+main = "src/server.ts"
+compatibility_date = "2024-04-05"
+
+[vars]
+# GITHUB_TOKEN = "your-token-here" (Use wrangler secret put GITHUB_TOKEN)
+# SUPABASE_URL = "your-url-here"
+# SUPABASE_SERVICE_ROLE_KEY = "your-key-here"
+
+[observability]
+enabled = true

@@ -10,7 +10,6 @@ import {
   Code2, 
   Share2,
   ExternalLink,
-  Zap,
   Cpu,
   User
 } from 'lucide-react';
@@ -75,7 +74,8 @@ export function Profile() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
       try {
-        const res = await fetch('http://localhost:3001/api/profile/summary', {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${apiUrl}/api/profile/summary`, {
           headers: { 'Authorization': `Bearer ${session.access_token}` }
         });
         const result = await res.json();
@@ -121,7 +121,7 @@ export function Profile() {
       >
         <div className="flex items-center gap-4 md:gap-5">
           <div className="w-10 h-10 md:w-14 md:h-14 neo-icon text-neo-accent-blue">
-             <User size={20} md:size={24} strokeWidth={2.5} />
+             <User size={isMobile ? 20 : 24} strokeWidth={2.5} />
           </div>
           <div>
              <h1 className="text-xl md:text-3xl font-black tracking-tighter uppercase italic text-slate-200">Profile</h1>
@@ -153,7 +153,7 @@ export function Profile() {
                   </div>
                </div>
                <div className="absolute -bottom-4 md:-bottom-6 left-1/2 -translate-x-1/2 neo-pressed px-6 md:px-8 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center gap-3 md:gap-4 border border-white/[0.02] shadow-2xl">
-                  <ShieldCheck size={16} md:size={20} className="text-neo-accent-blue" />
+                  <ShieldCheck size={isMobile ? 16 : 20} className="text-neo-accent-blue" />
                   <span className="text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.3em] text-slate-200 uppercase">Verified User</span>
                </div>
             </div>
@@ -174,7 +174,7 @@ export function Profile() {
                 </div>
                 <div className="neo-pressed px-6 md:px-10 py-4 md:py-5 rounded-[2rem] md:rounded-[2.5rem] border border-white/[0.01]">
                    <p className="text-[8px] md:text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] md:tracking-[0.3em] mb-2 font-mono">Impact Level</p>
-                   <p className="text-xl md:text-3xl font-black text-slate-200 tracking-tight">{data?.persona.level * 10}%</p>
+                   <p className="text-xl md:text-3xl font-black text-slate-200 tracking-tight">{data?.persona.level ? data.persona.level * 10 : 0}%</p>
                 </div>
               </div>
               
@@ -196,7 +196,7 @@ export function Profile() {
           <div className="neo-flat rounded-[2.5rem] md:rounded-[3.5rem] p-10 flex flex-col justify-between h-[200px] md:h-[220px] border border-white/[0.01] group relative" style={{ transformStyle: "preserve-3d" }}>
             <div className="flex justify-between items-center" style={{ transform: "translateZ(30px)" }}>
               <div className="w-12 h-12 md:w-14 md:h-14 neo-icon text-purple-400 group-hover:text-neo-accent-blue transition-colors">
-                <Star size={20} md:size={24} strokeWidth={2.5} />
+                <Star size={isMobile ? 20 : 24} strokeWidth={2.5} />
               </div>
               <span className="text-[9px] md:text-[10px] font-black text-slate-600 uppercase tracking-widest">Aggregate Impact</span>
             </div>
@@ -209,7 +209,7 @@ export function Profile() {
           <div className="neo-flat rounded-[2.5rem] md:rounded-[3.5rem] p-10 flex flex-col justify-between h-[200px] md:h-[220px] border border-white/[0.01] group relative" style={{ transformStyle: "preserve-3d" }}>
             <div className="flex justify-between items-center" style={{ transform: "translateZ(30px)" }}>
               <div className="w-12 h-12 md:w-14 md:h-14 neo-icon text-neo-accent-blue">
-                <GitFork size={20} md:size={24} strokeWidth={2.5} />
+                <GitFork size={isMobile ? 20 : 24} strokeWidth={2.5} />
               </div>
               <span className="text-[9px] md:text-[10px] font-black text-slate-600 uppercase tracking-widest">Network Forks</span>
             </div>
@@ -225,7 +225,7 @@ export function Profile() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#00aced10_0%,_transparent_75%)] opacity-0 group-hover:opacity-100 transition-opacity" />
           
           <div className="relative w-full h-full flex items-center justify-center scale-90 md:scale-100">
-            {Object.entries(data?.stats.languages || {}).slice(0, 10).map(([lang, count], i, arr) => {
+            {Object.entries(data?.stats.languages || {}).slice(0, 10).map(([lang], i, arr) => {
               const total = arr.length;
               const initialRotation = (i * (360 / total)) + (Math.random() * 20);
               const radius = (110 + (i % 3) * 40) * scale;
@@ -267,7 +267,7 @@ export function Profile() {
         <div className="neo-flat rounded-[2.5rem] md:rounded-[3.5rem] p-10 md:p-12 h-[410px] md:h-[480px] flex flex-col justify-between border border-white/[0.01] group relative overflow-hidden" style={{ transformStyle: "preserve-3d" }}>
           <div className="flex justify-between items-center" style={{ transform: "translateZ(30px)" }}>
             <div className="w-14 h-14 md:w-16 md:h-16 neo-icon text-neo-accent-orange">
-              <Clock size={24} md:size={28} strokeWidth={2.5} />
+              <Clock size={isMobile ? 24 : 28} strokeWidth={2.5} />
             </div>
             <span className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest">Daily Rhythm</span>
           </div>
@@ -300,7 +300,7 @@ export function Profile() {
       >
         <div className="space-y-4 md:space-y-6 text-center lg:text-left">
           <div className="neo-pressed inline-flex items-center gap-3 px-5 px-6 py-2 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.4em] uppercase text-neo-accent-blue border border-white/[0.01]">
-            <Share2 size={12} md:size={14} />
+            <Share2 size={isMobile ? 12 : 14} />
             Profile Share Ready
           </div>
           <h3 className="text-3xl md:text-6xl font-black tracking-tighter text-slate-200 leading-tight">Identity Compiled Successfully.</h3>
@@ -309,11 +309,11 @@ export function Profile() {
         
         <div className="flex flex-col sm:flex-row gap-6 md:gap-8 w-full lg:w-auto">
           <button className="neo-flat px-8 md:px-14 py-5 md:py-7 rounded-[2.5rem] md:rounded-[3rem] !bg-neo-accent-blue !text-neo-bg font-black text-xs md:text-sm uppercase tracking-[0.2em] md:tracking-[0.4em] hover:neo-pressed active:scale-95 transition-all flex items-center gap-4 md:gap-5 justify-center border border-white/[0.1] shadow-2xl shadow-neo-accent-blue/20">
-            <Code2 size={24} md:size={26} strokeWidth={3} />
+            <Code2 size={isMobile ? 24 : 26} strokeWidth={3} />
             Update Profile
           </button>
           <button className="neo-flat px-8 md:px-12 py-5 md:py-7 rounded-[2.5rem] md:rounded-[3rem] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] md:tracking-[0.3em] text-slate-400 hover:text-white transition-all flex items-center gap-3 md:gap-4 justify-center border border-white/[0.01]">
-            <ExternalLink size={20} md:size={24} />
+            <ExternalLink size={isMobile ? 20 : 24} />
             Public Link
           </button>
         </div>

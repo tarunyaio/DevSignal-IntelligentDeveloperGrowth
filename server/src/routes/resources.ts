@@ -1,19 +1,23 @@
-import { FastifyInstance } from 'fastify';
-import { supabaseAdmin } from '../server';
+import { Hono } from 'hono';
 
-export async function resourceRoutes(fastify: FastifyInstance) {
+const app = new Hono<{ 
+  Variables: { supabaseAdmin: any };
+}>();
 
-  // GET /api/resources — list all curated resources
-  fastify.get('/resources', async (_request, reply) => {
-    const { data, error } = await supabaseAdmin
-      .from('resources')
-      .select('*')
-      .order('rating', { ascending: false });
+// GET /api/resources — list all curated resources
+app.get('/resources', async (c) => {
+  const supabaseAdmin = c.get('supabaseAdmin');
 
-    if (error) {
-      return reply.status(500).send({ error: error.message });
-    }
+  const { data, error } = await supabaseAdmin
+    .from('resources')
+    .select('*')
+    .order('rating', { ascending: false });
 
-    return { resources: data };
-  });
-}
+  if (error) {
+    return c.json({ error: error.message }, 500);
+  }
+
+  return c.json({ resources: data });
+});
+
+export { app as resourceRoutes };
