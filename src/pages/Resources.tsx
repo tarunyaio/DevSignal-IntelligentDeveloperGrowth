@@ -123,7 +123,7 @@ export function Resources() {
           <motion.h2 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-5xl md:text-9xl font-black leading-tight tracking-tighter italic text-slate-200 mb-8"
+            className="text-4xl md:text-9xl font-black leading-tight tracking-tighter italic text-slate-200 mb-8"
           >
             Growth.<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-neo-accent-blue via-purple-500 to-indigo-600 non-italic underline decoration-neo-accent-blue/10 underline-offset-8">

@@ -178,7 +178,7 @@ export function LearningPathPage() {
 
                 <div className="w-full md:w-1/2">
                    <div className={cn(
-                     "neo-flat p-10 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/[0.01] transition-all duration-500 group",
+                     "neo-flat p-6 md:p-10 rounded-[2rem] md:rounded-[3.5rem] border border-white/[0.01] transition-all duration-500 group",
                      isCompleted && "bg-neo-accent-emerald/[0.02]",
                      isNext && "border-neo-accent-blue/20"
                    )}>
@@ -236,7 +236,7 @@ export function LearningPathPage() {
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-32 p-16 md:p-24 neo-flat rounded-[4rem] text-center space-y-10 border border-neo-accent-emerald/20 overflow-hidden relative"
+              className="mt-32 p-8 md:p-24 neo-flat rounded-[3rem] md:rounded-[4rem] text-center space-y-10 border border-neo-accent-emerald/20 overflow-hidden relative"
             >
               <div className="absolute inset-0 bg-neo-accent-emerald/5 opacity-50" />
               <div className="w-24 h-24 neo-icon text-neo-accent-emerald mx-auto relative z-10">

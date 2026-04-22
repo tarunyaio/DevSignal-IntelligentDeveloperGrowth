@@ -63,7 +63,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       onClick={() => navigate(`/resources/${id}`)}
       className="group relative"
     >
-      <div className="neo-flat rounded-[2.5rem] p-8 cursor-pointer border border-white/[0.01] transition-all duration-500 hover:neo-pressed h-full flex flex-col">
+      <div className="neo-flat rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 cursor-pointer border border-white/[0.01] transition-all duration-500 hover:neo-pressed h-full flex flex-col">
         {/* Category Badge - Surgical Style */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex flex-col">
@@ -82,10 +82,10 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         {/* Main Content */}
         <div className="mb-10 space-y-4 flex-grow">
           <div 
-            className="w-14 h-14 neo-icon mb-6"
+            className="w-12 h-12 md:w-14 md:h-14 neo-icon mb-6"
             style={{ color: accentColor }}
           >
-            <Icon size={24} strokeWidth={2.5} />
+            <Icon size={20} className="md:size-[24px]" strokeWidth={2.5} />
           </div>
           <h3 className="text-2xl font-black italic tracking-tighter text-slate-200 leading-tight group-hover:text-neo-accent-blue transition-colors">
             {title}
