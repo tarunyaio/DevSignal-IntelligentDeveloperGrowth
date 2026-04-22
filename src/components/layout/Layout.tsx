@@ -5,7 +5,7 @@ import { Footer } from './Footer';
 
 export function Layout() {
   return (
-    <div className="relative min-h-screen bg-neo-bg text-slate-200 font-sans selection:bg-neo-accent-blue/30 overflow-x-hidden">
+    <div className="relative min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white overflow-x-hidden industrial-grid">
       
       <div className="relative z-10 flex flex-col min-h-screen">
         <Header />

@@ -14,18 +14,18 @@ export function ActivityChart({ data }: ActivityChartProps) {
 
   if (isComputing) {
     return (
-      <div className="h-48 flex flex-col items-center justify-center text-slate-500 space-y-3">
-        <div className="flex gap-1">
+      <div className="h-48 flex flex-col items-center justify-center text-zinc-400 space-y-6 industrial-grid bg-zinc-50 border-2 border-black border-dashed">
+        <div className="flex gap-2">
           {[0, 1, 2].map(i => (
             <motion.div
               key={i}
-              animate={{ opacity: [0.2, 1, 0.2] }}
-              transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.2 }}
-              className="w-2 h-2 rounded-full bg-emerald-500"
+              animate={{ height: [8, 24, 8] }}
+              transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
+              className="w-2 bg-black"
             />
           ))}
         </div>
-        <p className="text-sm italic animate-pulse">GitHub is computing activity stats...</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Syncing_Activity_Buffer...</p>
       </div>
     );
   }
@@ -33,7 +33,7 @@ export function ActivityChart({ data }: ActivityChartProps) {
   const maxCommits = Math.max(...data.map(w => w.total), 1);
   const width = 800;
   const height = 120;
-  const padding = 20;
+  const padding = 10;
 
   // Generate points for the sparkline
   const points = data.map((week, i) => {
@@ -46,28 +46,21 @@ export function ActivityChart({ data }: ActivityChartProps) {
   const areaPath = `${linePath} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`;
 
   return (
-    <div className="relative group">
-      <div className="absolute top-0 right-0 flex items-center gap-2 text-[10px] text-emerald-500/80 font-mono">
-        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-        LIVE PULSE
+    <div className="relative group p-4 border-2 border-black bg-white">
+      <div className="absolute top-4 right-4 flex items-center gap-3 text-[10px] text-black font-black uppercase tracking-widest bg-yellow-400 px-3 py-1 border-2 border-black">
+        <div className="w-2 h-2 bg-black" />
+        PULSE: ACTIVE
       </div>
 
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-52 drop-shadow-[0_0_20px_rgba(16,185,129,0.25)]"
+        className="w-full h-52"
         preserveAspectRatio="none"
       >
-        <defs>
-          <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-
-        {/* Area Fill */}
+        {/* Area Fill - Industrial Pattern instead of gradient */}
         <motion.path
           d={areaPath}
-          fill="url(#areaGradient)"
+          fill="rgba(0,0,0,0.03)"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
@@ -77,31 +70,31 @@ export function ActivityChart({ data }: ActivityChartProps) {
         <motion.path
           d={linePath}
           fill="none"
-          stroke="#10b981"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          stroke="black"
+          strokeWidth="6"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
+          transition={{ duration: 1.5, ease: "circOut" }}
         />
 
-        {/* Hover Points */}
+        {/* Hover Bars instead of circles */}
         {points.map((p, i) => (
-          <circle
+          <rect
             key={i}
-            cx={p.x}
-            cy={p.y}
-            r="5"
-            className="fill-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"
-            style={{ transitionDelay: `${i * 20}ms` }}
+            x={p.x - 1}
+            y={p.y}
+            width="2"
+            height={height - p.y}
+            className="fill-black opacity-0 group-hover:opacity-10 transition-opacity"
           />
         ))}
       </svg>
 
-      <div className="flex justify-between mt-4 text-[10px] font-black uppercase tracking-widest text-slate-500/60 border-t border-white/5 pt-4">
-        <span>12 Weeks Ago</span>
-        <span>Recent Pulse</span>
+      <div className="flex justify-between mt-6 text-[10px] font-black uppercase tracking-widest text-zinc-400 border-t-2 border-black pt-4">
+        <span className="flex items-center gap-2"><span className="w-2 h-2 bg-zinc-200" /> T-12_WEEKS</span>
+        <span className="flex items-center gap-2">CURRENT_SIGNAL <span className="w-2 h-2 bg-black" /></span>
       </div>
     </div>
   );

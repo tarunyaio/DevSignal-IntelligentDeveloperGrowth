@@ -1,8 +1,6 @@
-import { Star, GitFork, Book, ArrowRight } from 'lucide-react';
-import React from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Link } from 'react-router-dom';
-
+import { motion } from 'framer-motion';
+import { Star, GitFork, ExternalLink, Code } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface RepoCardProps {
   id: string;
@@ -11,80 +9,53 @@ interface RepoCardProps {
   stars: number;
   forks: number;
   language: string;
-  lastUpdated: string;
+  lastUpdated?: string;
+  url?: string;
 }
 
-export function RepoCard({ id, name, description, stars, forks, language, lastUpdated }: RepoCardProps) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-  
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["6deg", "-6deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-6deg", "6deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
+export function RepoCard({ id, name, description, stars, forks, language, url }: RepoCardProps) {
+  const navigate = useNavigate();
 
   return (
-    <motion.div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => { x.set(0); y.set(0); }}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="perspective-1000 h-full"
+    <motion.div 
+      onClick={() => navigate(`/repo/${id}`)}
+      className="surgical-card p-10 cursor-pointer flex flex-col justify-between group h-full bg-white relative"
     >
-      <div 
-        className="neo-flat rounded-[2rem] md:rounded-[3rem] p-5 md:p-9 group relative border border-white/[0.01] flex flex-col gap-6 h-full transition-shadow duration-500 hover:shadow-2xl"
-        style={{ transform: "translateZ(20px)" }}
-      >
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-0" style={{ transform: "translateZ(40px)" }}>
-          <div className="flex items-center gap-4 md:gap-5">
-            <div className="w-10 h-10 md:w-14 md:h-14 neo-icon text-neo-accent-blue shadow-neo-accent-blue/10">
-              <Book size={18} className="md:size-[24px]" strokeWidth={2.5} />
-            </div>
-            <div className="min-w-0">
-              <h3 className="text-lg md:text-xl font-black tracking-tight text-slate-200 group-hover:text-neo-accent-blue transition-colors truncate max-w-[120px] md:max-w-[160px]">
-                {name.includes('/') ? name.split('/')[1] : name}
-              </h3>
-              <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest">{lastUpdated}</p>
-            </div>
+      <div className="space-y-8">
+        <div className="flex items-center justify-between border-b-2 border-black pb-6">
+          <div className="w-12 h-12 bg-black flex items-center justify-center text-white">
+            <Code size={24} strokeWidth={3} />
           </div>
-          
-          <div className="neo-pressed px-3 py-1.5 md:px-4 md:py-2 rounded-xl border border-white/[0.01] text-[9px] md:text-[10px] font-black tracking-widest text-neo-accent-blue uppercase shrink-0" style={{ transform: "translateZ(50px)" }}>
-            {language}
-          </div>
+          <button 
+            onClick={(e) => { e.stopPropagation(); window.open(url, '_blank'); }}
+            className="w-10 h-10 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all"
+          >
+            <ExternalLink size={18} />
+          </button>
         </div>
 
-        <p className="text-sm text-slate-400 font-medium leading-[1.6] line-clamp-2" style={{ transform: "translateZ(30px)" }}>
-          {description || "Repository synchronized for multi-vector analysis and structural integrity check."}
-        </p>
+        <div className="space-y-4">
+          <h4 className="text-2xl font-black tracking-tighter uppercase group-hover:text-accent-indigo transition-colors">{name}</h4>
+          <p className="text-sm text-zinc-500 font-bold italic line-clamp-3 leading-relaxed border-l-4 border-black/5 pl-4">
+            {description || 'System description unavailable for this repository.'}
+          </p>
+        </div>
+      </div>
 
-        <div className="flex items-center gap-8 mt-auto" style={{ transform: "translateZ(45px)" }}>
-          <div className="flex items-center gap-2 group-hover:text-neo-accent-blue transition-colors">
-            <div className="neo-icon w-9 h-9 scale-90">
-              <Star size={16} className="fill-current" />
-            </div>
-            <span className="text-xs font-black text-slate-300">{stars}</span>
+      <div className="mt-12 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 font-black text-xs uppercase tracking-widest">
+            <Star size={16} strokeWidth={3} className="text-yellow-600 fill-yellow-600" />
+            {stars}
           </div>
-          
-          <div className="flex items-center gap-2 group-hover:text-neo-accent-blue transition-colors">
-            <div className="neo-icon w-9 h-9 scale-90">
-              <GitFork size={16} />
-            </div>
-            <span className="text-xs font-black text-slate-300">{forks}</span>
+          <div className="flex items-center gap-2 font-black text-xs uppercase tracking-widest text-zinc-600">
+            <GitFork size={16} strokeWidth={3} />
+            {forks}
           </div>
-
-          <Link 
-            to={`/repo/${id}`} 
-            className="ml-auto w-12 h-12 neo-icon hover:neo-icon-pressed text-slate-500 hover:text-neo-accent-blue transition-all border border-white/[0.01]"
-          >
-            <ArrowRight size={20} />
-          </Link>
+        </div>
+        
+        <div className="flex items-center gap-2 px-3 py-1 bg-zinc-100 border border-black font-black text-[9px] uppercase tracking-widest">
+          {language}
         </div>
       </div>
     </motion.div>

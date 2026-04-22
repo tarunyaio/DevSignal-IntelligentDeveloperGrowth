@@ -1,7 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Clock, Star, ArrowUpRight } from 'lucide-react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { Clock, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 interface CourseCardProps {
@@ -9,124 +8,69 @@ interface CourseCardProps {
   title: string;
   tagline: string;
   category: string;
-  difficulty: string;
-  totalHours: number;
-  accentColor: string;
-  icon: any;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  duration: string;
+  lessonsCount: number;
   progress: number;
 }
 
-export const CourseCard: React.FC<CourseCardProps> = ({
-  id,
-  title,
-  tagline,
-  category,
-  difficulty,
-  totalHours,
-  accentColor,
-  icon: Icon,
-  progress
-}) => {
-  const navigate = useNavigate();
-  const progressPercentage = (progress / 10) * 100;
-
-  // Reduced tilt for stability
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
+export function CourseCard({ id, title, tagline, category, difficulty, duration, lessonsCount, progress }: CourseCardProps) {
+  const completionPercentage = Math.round((progress / lessonsCount) * 100);
 
   return (
     <motion.div 
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onClick={() => navigate(`/resources/${id}`)}
-      className="group relative"
+      className="surgical-card p-10 flex flex-col justify-between h-full bg-white relative group"
     >
-      <div className="neo-flat rounded-[2rem] p-6 cursor-pointer border border-white/[0.01] transition-all duration-500 hover:neo-pressed flex flex-col min-h-[380px]">
-        {/* Header Metadata */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">{category}</span>
+      <div className="space-y-8">
+        <div className="flex items-center justify-between border-b-2 border-black pb-6">
+          <span className="px-3 py-1 bg-zinc-100 border border-black font-black text-[9px] uppercase tracking-widest">
+            {difficulty}
+          </span>
+          <div className="flex items-center gap-2 text-zinc-500 font-black text-[10px] uppercase tracking-widest">
+            <Clock size={14} strokeWidth={3} />
+            {duration}
           </div>
-          <ArrowUpRight size={14} className="text-slate-600 group-hover:text-neo-accent-blue transition-colors" />
         </div>
 
-        {/* Content Node */}
-        <div className="mb-6 space-y-4">
-          <div 
-            className="w-12 h-12 neo-icon"
-            style={{ color: accentColor }}
-          >
-            <Icon size={20} strokeWidth={2.5} />
-          </div>
-          <h3 className="text-xl font-black italic tracking-tighter text-slate-200 leading-tight group-hover:text-neo-accent-blue transition-colors line-clamp-2">
+        <div className="space-y-4">
+          <h4 className="text-2xl font-black tracking-tighter uppercase group-hover:text-accent-indigo transition-colors leading-[0.9]">
             {title}
-          </h3>
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed opacity-60 line-clamp-2 italic">
-            {tagline}
+          </h4>
+          <p className="text-sm text-zinc-500 font-bold italic line-clamp-3 leading-relaxed border-l-4 border-black/5 pl-4">
+            "{tagline}"
           </p>
         </div>
 
-        {/* Bottom Metadata - Fixed at bottom */}
-        <div className="mt-auto pt-6 border-t border-white/[0.03] space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Clock size={12} className="text-slate-600" />
-              <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">{totalHours}H</span>
-            </div>
-            <div className="flex items-center gap-2">
-               <Star size={10} className={cn("fill-current", difficulty === 'Advanced' ? 'text-neo-accent-orange' : 'text-neo-accent-blue')} />
-               <span className="text-[9px] font-black uppercase tracking-widest text-slate-300">{difficulty}</span>
-            </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="space-y-2">
-            <div className="h-[4px] w-full neo-pressed rounded-full overflow-hidden">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercentage}%` }}
-                className="h-full rounded-full transition-all duration-1000 ease-out"
-                style={{ 
-                  backgroundColor: accentColor,
-                  boxShadow: `0 0 10px ${accentColor}40`
-                }}
-              />
-            </div>
-            <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-slate-600">
-               <span>Sync</span>
-               <span>{progress}/10</span>
-            </div>
-          </div>
-
-          <button className="w-full py-4 rounded-xl neo-flat flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-slate-200 hover:neo-pressed transition-all group/btn">
-            {progress > 0 ? 'Resume' : 'Start'}
-            <ChevronRight size={12} className="group-hover/btn:translate-x-1 transition-transform" />
-          </button>
+        <div className="inline-block px-2 py-0.5 bg-black text-white text-[8px] font-black uppercase tracking-[0.2em]">
+          {category}
         </div>
+      </div>
+
+      <div className="mt-12 space-y-6">
+        {/* Progress Bar */}
+        <div className="space-y-2">
+          <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest">
+            <span className="text-zinc-500">Integrity</span>
+            <span className="text-black">{completionPercentage}%</span>
+          </div>
+          <div className="h-4 bg-zinc-100 border-2 border-black overflow-hidden p-[2px]">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${completionPercentage}%` }}
+              transition={{ duration: 1.5, ease: "circOut" }}
+              className="h-full bg-black"
+            />
+          </div>
+        </div>
+
+        <Link 
+          to={`/learning-path/${id}`}
+          className="w-full py-5 bg-white border-4 border-black font-black text-[10px] uppercase tracking-widest text-black flex items-center justify-center gap-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+        >
+          {progress > 0 ? 'Resume_Module' : 'Init_Module'}
+          <ChevronRight size={16} strokeWidth={3} />
+        </Link>
       </div>
     </motion.div>
   );
-};
+}

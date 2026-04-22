@@ -1,77 +1,46 @@
-import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  BarChart3, 
-  BookOpen, 
-  Code2,
-  User
-} from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { LayoutDashboard, BookOpen, User, Code2, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
-  { icon: BarChart3, label: 'Analytics', href: '/analytics' },
-  { icon: BookOpen, label: 'Resources', href: '/resources' },
-  { icon: Code2, label: 'Editor', href: '/editor' },
+  { icon: LayoutDashboard, label: 'Feed', path: '/dashboard' },
+  { icon: BarChart3, label: 'Signal', path: '/analytics' },
+  { icon: BookOpen, label: 'Archive', path: '/resources' },
+  { icon: Code2, label: 'Logic', path: '/editor' },
+  { icon: User, label: 'User', path: '/profile' },
 ];
 
 export function BottomNav() {
+  const location = useLocation();
+
   return (
-    <div className="fixed bottom-6 md:bottom-12 left-0 right-0 flex justify-center items-center px-4 md:px-6 z-50 pointer-events-none">
-      <motion.nav 
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="neo-flat p-2 md:p-3 flex items-center gap-2 md:gap-6 rounded-[2.5rem] md:rounded-[3.5rem] pointer-events-auto border border-white/[0.01] shadow-2xl shadow-black/50"
-      >
-        <div className="flex items-center gap-1 md:gap-4 px-2 md:px-3">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.href}
-              to={item.href}
-              className={() => cn(
-                "relative group transition-all duration-300",
-                "w-12 h-12 md:w-16 md:h-16"
+    <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-6">
+      <div className="bg-white border-4 border-black p-2 flex items-center justify-between gap-2 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={cn(
+                "flex-1 flex flex-col items-center justify-center py-4 transition-all relative group",
+                isActive 
+                  ? "bg-black text-white" 
+                  : "text-zinc-500 hover:bg-zinc-50 hover:text-black"
               )}
             >
-              {({ isActive }) => (
-                <div className={cn(
-                  "w-full h-full neo-icon transition-all duration-300 border border-white/[0.01]",
-                  isActive ? "neo-icon-pressed text-neo-accent-blue" : "text-slate-500 hover:text-slate-300"
-                )}>
-                  <item.icon size={18} className={cn("md:size-[22px]", "transition-transform", isActive ? "scale-90" : "group-hover:scale-110")} />
-                  
-                  {/* Tooltip */}
-                  <span className="absolute -top-14 left-1/2 -translate-x-1/2 px-4 py-2 bg-slate-900/90 backdrop-blur-md text-white md:text-[10px] text-[8px] font-black rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none whitespace-nowrap shadow-2xl border border-white/5 uppercase tracking-[0.3em]">
-                    {item.label}
-                  </span>
-                </div>
-              )}
-            </NavLink>
-          ))}
-        </div>
-        
-        <div className="w-[1px] h-8 md:h-12 bg-white/[0.05] mx-1 md:mx-2" />
-        
-        <NavLink 
-          to="/profile"
-          className="relative group w-10 h-10 md:w-16 md:h-16 flex items-center justify-center pr-2 md:pr-3"
-        >
-          {({ isActive }) => (
-            <div className={cn(
-               "w-full h-full neo-icon overflow-hidden p-[3px] md:p-[4px] transition-all duration-300 border border-white/[0.01]",
-               isActive ? "neo-icon-pressed ring-2 ring-neo-accent-blue/30" : "hover:scale-105"
-             )}>
-               <div className="w-full h-full rounded-full bg-slate-800/50 flex items-center justify-center">
-                  <User size={18} className={isActive ? "text-neo-accent-blue" : "text-slate-400 md:size-[22px]"} />
-               </div>
-              <span className="absolute -top-14 left-1/2 -translate-x-1/2 px-4 py-2 bg-slate-900/90 backdrop-blur-md text-white md:text-[10px] text-[8px] font-black rounded-xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none whitespace-nowrap shadow-2xl border border-white/5 uppercase tracking-[0.3em]">
-                Profile
+              <item.icon size={20} strokeWidth={3} className={cn("transition-transform", !isActive && "group-hover:scale-110")} />
+              <span className={cn(
+                "text-[8px] font-black uppercase tracking-[0.2em] mt-2",
+                isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"
+              )}>
+                {item.label}
               </span>
-            </div>
-          )}
-        </NavLink>
-      </motion.nav>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }

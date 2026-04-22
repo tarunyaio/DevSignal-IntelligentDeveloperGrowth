@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Terminal } from 'lucide-react';
 
 interface LanguageData {
   name: string;
@@ -24,10 +25,11 @@ const LANGUAGE_COLORS: Record<string, string> = {
 };
 
 const DEFAULT_LANGUAGES: LanguageData[] = [
-  { name: 'TypeScript', percentage: 45 },
-  { name: 'JavaScript', percentage: 25 },
-  { name: 'Python', percentage: 20 },
-  { name: 'Other', percentage: 10 },
+  { name: 'JavaScript', percentage: 47 },
+  { name: 'HTML', percentage: 21 },
+  { name: 'TypeScript', percentage: 21 },
+  { name: 'CSS', percentage: 8 },
+  { name: 'Python', percentage: 3 },
 ];
 
 interface LanguageChartProps {
@@ -37,41 +39,44 @@ interface LanguageChartProps {
 export function LanguageChart({ languages }: LanguageChartProps) {
   const data = languages && languages.length > 0 ? languages : DEFAULT_LANGUAGES;
   return (
-    <div className="neo-flat p-10 rounded-[3rem] h-full relative border border-white/[0.01]">
-      <div className="flex justify-between items-center mb-10">
+    <div className="surgical-card p-10 bg-white relative overflow-hidden group">
+      <div className="flex justify-between items-center mb-12 border-b-2 border-black pb-6">
         <div>
-          <h3 className="text-2xl font-black tracking-tighter text-slate-200 uppercase">Language <span className="italic font-serif text-neo-accent-orange underline decoration-neo-accent-orange/30 underline-offset-8">Distribution</span></h3>
-          <p className="text-[10px] text-slate-500 uppercase tracking-[0.4em] font-black mt-3">Architectural Composition</p>
+          <h3 className="text-3xl font-black tracking-tighter text-black uppercase leading-none">Language <br /><span className="text-accent-indigo italic">Distribution</span></h3>
+          <p className="text-[10px] text-zinc-500 uppercase tracking-[0.4em] font-black mt-4">Architectural_Composition</p>
         </div>
+        <Terminal size={32} strokeWidth={3} className="text-zinc-200 group-hover:text-black transition-colors" />
       </div>
 
-      <div className="space-y-10">
+      <div className="space-y-12 relative z-10">
         {data.map((lang, index) => (
           <div key={lang.name} className="space-y-4">
-            <div className="flex justify-between items-end px-2">
-              <span className="text-xs font-black text-slate-400 uppercase tracking-widest">{lang.name}</span>
-              <span className="text-xs font-black text-slate-200 tracking-tighter">{lang.percentage}%</span>
+            <div className="flex justify-between items-end">
+              <span className="text-xs font-black text-black uppercase tracking-widest">{lang.name}</span>
+              <span className="text-sm font-black text-zinc-400 tracking-tighter">{lang.percentage}%</span>
             </div>
             
-            <div className="h-3 w-full neo-pressed rounded-full p-[3px] overflow-hidden border border-white/[0.01]">
+            <div className="h-4 w-full border-2 border-black p-[2px] bg-zinc-50">
               <motion.div
                 initial={{ width: 0 }}
                 whileInView={{ width: `${lang.percentage}%` }}
-                transition={{ duration: 1.5, delay: index * 0.1, ease: "easeOut" }}
-                className="h-full rounded-full relative"
-                style={{ backgroundColor: LANGUAGE_COLORS[lang.name] || '#a97bff' }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
-              </motion.div>
+                transition={{ duration: 1.5, delay: index * 0.1, ease: "circOut" }}
+                className="h-full relative"
+                style={{ backgroundColor: LANGUAGE_COLORS[lang.name] || '#000000' }}
+              />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Polish "Intelligence" Overlay */}
-      <div className="mt-12 p-6 neo-pressed rounded-[2.5rem] border border-white/[0.01] text-[11px] text-slate-400 leading-relaxed font-bold italic tracking-wide">
-        "Your stack is balanced with a focus on <span className="text-neo-accent-blue font-black not-italic px-1">Modern Standards</span> and <span className="text-neo-accent-orange font-black not-italic px-1">System Scalability</span>."
+      <div className="mt-16 p-8 border-4 border-black bg-zinc-50 relative overflow-hidden">
+        <div className="relative z-10 text-xs text-zinc-500 leading-relaxed font-bold italic tracking-wide">
+          "Your stack is balanced with a focus on <span className="text-black font-black not-italic border-b-2 border-black">Modern Standards</span> and <span className="text-black font-black not-italic border-b-2 border-black">System Scalability</span>."
+        </div>
+        <div className="industrial-grid absolute inset-0 opacity-10" />
       </div>
+      
+      <div className="industrial-grid absolute inset-0 opacity-5 pointer-events-none" />
     </div>
   );
 }

@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev src/server.ts",
+    "dev": "wrangler dev src/server.ts --port 3001",
     "build": "tsc",
     "start": "node dist/server.js",
     "deploy": "wrangler deploy src/server.ts",

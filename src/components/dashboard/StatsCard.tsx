@@ -1,85 +1,46 @@
-import React from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { TrendingUp, TrendingDown } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface StatsCardProps {
   title: string;
   value: string | number;
-  suffix?: string;
-  icon: any;
+  icon: React.ComponentType<any>;
+  color: 'blue' | 'purple' | 'emerald' | 'orange' | 'amber' | 'violet';
   trend?: {
     value: number;
     isPositive: boolean;
   };
-  color: 'blue' | 'orange' | 'purple' | 'emerald';
 }
 
-const colorMap = {
-  blue: 'text-neo-accent-blue',
-  orange: 'text-neo-accent-orange',
-  purple: 'text-purple-400',
-  emerald: 'text-emerald-400',
-};
-
-export function StatsCard({ title, value, suffix, icon: Icon, trend, color }: StatsCardProps) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-  
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const cleanTitle = title === "Repositories" ? "Total Repos" : 
-                     title === "Signal Stars" ? "Total Stars" : title;
-
+export function StatsCard({ title, value, icon: Icon, color, trend }: StatsCardProps) {
   return (
-    <motion.div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => { x.set(0); y.set(0); }}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="perspective-1000"
+    <motion.div 
+      className="surgical-card p-10 flex flex-col justify-between h-full bg-white relative overflow-hidden"
     >
-      <div 
-        className="neo-flat rounded-[2rem] md:rounded-[3rem] p-5 md:p-8 group relative border border-white/[0.01] transition-shadow duration-500 hover:shadow-2xl"
-        style={{ transform: "translateZ(20px)" }}
-      >
-        <div className="flex justify-between items-start mb-8" style={{ transform: "translateZ(40px)" }}>
-          <div className={cn("w-12 h-12 md:w-16 md:h-16 neo-icon", colorMap[color])}>
-            <Icon size={20} className="md:size-[26px]" strokeWidth={2.5} />
-          </div>
-          
-          {trend && (
-            <div className={cn(
-              "neo-pressed px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest border border-white/[0.02] uppercase",
-              trend.isPositive ? 'text-neo-accent-blue' : 'text-neo-accent-orange'
-            )}>
-              {trend.isPositive ? '+' : '-'}{trend.value}%
-            </div>
-          )}
+      <div className="absolute top-0 right-0 w-2 h-full bg-black opacity-5" />
+      
+      <div className="flex items-start justify-between">
+        <div className="w-16 h-16 border-4 border-black flex items-center justify-center text-black">
+          <Icon size={32} strokeWidth={3} />
         </div>
-
-        <div className="space-y-2" style={{ transform: "translateZ(50px)" }}>
-          <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em]">{cleanTitle}</p>
-          <div className="flex items-baseline gap-2">
-            <h3 className="text-2xl md:text-5xl font-black tracking-tighter text-slate-200">{value}</h3>
-            {suffix && <span className="text-[10px] md:text-xs text-slate-600 font-bold uppercase">{suffix}</span>}
+        {trend && (
+          <div className={cn(
+            "px-2 py-1 border-2 border-black font-black text-[10px] uppercase tracking-widest",
+            trend.isPositive ? "bg-green-400" : "bg-red-400"
+          )}>
+            {trend.value}%
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Subtle Glow Layer */}
-        <div className={cn(
-          "absolute -bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-[2px] blur-md transition-opacity duration-700 opacity-20 group-hover:opacity-100",
-          color === 'blue' || color === 'emerald' ? "bg-neo-accent-blue" : "bg-neo-accent-orange"
-        )} />
+      <div className="mt-12 space-y-2">
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500">{title}</p>
+        <div className="flex items-baseline gap-4">
+          <h4 className="text-5xl font-black tracking-tighter leading-none">{value}</h4>
+          <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">_UNIT</span>
+        </div>
       </div>
     </motion.div>
   );

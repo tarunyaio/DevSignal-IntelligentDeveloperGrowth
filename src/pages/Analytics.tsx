@@ -1,7 +1,9 @@
+import React from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Brain, Shield, Rocket } from 'lucide-react';
+import { TrendingUp, Brain, Shield, Rocket, BarChart2 } from 'lucide-react';
 import { useAnalytics } from '@/hooks/queries';
 import { SEO } from '@/components/layout/SEO';
+import { cn } from '@/lib/utils';
 
 // Memoize random data outside the component
 const HEATMAP_DATA = Array.from({ length: 168 }).map(() => ({
@@ -14,25 +16,45 @@ export function Analytics() {
   const languages = analytics?.languages || [];
 
   return (
-    <div className="relative min-h-screen space-y-8 md:space-y-16 pb-28 md:pb-32">
-      <SEO title="Intelligence Hub" description="Global mapping of your technical evolution and performance." />
-      <header className="space-y-2">
-        <h2 className="text-2xl md:text-4xl font-bold tracking-tight">Intelligence <span className="italic font-serif text-purple-400">Hub</span></h2>
-        <p className="text-slate-400 font-medium">Global mapping of your technical evolution and performance.</p>
-      </header>
+    <div className="relative min-h-screen space-y-16 pb-40 px-6 md:px-0">
+      <SEO title="Signal Mapping" description="Global mapping of technical evolution and performance arrays." />
+      
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 border-b-4 border-black pb-12">
+        <div className="space-y-6">
+          <div className="inline-block px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-[0.3em]">
+            Module: Analytics_Beta
+          </div>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter uppercase leading-none">
+            Technical <br />
+            <span className="text-accent-indigo">Evolution.</span>
+          </h2>
+        </div>
+        
+        <div className="flex items-center gap-6">
+          <div className="w-16 h-16 border-4 border-black flex items-center justify-center bg-zinc-50">
+            <BarChart2 size={32} strokeWidth={3} />
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 max-w-[200px] leading-relaxed">
+            Real-time parsing of global activity blocks and contribution velocity patterns.
+          </p>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
-        {/* Skill Radar - Custom CSS and SVG breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* Skill Architecture */}
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-1 p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl overflow-hidden relative"
+          className="lg:col-span-1 surgical-card p-10 bg-white relative overflow-hidden group"
         >
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <Brain size={120} />
+          <div className="absolute -top-12 -right-12 opacity-5 text-black">
+            <Brain size={240} strokeWidth={4} />
           </div>
-          <h3 className="text-xl font-bold mb-6">Skill <span className="text-blue-400">Architecture</span></h3>
-          <div className="space-y-6">
+          <h3 className="text-3xl font-black uppercase tracking-tighter mb-12 border-b-4 border-black pb-6 italic">
+            Skill_Array
+          </h3>
+          <div className="space-y-10 relative z-10">
             {(languages.length > 0 ? languages : [
               { name: 'Frontend', percentage: 80 },
               { name: 'Backend', percentage: 65 },
@@ -40,63 +62,67 @@ export function Analytics() {
               { name: 'DevOps', percentage: 73 },
               { name: 'AI/ML', percentage: 50 },
             ]).map((skill, index) => (
-              <div key={skill.name} className="space-y-2">
-                <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-slate-500">
+              <div key={skill.name} className="space-y-4">
+                <div className="flex justify-between text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
                   <span>{skill.name}</span>
-                  <span>{skill.percentage}%</span>
+                  <span className="text-black bg-yellow-400 px-2 border border-black">{skill.percentage}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-5 bg-zinc-50 border-2 border-black p-[3px] overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${skill.percentage}%` }}
-                    transition={{ duration: 1, delay: index * 0.1 }}
-                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                    transition={{ duration: 1.5, delay: index * 0.1, ease: "circOut" }}
+                    className="h-full bg-black"
                   />
                 </div>
               </div>
             ))}
           </div>
+          <div className="industrial-grid absolute inset-0 opacity-5 pointer-events-none" />
         </motion.div>
 
-        {/* Contribution Heatmap Mockup - "Alive" grid design */}
+        {/* Contribution Heatmap */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-2 p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-3xl"
+          className="lg:col-span-2 surgical-card p-10 bg-white relative overflow-hidden"
         >
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-xl font-bold italic font-serif">Deep Work <span className="text-purple-400">Heatmap</span></h3>
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <span>Less</span>
-              {[0.1, 0.3, 0.6, 0.9].map(op => (
-                <div key={op} className="w-3 h-3 rounded-sm bg-purple-500" style={{ opacity: op }} />
-              ))}
-              <span>More</span>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16 border-b-4 border-black pb-10">
+            <h3 className="text-3xl font-black uppercase tracking-tighter italic">Deep_Work_Heatmap</h3>
+            <div className="flex items-center gap-4 px-6 py-3 border-4 border-black bg-zinc-50">
+              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Scale:</span>
+              <div className="flex gap-2">
+                {[0.1, 0.4, 0.7, 1].map(op => (
+                  <div key={op} className="w-4 h-4 border-2 border-black bg-black" style={{ opacity: String(op) }} />
+                ))}
+              </div>
             </div>
           </div>
           
-          <div className="grid grid-cols-24 gap-1.5">
-            {/* Yeh loop ek vibrant heatmap grid create karta hai */}
+          <div className="grid grid-cols-12 sm:grid-cols-[repeat(24,minmax(0,1fr))] gap-2 relative z-10">
             {HEATMAP_DATA.map((data, i) => (
               <motion.div 
                 key={i}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: i * 0.002 }}
-                className="aspect-square rounded-[3px] bg-purple-500/40 hover:bg-purple-400 transition-colors cursor-help"
-                style={{ opacity: data.opacity }}
-                title={`Activity level: ${data.level} commits`}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: data.opacity }}
+                transition={{ delay: i * 0.001 }}
+                className="aspect-square border-2 border-black/5 bg-black hover:bg-accent-indigo hover:opacity-100 transition-all cursor-crosshair hover:scale-125 hover:z-20"
+                title={`Level: ${data.level}`}
               />
             ))}
           </div>
+          <div className="mt-12 p-8 border-4 border-black bg-zinc-50 text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 italic text-center relative z-10">
+            "System pulse: Optimized for high-velocity contribution arrays."
+          </div>
+          <div className="industrial-grid absolute inset-0 opacity-5 pointer-events-none" />
         </motion.div>
       </div>
 
       {/* Performance Metrics Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
-        <MetricBox title="Total Repos" value={String(analytics?.total_repos ?? 0)} suffix="synced" icon={TrendingUp} color="blue" />
-        <MetricBox title="Total Stars" value={String(analytics?.total_stars ?? 0)} suffix="earned" icon={Shield} color="green" />
-        <MetricBox title="Open Issues" value={String(analytics?.total_issues ?? 0)} suffix="active" icon={Rocket} color="purple" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <MetricBox title="Total_Repos" value={String(analytics?.total_repos ?? 0)} suffix="SYNCED" icon={TrendingUp} color="indigo" />
+        <MetricBox title="Stars_Earned" value={String(analytics?.total_stars ?? 0)} suffix="VERIFIED" icon={Shield} color="black" />
+        <MetricBox title="Active_Issues" value={String(analytics?.total_issues ?? 0)} suffix="PENDING" icon={Rocket} color="indigo" />
       </div>
     </div>
   );
@@ -107,25 +133,25 @@ interface MetricBoxProps {
   value: string;
   suffix: string;
   icon: React.ElementType;
-  color: 'blue' | 'green' | 'purple';
+  color: 'indigo' | 'black';
 }
 
 function MetricBox({ title, value, suffix, icon: Icon, color }: MetricBoxProps) {
-  const colorMap = {
-    blue: 'text-blue-400 border-blue-500/20 bg-blue-500/5',
-    green: 'text-green-400 border-green-500/20 bg-green-500/5',
-    purple: 'text-purple-400 border-purple-500/20 bg-purple-500/5',
-  };
-
   return (
-    <div className={`p-8 rounded-[2rem] border backdrop-blur-xl flex flex-col items-center text-center space-y-4 ${colorMap[color]}`}>
-      <Icon size={32} strokeWidth={1.5} />
-      <div>
-        <h4 className="text-3xl font-bold tracking-tighter">{value}</h4>
-        <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mt-1">{title}</p>
-        <p className="text-[10px] text-slate-600 mt-2 italic">{suffix}</p>
+    <div className={cn(
+      "surgical-card p-12 flex flex-col items-center text-center space-y-8 group transition-all",
+      color === 'indigo' ? 'hover:bg-zinc-50' : 'hover:bg-zinc-100'
+    )}>
+      <div className="w-20 h-20 border-4 border-black flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-none group-hover:translate-x-[3px] group-hover:translate-y-[3px]">
+        <Icon size={40} strokeWidth={3} />
+      </div>
+      <div className="space-y-6">
+        <h4 className="text-8xl font-black tracking-tighter leading-none">{value}</h4>
+        <div className="space-y-2">
+          <p className="text-xs font-black uppercase tracking-[0.4em] text-black border-y-2 border-black py-3">{title}</p>
+          <p className="text-[10px] font-bold text-zinc-500 mt-6 italic tracking-[0.3em] uppercase">{suffix}_STATUS</p>
+        </div>
       </div>
     </div>
   );
 }
-

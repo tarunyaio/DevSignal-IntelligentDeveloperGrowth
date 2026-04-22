@@ -11,7 +11,7 @@ export function SEO({
   title, 
   description, 
   image = '/og-preview.png',
-  url = 'https://devsignal.pages.dev/' 
+  url = import.meta.env.VITE_SITE_URL || 'http://localhost:5173' 
 }: SEOProps) {
   useEffect(() => {
     const baseTitle = 'DevSignal | Developer Intelligence';

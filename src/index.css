@@ -1,58 +1,94 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: "Inter", "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Outfit", sans-serif;
   
-  /* Neomorphic Colors - Refined for Visibility */
-  --color-neo-bg: #0f1115;
-  --color-neo-surface: #0f1115;
-  --color-neo-accent-blue: #3b82f6;
-  --color-neo-accent-emerald: #10b981;
-  --color-neo-accent-orange: #f97316;
+  /* Surgical / Industrial Palette */
+  --color-primary-50: #f8fafc;
+  --color-primary-100: #f1f5f9;
+  --color-primary-200: #e2e8f0;
+  --color-primary-300: #cbd5e1;
+  --color-primary-400: #94a3b8;
+  --color-primary-500: #64748b;
+  --color-primary-600: #475569;
+  --color-primary-700: #334155;
+  --color-primary-800: #1e293b;
+  --color-primary-900: #0f172a;
+
+  --color-app-bg: #ffffff;
+  --color-app-surface: #f8fafc;
+  --color-app-border: #000000;
+  --color-app-text: #000000;
+  --color-app-text-muted: #666666;
+  
+  --color-accent-indigo: #4338ca;
+  --color-accent-blue: #2563eb;
+  --color-accent-emerald: #059669;
 }
 
 @layer base {
   body {
-    @apply font-sans bg-neo-bg text-slate-200 selection:bg-neo-accent-blue/20;
+    @apply font-sans bg-white text-black antialiased selection:bg-black selection:text-white;
     min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-black tracking-tight uppercase;
   }
 }
 
 @layer utilities {
-  /* 3D Perspective Context */
-  .perspective-1000 {
-    perspective: 1000px;
+  .surgical-card {
+    @apply bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200;
   }
 
-  /* Refined Raised Surface */
-  .neo-flat {
-    @apply bg-neo-surface;
-    box-shadow: 
-      8px 8px 16px rgba(0, 0, 0, 0.5),
-      -8px -8px 16px rgba(255, 255, 255, 0.04);
+  .industrial-grid {
+    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
-  /* Refined Pressed Surface */
-  .neo-pressed {
-    @apply bg-neo-surface;
-    box-shadow: 
-      inset 6px 6px 12px rgba(0, 0, 0, 0.5),
-      inset -6px -6px 12px rgba(255, 255, 255, 0.04);
+  /* Industrial Scrollbar */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-left: 2px solid #000000;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #000000;
+    border: 2px solid #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4338ca;
   }
 
-  /* Circular Icon Buttons */
-  .neo-icon {
-    @apply flex items-center justify-center rounded-full bg-neo-surface transition-all active:scale-95;
-    box-shadow: 
-      4px 4px 8px rgba(0, 0, 0, 0.4),
-      -4px -4px 8px rgba(255, 255, 255, 0.04);
+  .accent-text {
+    @apply text-accent-indigo font-black uppercase tracking-tighter;
   }
-  
-  .neo-icon-pressed {
-    @apply flex items-center justify-center rounded-full bg-neo-surface;
-    box-shadow: 
-      inset 3px 3px 6px rgba(0, 0, 0, 0.4),
-      inset -3px -3px 6px rgba(255, 255, 255, 0.04);
+
+  .pill-badge {
+    @apply px-3 py-1 border border-black text-[10px] font-black uppercase tracking-widest bg-white;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Flowing line animation - simplified for industrial look */
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .animate-draw {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dash 5s linear forwards;
   }
 }

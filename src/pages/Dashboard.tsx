@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Layout, Star, GitFork, Zap, RefreshCcw, AlertCircle, Cpu } from 'lucide-react';
+import { Layout, Star, GitFork, Zap, RefreshCcw, AlertCircle, Cpu, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { RepoCard } from '@/components/dashboard/RepoCard';
 import { LanguageChart } from '@/components/dashboard/LanguageChart';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
 import { useRepos, useAnalytics, useSync } from '@/hooks/queries';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSearch } from '@/contexts/SearchContext';
 import { cn } from '@/lib/utils';
 import { SEO } from '@/components/layout/SEO';
 
@@ -14,6 +16,7 @@ export function Dashboard() {
   const { data: analytics, isLoading: analyticsLoading } = useAnalytics();
   const syncMutation = useSync();
   const { user } = useAuth();
+  const [visibleRepos, setVisibleRepos] = useState(6);
 
   const isLoading = reposLoading || analyticsLoading;
 
@@ -26,121 +29,127 @@ export function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-10">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-8 industrial-grid">
         <motion.div 
-          animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-32 h-32 neo-icon text-neo-accent-blue"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-24 h-24 border-8 border-black border-t-transparent flex items-center justify-center"
         >
-          <Cpu size={48} strokeWidth={1} />
+          <RefreshCcw size={32} strokeWidth={3} />
         </motion.div>
-        <div className="text-center space-y-2">
-          <p className="text-xl font-black text-slate-200 uppercase tracking-[0.2em]">Synchronizing</p>
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest italic">Fetching repository data...</p>
+        <div className="text-center space-y-4">
+          <p className="text-2xl font-black uppercase tracking-tighter">Initializing Probe...</p>
+          <div className="h-2 w-48 bg-zinc-100 border-2 border-black overflow-hidden mx-auto">
+            <motion.div 
+              initial={{ x: '-100%' }}
+              animate={{ x: '100%' }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              className="h-full w-1/2 bg-black"
+            />
+          </div>
         </div>
       </div>
     );
   }
 
-  if (reposError) {
-    return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-6 text-slate-400">
-        <div className="w-20 h-20 neo-icon text-neo-accent-orange">
-          <AlertCircle size={32} />
-        </div>
-        <p className="font-bold uppercase tracking-widest text-xs">Failed to load repositories</p>
-        <button onClick={handleSync} className="neo-flat px-6 py-2 rounded-xl text-neo-accent-blue font-black text-[10px] uppercase tracking-widest">
-          Retry Sync
-        </button>
-      </div>
-    );
-  }
+  const { searchQuery } = useSearch();
 
-  const repoList = repos || [];
+  const repoList = (repos || []).filter(repo => 
+    repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (repo.description && repo.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
   const stats = analytics || { total_repos: 0, total_stars: 0, total_forks: 0, total_issues: 0, languages: [] };
 
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative min-h-screen space-y-10 md:space-y-16 pb-28 md:pb-32"
+      className="space-y-16 pb-32"
     >
-      <SEO title="Dashboard" description="Monitor your project pulse and development signals in real-time." />
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-10">
-        <div className="space-y-4">
-          <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-200">Dashboard</h2>
-          <p className="text-slate-500 font-bold text-[8px] md:text-[10px] uppercase tracking-[0.4em]">
-            Status: <span className="text-neo-accent-blue">Online</span> • Monitoring <span className="text-slate-300">{stats.total_repos} active projects</span>
-          </p>
+      <SEO title="Dashboard" description="Surgical monitoring of repository signals." />
+      
+      {/* Header & Sync */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 border-b-4 border-black pb-12">
+        <div className="space-y-6">
+          <div className="inline-block px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-[0.3em]">
+            Sector: Alpha-1
+          </div>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter uppercase leading-none">
+            Intelligence <br />
+            <span className="text-accent-indigo">Feed.</span>
+          </h2>
         </div>
         
         <button 
           onClick={handleSync}
           disabled={syncMutation.isPending}
-          className="neo-flat flex items-center gap-4 md:gap-5 px-6 md:px-10 py-4 md:py-5 rounded-[2rem] md:rounded-[2.5rem] hover:neo-pressed transition-all group disabled:opacity-50 border border-white/[0.01]"
+          className="px-10 py-5 border-4 border-black font-black text-xs uppercase tracking-widest bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all flex items-center gap-4 group"
         >
-          <div className={cn("w-10 h-10 md:w-12 md:h-12 neo-icon", syncMutation.isPending && "neo-icon-pressed")}>
-            <RefreshCcw size={18} className={cn("text-neo-accent-blue", syncMutation.isPending ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-700')} />
-          </div>
-          <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-slate-200">
-            {syncMutation.isPending ? 'STAGING...' : 'Manual Sync'}
-          </span>
+          <RefreshCcw size={20} className={cn("transition-transform", syncMutation.isPending && 'animate-spin')} strokeWidth={3} />
+          {syncMutation.isPending ? 'Processing...' : 'Rescan Repositories'}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12">
-        <StatsCard title="Total Repos" value={stats.total_repos} icon={Layout} color="blue" trend={{ value: 8, isPositive: true }} />
-        <StatsCard title="Total Stars" value={stats.total_stars} icon={Star} color="purple" trend={{ value: 12, isPositive: true }} />
-        <StatsCard title="Total Forks" value={stats.total_forks} icon={GitFork} color="emerald" />
-        <StatsCard title="Open Issues" value={stats.total_issues} icon={Zap} color="orange" />
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <StatsCard title="Total_Repos" value={stats.total_repos} icon={Layout} color="blue" />
+        <StatsCard title="Stars_Mapped" value={stats.total_stars} icon={Star} color="amber" />
+        <StatsCard title="Forks_Detected" value={stats.total_forks} icon={GitFork} color="violet" />
+        <StatsCard title="Active_Issues" value={stats.total_issues} icon={Zap} color="orange" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
-        <div className="lg:col-span-1">
-          <LanguageChart languages={analytics?.languages} />
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="lg:col-span-2 space-y-10">
+          <div className="flex items-center justify-between border-b-2 border-black pb-4">
+            <h3 className="text-2xl font-black uppercase tracking-tighter">Signal Array</h3>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Total: {repoList.length}</span>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {repoList.length > 0 ? (
+              repoList.slice(0, visibleRepos).map((repo) => (
+                <RepoCard 
+                  key={repo.id} 
+                  {...repo}
+                />
+              ))
+            ) : (
+              <div className="col-span-full py-20 border-4 border-dashed border-black/10 flex flex-col items-center justify-center text-center space-y-6">
+                <AlertCircle size={48} className="text-zinc-400" />
+                <div className="space-y-2">
+                  <p className="text-xl font-black uppercase tracking-tighter text-zinc-600">Zero Results Detected</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Archive query returned null for "{searchQuery}"</p>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {visibleRepos < repoList.length && (
+            <button 
+              onClick={() => setVisibleRepos(prev => prev + 6)}
+              className="w-full py-8 border-4 border-dashed border-black font-black text-xs uppercase tracking-widest hover:bg-zinc-50 transition-colors shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
+            >
+              Load Remaining Data Blocks
+            </button>
+          )}
         </div>
-        <div className="lg:col-span-2">
-          <ActivityFeed />
-        </div>
-      </div>
 
-      <div className="space-y-8 md:space-y-10">
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <h3 className="text-2xl md:text-3xl font-black tracking-tighter text-slate-200 italic">Project <span className="text-neo-accent-blue not-italic underline decoration-neo-accent-blue/30 underline-offset-8">Pulse</span></h3>
-            <p className="text-[8px] md:text-[10px] text-slate-500 uppercase tracking-[0.4em] font-black">Synchronized Local Repository Feed</p>
+        <div className="space-y-12">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b-2 border-black pb-4">
+              <h3 className="text-2xl font-black uppercase tracking-tighter">Metrics</h3>
+            </div>
+            <LanguageChart languages={analytics?.languages} />
           </div>
-          <div className="h-[2px] flex-1 neo-pressed mx-8 md:mx-16 hidden md:block" />
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b-2 border-black pb-4">
+              <h3 className="text-2xl font-black uppercase tracking-tighter">Logs</h3>
+            </div>
+            <ActivityFeed />
+          </div>
         </div>
-        
-        {repoList.length === 0 ? (
-          <div className="py-28 neo-flat rounded-[4rem] flex flex-col items-center justify-center text-center space-y-8 border border-white/[0.01]">
-            <div className="w-24 h-24 neo-icon text-slate-800">
-              <RefreshCcw size={40} />
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-black text-slate-500 uppercase tracking-[0.3em]">No repositories found.</p>
-              <button onClick={handleSync} className="text-neo-accent-blue font-black underline underline-offset-8 uppercase text-[10px] tracking-[0.4em] hover:text-white transition-colors">
-                Initialize Discovery Sync
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-            {repoList.map((repo) => (
-              <RepoCard 
-                key={repo.id} 
-                id={repo.id}
-                name={repo.name}
-                description={repo.description || ''}
-                stars={repo.stars}
-                forks={repo.forks}
-                language={repo.language || 'Unknown'}
-                lastUpdated={repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'Never'}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </motion.div>
   );

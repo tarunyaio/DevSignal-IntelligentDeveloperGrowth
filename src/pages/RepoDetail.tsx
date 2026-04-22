@@ -1,10 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
   Activity, ExternalLink, GitCommit,
   GitPullRequest, AlertCircle,
-  Users, Code2, Cpu
+  Users, Code2, Cpu, Terminal, Star, BarChart3
 } from 'lucide-react';
 import { useRepo } from '@/hooks/queries';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
@@ -12,45 +12,27 @@ import { ContributorGrid } from '@/components/dashboard/ContributorGrid';
 import { LanguageStats } from '@/components/dashboard/LanguageStats';
 import { ReadmePreview } from '@/components/dashboard/ReadmePreview';
 import { cn } from '@/lib/utils';
+import { SEO } from '@/components/layout/SEO';
 
-function TiltMetric({ label, value, icon: Icon, color }: any) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
-
-  const colorClass = {
-    blue: 'text-neo-accent-blue',
-    purple: 'text-purple-400',
-    orange: 'text-neo-accent-orange',
-  }[color as 'blue' | 'purple' | 'orange'];
-
+function IndustrialMetric({ label, value, icon: Icon, color }: any) {
   return (
-    <motion.div 
-      onMouseMove={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        x.set((e.clientX - rect.left) / rect.width - 0.5);
-        y.set((e.clientY - rect.top) / rect.height - 0.5);
-      }}
-      onMouseLeave={() => { x.set(0); y.set(0); }}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="perspective-1000"
-    >
-      <div className="neo-flat p-6 md:p-9 rounded-[2rem] md:rounded-[3rem] border border-white/[0.01] group transition-all" style={{ transform: "translateZ(20px)" }}>
-        <div className="flex items-center justify-between mb-8" style={{ transform: "translateZ(40px)" }}>
-          <div className={cn("neo-icon w-14 h-14", colorClass)}>
-            <Icon size={24} strokeWidth={2.5} />
-          </div>
-          <div className="w-12 h-[1px] neo-pressed opacity-40" />
+    <div className="surgical-card p-10 flex flex-col justify-between h-full bg-white group">
+      <div className="flex items-center justify-between border-b-2 border-black pb-6">
+        <div className={cn(
+          "w-14 h-14 border-4 border-black flex items-center justify-center transition-all",
+          color === 'blue' ? 'group-hover:bg-blue-500 group-hover:text-white' : 
+          color === 'purple' ? 'group-hover:bg-purple-500 group-hover:text-white' : 
+          'group-hover:bg-orange-500 group-hover:text-white'
+        )}>
+          <Icon size={24} strokeWidth={3} />
         </div>
-        <div className="space-y-2" style={{ transform: "translateZ(50px)" }}>
-          <p className="text-2xl md:text-5xl font-black tracking-tighter text-slate-200">{value}</p>
-          <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">{label}</p>
-        </div>
+        <div className="w-12 h-1 bg-black/10" />
       </div>
-    </motion.div>
+      <div className="mt-8 space-y-2">
+        <p className="text-4xl md:text-6xl font-black tracking-tighter text-black leading-none">{value}</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400">{label}_VALUE</p>
+      </div>
+    </div>
   );
 }
 
@@ -60,155 +42,163 @@ export function RepoDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-10">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-12 industrial-grid">
         <motion.div 
-          animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-32 h-32 neo-icon text-neo-accent-blue"
-        >
-          <Cpu size={48} strokeWidth={1} />
-        </motion.div>
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-24 h-24 border-8 border-black border-t-transparent"
+        />
+        <p className="text-xl font-black uppercase tracking-tighter">Parsing_Repository_Structure...</p>
       </div>
     );
   }
 
   if (error || !repo) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-8 text-slate-400">
-        <div className="w-24 h-24 neo-icon text-neo-accent-orange">
-          <AlertCircle size={40} />
+      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-10 text-black industrial-grid">
+        <div className="w-24 h-24 border-4 border-black flex items-center justify-center">
+          <AlertCircle size={48} strokeWidth={3} className="text-red-500" />
         </div>
-        <p className="font-black uppercase tracking-[0.3em] text-xs">Repository connection lost</p>
-        <Link to="/dashboard" className="neo-flat px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] text-neo-accent-blue">Return to Dashboard</Link>
+        <div className="text-center space-y-4">
+          <p className="font-black uppercase tracking-[0.5em] text-sm">CONNECTION_TERMINATED</p>
+          <p className="text-zinc-400 font-bold italic">Error_Code: 0xRECON_LOST</p>
+        </div>
+        <Link to="/dashboard" className="px-12 py-6 border-4 border-black font-black uppercase text-xs tracking-widest hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          REBOOT_DASHBOARD
+        </Link>
       </div>
     );
   }
 
   return (
     <div className="relative min-h-screen space-y-20 pb-40">
-      {/* Navigation aur Back Button */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 md:gap-0">
-        <Link 
-          to="/dashboard" 
-          className="neo-flat px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl flex items-center justify-center gap-3 md:gap-4 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-slate-400 hover:text-white transition-all hover:neo-pressed border border-white/[0.01]"
+      <SEO title={`${repo.name} | Repository Intelligence`} description={repo.description} />
+      
+      {/* Navigation */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-8 border-b-4 border-black pb-12">
+        <button 
+          onClick={() => navigate(-1)}
+          className="group flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-black transition-colors"
         >
-          <ArrowLeft size={16} />
-          Back to Dashboard
-        </Link>
+          <div className="w-12 h-12 border-2 border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+             <ArrowLeft size={20} strokeWidth={3} />
+          </div>
+          Return_To_Array
+        </button>
 
         <a 
           href={repo.url} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="neo-flat px-6 py-3 md:px-10 md:py-5 rounded-xl md:rounded-[2.5rem] flex items-center justify-center gap-3 md:gap-5 text-xs md:text-sm font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-neo-accent-blue hover:neo-pressed transition-all border border-white/[0.05]"
+          className="px-10 py-5 border-4 border-black font-black text-xs uppercase tracking-widest bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all flex items-center gap-4"
         >
-          View on GitHub <ExternalLink size={18} />
+          SOURCE_GITHUB <ExternalLink size={18} strokeWidth={3} />
         </a>
       </div>
 
       {/* Hero Header */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-end">
-        <div className="lg:col-span-8 space-y-10">
-          <div className="flex items-center gap-5">
-            <span className="neo-pressed px-5 py-2 rounded-full text-[11px] font-black uppercase text-neo-accent-blue tracking-widest border border-white/[0.01]">
-              {repo.language || 'Multi-Stack'}
-            </span>
+        <div className="lg:col-span-8 space-y-12">
+          <div className="inline-flex items-center gap-4 px-6 py-2 border-2 border-black bg-zinc-50 font-black text-[10px] uppercase tracking-widest">
+            <Terminal size={16} strokeWidth={3} className="text-accent-indigo" />
+            STACK: {repo.language || 'MULTI_ARRAY'}
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-7xl font-black tracking-tighter text-slate-200 opacity-95 leading-[1.1] max-w-5xl break-words">
+          <h1 className="text-5xl md:text-9xl font-black tracking-tighter text-black leading-[0.85] uppercase break-words">
             {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
           </h1>
-          <p className="text-2xl text-slate-500 max-w-3xl font-medium leading-relaxed italic border-l-4 border-neo-accent-blue/20 pl-8">
-            {repo.description || 'Comprehensive repository synchronized for architectural analysis and development tracking.'}
+          <p className="text-xl md:text-3xl font-bold leading-relaxed italic border-l-8 border-black pl-10 max-w-4xl text-zinc-500">
+            "{repo.description || 'Systemized repository synchronized for deep architectural analysis and contribution tracking.'}"
           </p>
         </div>
 
-        {/* Stars Score Card */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="lg:col-span-4 neo-flat p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] flex flex-col items-center text-center border border-white/[0.01] relative overflow-hidden group shadow-2xl"
-        >
-          <div className="relative w-40 h-40 md:w-52 md:h-52 flex items-center justify-center mb-8 md:mb-12">
-            <div className="absolute inset-0 neo-pressed rounded-full" />
-            <svg className="absolute inset-0 w-full h-full -rotate-90 scale-[1.05]">
-              <circle cx="80" cy="80" r="75" fill="none" stroke="rgba(255,255,255,0.01)" strokeWidth="10" className="md:hidden" />
-              <circle cx="104" cy="104" r="98" fill="none" stroke="rgba(255,255,255,0.01)" strokeWidth="12" className="hidden md:block" />
-              <motion.circle 
-                cx="80" cy="80" r="75" fill="none" stroke="currentColor" strokeWidth="10" 
-                className="text-neo-accent-blue md:hidden"
-                strokeDasharray="471"
-                initial={{ strokeDashoffset: 471 }}
-                animate={{ strokeDashoffset: 471 - (471 * Math.min(repo.stars, 100)) / 100 }}
-                transition={{ duration: 2, ease: "easeOut" }}
-              />
-              <motion.circle 
-                cx="104" cy="104" r="98" fill="none" stroke="currentColor" strokeWidth="12" 
-                className="text-neo-accent-blue hidden md:block"
-                strokeDasharray="615"
-                initial={{ strokeDashoffset: 615 }}
-                animate={{ strokeDashoffset: 615 - (615 * Math.min(repo.stars, 100)) / 100 }}
-                transition={{ duration: 2, ease: "easeOut" }}
-              />
-            </svg>
-            <div className="text-center relative z-10">
-              <span className="text-5xl md:text-7xl font-black tracking-tighter text-slate-200">{repo.stars}</span>
-            </div>
+        {/* Global Impact Card */}
+        <div className="lg:col-span-4 surgical-card p-12 bg-black text-white relative overflow-hidden group">
+          <div className="relative z-10 flex flex-col items-center text-center space-y-10">
+             <div className="w-24 h-24 border-4 border-white flex items-center justify-center">
+                <Star size={40} strokeWidth={3} className="text-yellow-400 fill-yellow-400" />
+             </div>
+             <div className="space-y-2">
+                <h4 className="text-8xl font-black tracking-tighter leading-none">{repo.stars}</h4>
+                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-400">Global_Star_Array</p>
+             </div>
+             <div className="w-full h-2 bg-white/20 relative">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min((repo.stars / 100) * 100, 100)}%` }}
+                  className="absolute inset-0 bg-accent-indigo"
+                  transition={{ duration: 1.5 }}
+                />
+             </div>
           </div>
-          <h4 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] md:tracking-[0.5em] text-slate-500">Total Stars</h4>
-        </motion.div>
+          <div className="industrial-grid absolute inset-0 opacity-10" />
+        </div>
       </section>
 
-      {/* Analytics aur Visuals Grid */}
+      {/* Analytics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         
-        {/* Activity Graph Section */}
+        {/* Activity Graph */}
         <div className="lg:col-span-8 space-y-12">
-          <div className="neo-flat p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/[0.01]">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-0 mb-8 md:mb-12">
-              <h3 className="text-xl md:text-2xl font-black flex items-center gap-4 md:gap-5 text-slate-200 uppercase tracking-tighter italic">
-                <div className="neo-icon w-10 h-10 md:w-12 md:h-12 text-neo-accent-blue"><Activity size={18} className="md:size-[22px]" /></div> Recent <span className="text-neo-accent-blue not-italic underline decoration-neo-accent-blue/30 underline-offset-8">Activity</span>
+          <div className="surgical-card p-12 bg-white relative overflow-hidden">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12 border-b-2 border-black pb-8">
+              <h3 className="text-2xl font-black flex items-center gap-6 text-black uppercase tracking-tighter italic">
+                <div className="w-14 h-14 border-4 border-black flex items-center justify-center text-accent-indigo">
+                  <Activity size={28} strokeWidth={3} />
+                </div> 
+                RECENT_SIGNAL_PULSE
               </h3>
-              <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">Last 12 Months Sync</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500">12_MONTH_LOGS</span>
             </div>
-            <ActivityChart data={repo.activity} />
+            <div className="relative z-10">
+              <ActivityChart data={repo.activity} />
+            </div>
+            <div className="industrial-grid absolute inset-0 opacity-5 pointer-events-none" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <TiltMetric label="Stars" value={repo.stars} icon={Activity} color="blue" />
-            <TiltMetric label="Forks" value={repo.forks} icon={GitPullRequest} color="purple" />
-            <TiltMetric label="Issues" value={repo.open_issues} icon={AlertCircle} color="orange" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <IndustrialMetric label="STARS" value={repo.stars} icon={Star} color="blue" />
+            <IndustrialMetric label="FORKS" value={repo.forks} icon={GitPullRequest} color="purple" />
+            <IndustrialMetric label="ISSUES" value={repo.open_issues} icon={AlertCircle} color="orange" />
           </div>
         </div>
 
-        {/* Sidebar Info Section */}
+        {/* Sidebar */}
         <div className="lg:col-span-4 space-y-12">
-          {/* Language Breakdown */}
-          <div className="neo-flat p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/[0.01]">
-            <h3 className="text-xl md:text-2xl font-black mb-8 md:mb-12 flex items-center gap-4 md:gap-5 text-slate-200 uppercase tracking-tighter italic">
-              <div className="neo-icon w-10 h-10 md:w-12 md:h-12 text-neo-accent-orange"><Code2 size={18} className="md:size-[22px]" /></div> Languages
+          {/* Languages */}
+          <div className="surgical-card p-12 bg-white">
+            <h3 className="text-2xl font-black mb-12 border-b-2 border-black pb-6 flex items-center gap-6 uppercase tracking-tighter italic">
+              <div className="w-12 h-12 border-4 border-black flex items-center justify-center text-orange-500">
+                <Code2 size={24} strokeWidth={3} />
+              </div> 
+              STACK_DENSITY
             </h3>
             <LanguageStats languages={repo.languages} />
           </div>
 
-          {/* Repo Info */}
-          <div className="neo-flat p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/[0.01]">
-            <h3 className="text-xl md:text-2xl font-black mb-8 md:mb-12 flex items-center gap-4 md:gap-5 text-slate-200 uppercase tracking-tighter italic">
-              <div className="neo-icon w-10 h-10 md:w-12 md:h-12 text-purple-400"><GitCommit size={18} className="md:size-[22px]" /></div> Repo Info
+          {/* Metadata */}
+          <div className="surgical-card p-12 bg-white group">
+            <h3 className="text-2xl font-black mb-12 border-b-2 border-black pb-6 flex items-center gap-6 uppercase tracking-tighter italic">
+              <div className="w-12 h-12 border-4 border-black flex items-center justify-center text-violet-500 group-hover:bg-black group-hover:text-white transition-all">
+                <BarChart3 size={24} strokeWidth={3} />
+              </div> 
+              METADATA
             </h3>
-            <div className="space-y-10 text-xs font-black">
-              <div className="flex justify-between items-center group">
-                <span className="text-slate-600 uppercase tracking-[0.3em]">Default Branch</span>
-                <span className="neo-pressed px-5 py-2.5 rounded-xl text-neo-accent-blue font-mono italic border border-white/[0.01]">{repo.default_branch}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-slate-600 uppercase tracking-[0.3em]">Last Sync</span>
-                <span className="text-slate-200 tracking-widest">
-                  {repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'NEVER'}
+            <div className="space-y-8">
+              <div className="flex justify-between items-center group/item">
+                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Branch</span>
+                <span className="px-4 py-1.5 border border-black font-mono text-xs font-black uppercase bg-zinc-50 group-hover/item:bg-black group-hover/item:text-white transition-all">
+                  {repo.default_branch}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-slate-600 uppercase tracking-[0.3em]">Updated At</span>
-                <span className="text-slate-200 tracking-widest">
+              <div className="flex justify-between items-center group/item">
+                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Synced</span>
+                <span className="text-xs font-black uppercase tracking-widest text-black">
+                  {repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'N/A'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center group/item">
+                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Updated</span>
+                <span className="text-xs font-black uppercase tracking-widest text-black">
                   {repo.updated_at ? new Date(repo.updated_at).toLocaleDateString() : 'UNKNOWN'}
                 </span>
               </div>
@@ -217,23 +207,24 @@ export function RepoDetail() {
         </div>
       </div>
 
-      {/* Community Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-12">
-          <div className="neo-flat p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] border border-white/[0.01]">
-            <h3 className="text-xl md:text-2xl font-black mb-8 md:mb-12 flex items-center gap-4 md:gap-5 text-slate-200 uppercase tracking-tighter italic">
-              <div className="neo-icon w-12 h-12 md:w-14 md:h-14 text-neo-accent-emerald"><Users size={22} className="md:size-[26px]" /></div> Top Contributors
-            </h3>
-            <ContributorGrid contributors={repo.contributors} />
-          </div>
-        </div>
+      {/* Contributors */}
+      <div className="surgical-card p-12 md:p-24 bg-white relative overflow-hidden">
+        <h3 className="text-3xl font-black mb-16 border-b-4 border-black pb-10 flex items-center gap-8 uppercase tracking-tighter italic">
+          <div className="w-16 h-16 border-4 border-black flex items-center justify-center text-green-500">
+            <Users size={32} strokeWidth={3} />
+          </div> 
+          TOP_CONTRIBUTORS_ARRAY
+        </h3>
+        <ContributorGrid contributors={repo.contributors} />
+        <div className="industrial-grid absolute inset-0 opacity-10 pointer-events-none" />
       </div>
 
-      {/* Documentation Section */}
-      <section>
-        <ReadmePreview content={repo.readme} />
+      {/* Readme */}
+      <section className="surgical-card p-2 bg-white">
+        <div className="border-2 border-black/5 bg-white">
+          <ReadmePreview content={repo.readme} />
+        </div>
       </section>
     </div>
   );
 }
-

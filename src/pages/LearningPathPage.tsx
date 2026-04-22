@@ -10,7 +10,9 @@ import {
   Book, 
   Code2, 
   Layout,
-  Zap
+  Zap,
+  Terminal,
+  ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LEARNING_PATHS } from '../data/learningPaths';
@@ -19,11 +21,11 @@ import { SEO } from '@/components/layout/SEO';
 
 const getIcon = (type: string) => {
   switch (type) {
-    case 'video': return <Play size={18} strokeWidth={2.5} />;
-    case 'docs': return <Book size={18} strokeWidth={2.5} />;
-    case 'course': return <Layout size={18} strokeWidth={2.5} />;
-    case 'project': return <Code2 size={18} strokeWidth={2.5} />;
-    default: return <ExternalLink size={18} strokeWidth={2.5} />;
+    case 'video': return <Play size={20} strokeWidth={3} />;
+    case 'docs': return <Book size={20} strokeWidth={3} />;
+    case 'course': return <Layout size={20} strokeWidth={3} />;
+    case 'project': return <Code2 size={20} strokeWidth={3} />;
+    default: return <ExternalLink size={20} strokeWidth={3} />;
   }
 };
 
@@ -48,16 +50,16 @@ export function LearningPathPage() {
 
   if (!path) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center space-y-8 bg-neo-bg">
-        <div className="w-20 h-20 neo-icon text-slate-800">
-           <Zap size={40} />
+      <div className="min-h-screen flex flex-col items-center justify-center space-y-12 bg-white industrial-grid">
+        <div className="w-24 h-24 border-4 border-black flex items-center justify-center">
+           <Zap size={48} strokeWidth={3} />
         </div>
-        <div className="text-center">
-          <h2 className="text-3xl font-black italic tracking-tighter text-slate-200 uppercase">Archive Not Found</h2>
-          <p className="text-slate-500 font-bold text-xs tracking-widest uppercase mt-2">Error 404: Knowledge Sector Missing</p>
+        <div className="text-center space-y-4">
+          <h2 className="text-5xl font-black tracking-tighter text-black uppercase">Archive_Lost</h2>
+          <p className="text-zinc-500 font-bold text-[10px] tracking-[0.5em] uppercase italic">Error 404: Knowledge Sector Null</p>
         </div>
-        <button onClick={() => navigate('/resources')} className="neo-flat px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] text-neo-accent-blue hover:neo-pressed transition-all">
-           Re-initialize Discovery
+        <button onClick={() => navigate('/resources')} className="px-12 py-6 border-4 border-black font-black uppercase text-xs tracking-widest hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+           Return_to_Archive
         </button>
       </div>
     );
@@ -77,127 +79,118 @@ export function LearningPathPage() {
   const PathIcon = path.icon;
 
   return (
-    <div className="min-h-screen bg-neo-bg text-slate-200 pb-32">
-      <SEO title={`${path.title} Archive`} description={path.tagline} />
+    <div className="min-h-screen bg-white text-black pb-40">
+      <SEO title={`${path.title} | Technical Archive`} description={path.tagline} />
 
       {/* Header Overlay */}
-      <div className="relative mb-16 px-4 md:px-0">
-        <motion.div 
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="neo-flat p-8 md:p-16 rounded-[3.5rem] md:rounded-[4.5rem] border border-white/[0.01]"
-        >
+      <div className="relative mb-24">
+        <div className="surgical-card p-12 md:p-24 bg-white relative overflow-hidden group">
           <button 
             onClick={() => navigate('/resources')}
-            className="group mb-12 flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 hover:text-neo-accent-blue transition-colors"
+            className="group mb-16 flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-black transition-colors"
           >
-            <div className="w-10 h-10 neo-icon group-hover:neo-icon-pressed transition-all">
-               <ArrowLeft size={16} />
+            <div className="w-12 h-12 border-2 border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+               <ArrowLeft size={20} strokeWidth={3} />
             </div>
-            Archive Directory
+            BACK_TO_ARCHIVE
           </button>
 
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
-            <div className="space-y-6 max-w-3xl">
-              <div className="flex items-center gap-5">
-                 <div className="w-16 h-16 neo-icon" style={{ color: path.accentColor }}>
-                    <PathIcon size={32} strokeWidth={2.5} />
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-16 relative z-10">
+            <div className="space-y-10 max-w-4xl">
+              <div className="flex items-center gap-8">
+                 <div className="w-20 h-20 border-4 border-black flex items-center justify-center text-black">
+                    <PathIcon size={40} strokeWidth={3} />
                  </div>
-                 <div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-500">{path.category} // Sector</span>
-                    <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter text-slate-200">{path.title}</h1>
+                 <div className="space-y-2">
+                    <span className="text-[10px] font-black uppercase tracking-[0.5em] text-accent-indigo">Sector: {path.category}</span>
+                    <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-black uppercase leading-[0.9]">{path.title}</h1>
                  </div>
               </div>
-              <p className="text-lg md:text-2xl font-medium italic text-slate-500 leading-relaxed opacity-80">
-                {path.tagline}
+              <p className="text-xl md:text-3xl font-bold italic border-l-8 border-black pl-8 max-w-3xl leading-relaxed text-zinc-500">
+                "{path.tagline}"
               </p>
             </div>
 
-            <div className="neo-flat p-10 rounded-[2.5rem] min-w-[280px] space-y-6">
+            <div className="surgical-card p-12 min-w-[350px] space-y-10 bg-zinc-50">
                <div className="flex justify-between items-end">
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Synchronization</span>
-                  <span className="text-3xl font-black italic text-slate-200">{Math.round(progress)}%</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Sync_Progress</span>
+                  <span className="text-4xl font-black tracking-tighter italic">{Math.round(progress)}%</span>
                </div>
-               <div className="h-2 w-full neo-pressed rounded-full overflow-hidden p-[1px]">
+               <div className="h-6 w-full border-2 border-black p-[3px] bg-white">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    className="h-full rounded-full"
-                    style={{ backgroundColor: path.accentColor, boxShadow: `0 0 20px ${path.accentColor}40` }}
+                    className="h-full bg-black"
+                    transition={{ duration: 1, ease: "circOut" }}
                   />
                </div>
-               <div className="flex items-center justify-between pt-2">
-                  <div className="flex items-center gap-3">
-                     <Clock size={14} className="text-slate-600" />
-                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{path.totalHours}H Est.</span>
+               <div className="flex items-center justify-between pt-4 border-t border-black/20">
+                  <div className="flex items-center gap-4">
+                     <Clock size={16} strokeWidth={3} className="text-zinc-500" />
+                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{path.totalHours}H_EST</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                     <Trophy size={14} className="text-slate-600" />
-                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{completedLevels.length}/10 Verified</span>
+                  <div className="flex items-center gap-4">
+                     <Trophy size={16} strokeWidth={3} className="text-zinc-500" />
+                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{completedLevels.length}/{path.levels.length}_VERIFIED</span>
                   </div>
                </div>
             </div>
           </div>
-        </motion.div>
+          <div className="industrial-grid absolute inset-0 opacity-10 pointer-events-none" />
+        </div>
       </div>
 
       {/* Mastery Roadmap */}
-      <div className="max-w-5xl mx-auto px-4 md:px-0">
-        <div className="space-y-12 relative pt-12">
-          {/* Vertical Backbone */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] neo-pressed opacity-20 hidden md:block" />
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="space-y-20 relative pt-12">
+          {/* Vertical Line */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-1 bg-black/10 hidden md:block" />
           
           {path.levels.map((level, index) => {
             const isCompleted = completedLevels.includes(level.level);
-            const isNext = completedLevels.length === index;
 
             return (
               <motion.div
                 key={level.level}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 className={cn(
-                  "relative flex flex-col md:flex-row items-center gap-8 md:gap-20",
+                  "relative flex flex-col md:flex-row items-center gap-16 md:gap-32",
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 )}
               >
-                {/* Visual Connector Node */}
+                {/* Node Center */}
                 <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 hidden md:block">
-                   <motion.div 
-                    whileHover={{ scale: 1.2 }}
-                    className={cn(
-                      "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 border-4",
-                      isCompleted ? "neo-flat bg-neo-bg border-neo-accent-emerald" : 
-                      isNext ? "neo-pressed bg-neo-bg border-neo-accent-blue" : "neo-flat bg-neo-bg border-slate-800"
-                    )}
-                   >
-                      <span className="text-[11px] font-black italic">{level.level}</span>
-                   </motion.div>
+                   <div className={cn(
+                      "w-16 h-16 border-4 border-black flex items-center justify-center transition-all duration-500",
+                      isCompleted ? "bg-black text-white" : "bg-white text-black"
+                   )}>
+                      <span className="text-lg font-black">{level.level.toString().padStart(2, '0')}</span>
+                   </div>
                 </div>
 
                 <div className="w-full md:w-1/2">
                    <div className={cn(
-                     "neo-flat p-6 md:p-10 rounded-[2rem] md:rounded-[3.5rem] border border-white/[0.01] transition-all duration-500 group",
-                     isCompleted && "bg-neo-accent-emerald/[0.02]",
-                     isNext && "border-neo-accent-blue/20"
+                     "surgical-card p-10 md:p-12 transition-all duration-500 group relative overflow-hidden",
+                     isCompleted ? "bg-zinc-50 border-zinc-200 shadow-none" : "bg-white"
                    )}>
-                      <div className="flex items-center justify-between mb-8">
-                         <div className={cn("w-12 h-12 neo-icon", isCompleted ? "text-neo-accent-emerald" : "text-slate-700")}>
+                      <div className="flex items-center justify-between mb-10">
+                         <div className={cn("w-14 h-14 border-4 border-black flex items-center justify-center", isCompleted ? "bg-black text-white border-white" : "bg-white text-black")}>
                             {getIcon(level.type)}
                          </div>
-                         <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-600 italic">Stage_{level.level.toString().padStart(2, '0')}</span>
+                         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 italic">Stage_{level.level.toString().padStart(2, '0')}</span>
                       </div>
 
-                      <div className="space-y-4 mb-10">
+                      <div className="space-y-6 mb-12">
                          <h3 className={cn(
-                           "text-2xl font-black italic tracking-tighter leading-tight",
-                           isCompleted ? "text-slate-400 line-through" : "text-slate-200"
+                           "text-3xl font-black tracking-tighter leading-none uppercase",
+                           isCompleted ? "text-zinc-500 line-through" : "text-black"
                          )}>
                            {level.title}
                          </h3>
-                         <p className="text-xs font-bold text-slate-500 uppercase tracking-widest leading-loose italic opacity-70">
-                           {level.description}
+                         <p className="text-sm font-bold text-zinc-600 italic leading-relaxed border-l-4 border-black/20 pl-6">
+                           "{level.description}"
                          </p>
                       </div>
 
@@ -206,24 +199,23 @@ export function LearningPathPage() {
                            href={level.url} 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           className="w-full sm:flex-1 py-4 rounded-2xl neo-flat flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 hover:neo-pressed transition-all"
+                           className="w-full sm:flex-1 py-6 border-4 border-black bg-white flex items-center justify-center gap-4 text-[11px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all"
                          >
-                           Access Module <ExternalLink size={14} />
+                           ACCESS_MODULE <ExternalLink size={16} strokeWidth={3} />
                          </a>
                          <button 
                            onClick={() => toggleLevel(level.level)}
                            className={cn(
-                             "w-full sm:w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500",
-                             isCompleted ? "neo-pressed text-neo-accent-emerald" : "neo-flat text-slate-600 hover:text-neo-accent-blue"
+                             "w-full sm:w-20 h-20 border-4 border-black flex items-center justify-center transition-all duration-500",
+                             isCompleted ? "bg-black text-white" : "bg-white text-zinc-400 hover:text-black"
                            )}
                          >
-                            <CheckCircle size={24} strokeWidth={isCompleted ? 3 : 2} />
+                            <CheckCircle size={32} strokeWidth={3} />
                          </button>
                       </div>
                    </div>
                 </div>
 
-                {/* Desktop Spacer for alternating layout */}
                 <div className="w-1/2 hidden md:block" />
               </motion.div>
             );
@@ -234,20 +226,23 @@ export function LearningPathPage() {
         <AnimatePresence>
           {completedLevels.length === path.levels.length && (
             <motion.div 
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-32 p-8 md:p-24 neo-flat rounded-[3rem] md:rounded-[4rem] text-center space-y-10 border border-neo-accent-emerald/20 overflow-hidden relative"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-40 p-16 md:p-32 border-8 border-black text-center space-y-12 bg-white relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-neo-accent-emerald/5 opacity-50" />
-              <div className="w-24 h-24 neo-icon text-neo-accent-emerald mx-auto relative z-10">
-                 <Trophy size={48} />
+              <div className="industrial-grid absolute inset-0 opacity-10 pointer-events-none" />
+              <div className="w-32 h-32 bg-black text-white flex items-center justify-center mx-auto relative z-10 border-8 border-double border-white outline outline-4 outline-black">
+                 <Trophy size={64} strokeWidth={3} />
               </div>
-              <div className="space-y-4 relative z-10">
-                 <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-slate-200 uppercase">Sector Mastered</h2>
-                 <p className="text-slate-500 font-bold uppercase tracking-[0.5em] text-xs">All intelligence nodes synchronized</p>
+              <div className="space-y-6 relative z-10">
+                 <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-black uppercase leading-none">Sector_Mastered</h2>
+                 <p className="text-zinc-500 font-black uppercase tracking-[0.5em] text-[10px]">ALL_INTELLIGENCE_NODES_SYNCHRONIZED</p>
               </div>
-              <button onClick={() => navigate('/resources')} className="relative z-10 neo-flat px-12 py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] text-neo-accent-blue hover:neo-pressed transition-all">
-                 Initialize Next Sector Discovery
+              <button 
+                onClick={() => navigate('/resources')} 
+                className="relative z-10 px-16 py-8 bg-black text-white font-black uppercase text-xl tracking-widest hover:scale-105 transition-all shadow-[12px_12px_0px_0px_rgba(67,56,202,0.5)]"
+              >
+                 NEXT_ARCHIVE_INITIALIZE
               </button>
             </motion.div>
           )}
