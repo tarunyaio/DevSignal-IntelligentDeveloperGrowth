@@ -1,4 +1,3 @@
-import type { LucideIcon } from 'lucide-react';
 import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -7,7 +6,7 @@ interface StatsCardProps {
   title: string;
   value: string | number;
   suffix?: string;
-  icon: LucideIcon;
+  icon: any;
   trend?: {
     value: number;
     isPositive: boolean;

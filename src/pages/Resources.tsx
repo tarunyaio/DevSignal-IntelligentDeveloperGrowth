@@ -1,188 +1,157 @@
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, BookOpen, Terminal, Shield, Cpu, Layout } from 'lucide-react';
-import { ResourceCard, type ResourceType } from '@/components/resources/ResourceCard';
-import { useResources } from '@/hooks/queries';
-import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
+import { Search, Zap } from 'lucide-react';
+import { CourseCard } from '../components/CourseCard';
+import { LEARNING_PATHS } from '../data/learningPaths';
 import { SEO } from '@/components/layout/SEO';
 
-const CATEGORIES = [
-  { id: 'all', name: 'All Resources', icon: Layout },
-  { id: 'performance', name: 'Performance', icon: Terminal },
-  { id: 'security', name: 'Security', icon: Shield },
-  { id: 'ai', name: 'AI & ML', icon: Cpu },
-  { id: 'architecture', name: 'Architecture', icon: BookOpen },
-];
-
-interface Resource {
-  id: string;
-  title: string;
-  description: string;
-  type: ResourceType;
-  category: string;
-  duration: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  url: string;
-  rating: number;
-}
-
-const FALLBACK_RESOURCES: Resource[] = [
-  {
-    id: '1',
-    title: 'Advanced React Performance',
-    description: 'Master the art of high-performance rendering and virtualization in modern React apps.',
-    type: 'video',
-    category: 'performance',
-    duration: '45 mins',
-    difficulty: 'Advanced',
-    url: 'https://react.dev',
-    rating: 4.9
-  },
-  {
-    id: '2',
-    title: 'Zero Trust Security Guide',
-    description: 'A guide on building modern SaaS apps to meet security standards.',
-    type: 'article',
-    category: 'security',
-    duration: '15 mins',
-    difficulty: 'Intermediate',
-    url: 'https://owasp.org',
-    rating: 4.7
-  },
-  {
-    id: '3',
-    title: 'Next.js Boilerplate: Deep Space',
-    description: 'A premium starter kit with perfect lighthouse scores and glassmorphic UI integrated.',
-    type: 'repo',
-    category: 'architecture',
-    duration: 'N/A',
-    difficulty: 'Beginner',
-    url: 'https://github.com',
-    rating: 5.0
-  },
-  {
-    id: '4',
-    title: 'LLM Fine-tuning Masterclass',
-    description: 'Understanding the fundamentals of training open-source models for custom enterprise logic.',
-    type: 'course',
-    category: 'ai',
-    duration: '12 hours',
-    difficulty: 'Advanced',
-    url: 'https://huggingface.co',
-    rating: 4.8
-  },
-  {
-    id: '5',
-    title: 'Microservices with Fastify',
-    description: 'Building ultra-low latency backend systems using the Fastify ecosystem.',
-    type: 'article',
-    category: 'performance',
-    duration: '25 mins',
-    difficulty: 'Intermediate',
-    url: 'https://fastify.io',
-    rating: 4.6
-  }
-];
+const CATEGORIES = ['All', 'Frontend', 'Backend', 'DevOps', 'Mobile', 'AI/ML', 'Systems', 'CS Fundamentals', 'Web3', 'Workflow'];
 
 export function Resources() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const { data: apiResources } = useResources();
-
-  const resources = (apiResources && apiResources.length > 0 ? apiResources : FALLBACK_RESOURCES) as Resource[];
-
-  const filteredResources = useMemo(() => {
-    return resources.filter(res => {
-      const matchesSearch = res.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           res.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || res.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [progressData, setProgressData] = useState<Record<string, number>>(() => {
+    const data: Record<string, number> = {};
+    LEARNING_PATHS.forEach(path => {
+      const saved = localStorage.getItem(`progress_${path.id}`);
+      if (saved) {
+        try {
+          data[path.id] = JSON.parse(saved).length;
+        } catch {
+          data[path.id] = 0;
+        }
+      } else {
+        data[path.id] = 0;
+      }
     });
-  }, [searchQuery, selectedCategory, resources]);
+    return data;
+  });
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const data: Record<string, number> = {};
+      LEARNING_PATHS.forEach(path => {
+        const saved = localStorage.getItem(`progress_${path.id}`);
+        if (saved) {
+          try {
+            data[path.id] = JSON.parse(saved).length;
+          } catch {
+            data[path.id] = 0;
+          }
+        } else {
+          data[path.id] = 0;
+        }
+      });
+      setProgressData(data);
+    };
+
+    window.addEventListener('storage', updateProgress);
+    window.addEventListener('focus', updateProgress);
+    return () => {
+      window.removeEventListener('storage', updateProgress);
+      window.removeEventListener('focus', updateProgress);
+    };
+  }, []);
+
+  const filteredPaths = LEARNING_PATHS.filter(path => {
+    const matchesSearch = path.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         path.tagline.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || path.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <div className="relative min-h-screen space-y-10 md:space-y-16 pb-28 md:pb-32">
-      <SEO title="Resource Archive" description="Curated intelligence modules and architectural guides for modern developers." />
-      {/* Header Section - Title aur Search Bar */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-12">
-        <div className="space-y-4 text-center md:text-left">
-          <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase italic text-slate-200">
-            Resource <span className="text-neo-accent-blue not-italic underline decoration-neo-accent-blue/30 underline-offset-4 md:underline-offset-8">Archive</span>
-          </h2>
-          <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em] mt-3">Curated intelligence modules for developer growth.</p>
+    <div className="min-h-screen bg-[#0f172a] pb-20">
+      <SEO title="Learning Intelligence Archive" description="20 premium, hand-curated learning paths for developer growth." />
+      
+      {/* Hero Section */}
+      <div className="relative pt-32 pb-20 px-6 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-full opacity-20 pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-[120px]" />
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500 rounded-full blur-[150px]" />
         </div>
 
-        <div className="relative w-full md:w-[450px]">
-          <div className="absolute inset-0 neo-pressed rounded-3xl" />
-          <div className="relative flex items-center px-6 py-5">
-            <Search className="text-neo-accent-blue" size={20} strokeWidth={3} />
-            <input 
-              type="text"
-              placeholder="Query archive..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent px-4 focus:outline-none placeholder:text-slate-700 font-bold text-sm tracking-wide text-slate-200"
-            />
-          </div>
-        </div>
-      </header>
-
-      {/* Category Tabs - Tactile Navigation */}
-      <div className="flex items-center gap-6 overflow-x-auto pb-6 scrollbar-hide">
-        {CATEGORIES.map((cat) => {
-          const Icon = cat.icon;
-          const isActive = selectedCategory === cat.id;
-          return (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={cn(
-                "flex items-center gap-4 px-8 py-4 rounded-2xl transition-all whitespace-nowrap text-xs font-black uppercase tracking-widest border border-white/[0.01]",
-                isActive 
-                ? "neo-pressed text-neo-accent-blue shadow-[inset_0_0_15px_rgba(99,102,241,0.15)]" 
-                : "neo-flat text-slate-500 hover:text-slate-300 hover:neo-pressed"
-              )}
-            >
-              <div className={cn("w-6 h-6 flex items-center justify-center rounded-lg", isActive ? "text-neo-accent-blue" : "text-slate-600")}>
-                <Icon size={16} strokeWidth={2.5} />
-              </div>
-              {cat.name}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Resource Grid - Filtered resources card layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 relative">
-        <AnimatePresence mode="popLayout">
-          {filteredResources.map((resource) => (
-            <motion.div
-              key={resource.id}
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ResourceCard {...resource} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-        
-        {filteredResources.length === 0 && (
-          <div className="col-span-full py-24 flex flex-col items-center justify-center text-center space-y-4">
-            <div className="p-6 rounded-full bg-white/5 border border-dashed border-white/10 text-slate-600">
-              <Filter size={48} />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full neo-flat mb-6 text-blue-400 font-bold text-sm">
+              <Zap size={16} />
+              <span>Learning Intelligence Archive</span>
             </div>
-            <p className="text-xl font-bold text-slate-500 italic">"No intelligence found for this search/filter."</p>
-            <button 
-              onClick={() => {setSearchQuery(''); setSelectedCategory('all');}}
-              className="text-purple-400 font-bold underline underline-offset-8 decoration-purple-500/30 hover:text-purple-300"
-            >
-              Clear all filters
-            </button>
+            <h1 className="text-6xl md:text-7xl font-black text-white mb-6 tracking-tight">
+              Master the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Modern Stack</span>
+            </h1>
+            <p className="text-xl text-white/50 max-w-2xl mx-auto leading-relaxed">
+              20 premium, hand-curated learning paths designed to take you from foundational concepts to advanced systems engineering.
+            </p>
           </div>
-        )}
+
+          {/* Search and Filter */}
+          <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-6 mb-20">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={20} />
+              <input
+                type="text"
+                placeholder="Search for an archive..."
+                className="w-full h-16 pl-12 pr-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.05] transition-all"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
+              {CATEGORIES.map(category => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-6 py-4 rounded-2xl font-bold whitespace-nowrap transition-all ${
+                    selectedCategory === category
+                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20 scale-105'
+                    : 'bg-white/[0.03] text-white/40 border border-white/5 hover:text-white hover:border-white/20'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Grid Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredPaths.map(path => (
+              <CourseCard
+                key={path.id}
+                {...path}
+                progress={progressData[path.id] || 0}
+              />
+            ))}
+          </div>
+
+          {filteredPaths.length === 0 && (
+            <div className="text-center py-40">
+              <div className="w-20 h-20 rounded-full neo-flat flex items-center justify-center mx-auto mb-6 text-white/20">
+                <Search size={40} />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">No archives found</h3>
+              <p className="text-white/40">Try searching for a different keyword or category.</p>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Stats Section */}
+      <div className="max-w-7xl mx-auto px-6 mt-20">
+        <div className="p-12 rounded-[40px] neo-flat grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+          <div>
+            <div className="text-4xl font-black text-white mb-2">200+</div>
+            <div className="text-white/40 text-sm font-bold uppercase tracking-widest">Levels of Mastery</div>
+          </div>
+          <div className="border-x border-white/5">
+            <div className="text-4xl font-black text-white mb-2">20</div>
+            <div className="text-white/40 text-sm font-bold uppercase tracking-widest">Curated Archives</div>
+          </div>
+          <div>
+            <div className="text-4xl font-black text-white mb-2">100%</div>
+            <div className="text-white/40 text-sm font-bold uppercase tracking-widest">Free Resources</div>
+          </div>
+        </div>
       </div>
     </div>
   );

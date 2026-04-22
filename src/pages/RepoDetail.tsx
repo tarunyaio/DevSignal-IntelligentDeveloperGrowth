@@ -4,7 +4,7 @@ import {
   ArrowLeft, 
   Activity, ExternalLink, GitCommit,
   GitPullRequest, AlertCircle,
-  Users, Code, Cpu
+  Users, Code2, Cpu
 } from 'lucide-react';
 import { useRepo } from '@/hooks/queries';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
@@ -185,7 +185,7 @@ export function RepoDetail() {
           {/* Language Breakdown */}
           <div className="neo-flat p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/[0.01]">
             <h3 className="text-xl md:text-2xl font-black mb-8 md:mb-12 flex items-center gap-4 md:gap-5 text-slate-200 uppercase tracking-tighter italic">
-              <div className="neo-icon w-10 h-10 md:w-12 md:h-12 text-neo-accent-orange"><Code size={18} className="md:size-[22px]" /></div> Languages
+              <div className="neo-icon w-10 h-10 md:w-12 md:h-12 text-neo-accent-orange"><Code2 size={18} className="md:size-[22px]" /></div> Languages
             </h3>
             <LanguageStats languages={repo.languages} />
           </div>
