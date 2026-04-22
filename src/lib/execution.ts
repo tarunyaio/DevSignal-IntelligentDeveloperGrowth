@@ -5,8 +5,12 @@
 
 const EXECUTION_TIMEOUT_MS = 5000;
 
-function createSandboxHTML(code: string): string {
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><script>
+function createSandboxHTML(code: string, language: string): string {
+  const isTypeScript = language === 'typescript';
+  
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">
+  <script src="https://unpkg.com/sucrase@3.34.0/dist/sucrase.js"></script>
+  </head><body><script>
 const __logs = [];
 const console = {
   log: (...a) => __logs.push(a.map(v => typeof v === 'object' ? JSON.stringify(v, null, 2) : String(v)).join(' ')),
@@ -14,11 +18,35 @@ const console = {
   warn: (...a) => __logs.push('Warning: ' + a.join(' ')),
   info: (...a) => __logs.push(a.map(v => typeof v === 'object' ? JSON.stringify(v, null, 2) : String(v)).join(' ')),
 };
+
 try {
-  ${code}
-  window.parent.postMessage({ type: 'sandbox-result', output: __logs.join('\\n') || 'Code executed successfully with no output (try console.log).' }, '*');
+  let executableCode = \`${code.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;
+  
+  if (${isTypeScript}) {
+    try {
+      executableCode = window.sucrase.transform(executableCode, {
+        transforms: ['typescript', 'imports'],
+      }).code;
+    } catch (e) {
+      throw new Error('Transpilation Error: ' + e.message);
+    }
+  }
+
+  // Wrap in async IIFE and run
+  const script = document.createElement('script');
+  script.textContent = \`
+    (async () => {
+      try {
+        \${executableCode}
+        window.parent.postMessage({ type: 'sandbox-result', output: __logs.join('\\\\n') || 'Code executed successfully with no output (try console.log).' }, '*');
+      } catch (e) {
+        window.parent.postMessage({ type: 'sandbox-result', output: 'Runtime error:\\\\n' + e.message }, '*');
+      }
+    })();
+  \`;
+  document.body.appendChild(script);
 } catch (e) {
-  window.parent.postMessage({ type: 'sandbox-result', output: 'Runtime error:\\n' + e.message }, '*');
+  window.parent.postMessage({ type: 'sandbox-result', output: 'System error:\\\\n' + e.message }, '*');
 }
 <${'/' + 'script'}></body></html>`;
 }
@@ -54,7 +82,7 @@ export async function executeCode(code: string, language: string): Promise<strin
 
     window.addEventListener('message', handler);
 
-    const html = createSandboxHTML(code);
+    const html = createSandboxHTML(code, language);
     const blob = new Blob([html], { type: 'text/html' });
     iframe.src = URL.createObjectURL(blob);
   });

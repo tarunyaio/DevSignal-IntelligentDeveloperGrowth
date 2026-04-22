@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Zap, ShieldCheck, BarChart3, Code2, BookOpen, ArrowRight, Star, Layers, Globe, Terminal } from 'lucide-react';
+import { BarChart3, Code2, ArrowRight, Layers, Terminal } from 'lucide-react';
 import { SEO } from '../components/layout/SEO';
 
 export function LandingPage() {
@@ -43,17 +43,17 @@ export function LandingPage() {
         </nav>
 
         {/* Hero Section */}
-        <section className="max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-32 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
+        <section className="max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-32 grid grid-cols-1 lg:grid-cols-5 gap-12 md:gap-20 items-center">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-8 md:space-y-10"
+            className="space-y-8 md:space-y-10 lg:col-span-3"
           >
             <div className="inline-block px-4 py-1 border-2 border-black bg-yellow-400 font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
               Surgical Intelligence System
             </div>
             
-            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-[0.85] tracking-tighter uppercase">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-black leading-[0.85] tracking-tighter uppercase">
               Engineered <br />
               <span className="text-accent-indigo">Growth.</span>
             </h1>
@@ -81,7 +81,7 @@ export function LandingPage() {
             </div>
           </motion.div>
 
-          <div className="relative mt-12 lg:mt-0">
+          <div className="relative mt-12 lg:mt-0 lg:col-span-2">
             <div className="surgical-card p-1 aspect-square bg-zinc-100 flex items-center justify-center overflow-hidden">
                <div className="w-full h-full border-2 border-black flex flex-col p-4 md:p-8 space-y-6 md:space-y-8 bg-white industrial-grid">
                   <div className="flex items-center justify-between border-b-2 border-black pb-4">

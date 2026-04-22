@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Layout, Star, GitFork, Zap, RefreshCcw, AlertCircle, Cpu, ArrowUpRight, TrendingUp } from 'lucide-react';
+import { Layout, Star, GitFork, Zap, RefreshCcw, AlertCircle } from 'lucide-react';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { RepoCard } from '@/components/dashboard/RepoCard';
 import { LanguageChart } from '@/components/dashboard/LanguageChart';
@@ -12,10 +12,11 @@ import { cn } from '@/lib/utils';
 import { SEO } from '@/components/layout/SEO';
 
 export function Dashboard() {
-  const { data: repos, isLoading: reposLoading, error: reposError } = useRepos();
+  const { data: repos, isLoading: reposLoading } = useRepos();
   const { data: analytics, isLoading: analyticsLoading } = useAnalytics();
   const syncMutation = useSync();
   const { user } = useAuth();
+  const { searchQuery } = useSearch();
   const [visibleRepos, setVisibleRepos] = useState(6);
 
   const isLoading = reposLoading || analyticsLoading;
@@ -52,7 +53,6 @@ export function Dashboard() {
     );
   }
 
-  const { searchQuery } = useSearch();
 
   const repoList = (repos || []).filter(repo => 
     repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

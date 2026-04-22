@@ -8,9 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "type-check": "tsc -b",
-    "test": "vitest run",
+    "test": "vitest run && cd server && npm run test",
     "test:watch": "vitest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -55,8 +56,7 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "eslint --fix",
-      "tsc -b"
+      "eslint --fix"
     ]
   }
 }

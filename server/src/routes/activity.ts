@@ -23,7 +23,7 @@ app.get('/activity', async (c) => {
     // 1. Identify GitHub Username
     let githubUsername = metadataGithubUsername;
     
-    console.log({ userId, metadataUsername: githubUsername }, 'Starting activity fetch');
+    // Starting activity fetch
 
     if (!githubUsername || githubUsername === 'ai-debug-session') {
       // Fallback: Check repositories table
@@ -35,7 +35,7 @@ app.get('/activity', async (c) => {
 
       if (!repoError && repos && repos.length > 0) {
         githubUsername = repos[0].name.split('/')[0];
-        console.log({ githubUsername }, 'Username found via repository fallback');
+        // Username found via repository fallback
       }
     }
 
@@ -45,13 +45,13 @@ app.get('/activity', async (c) => {
     }
 
     // 2. Fetch Public Events from GitHub
-    console.log({ githubUsername }, 'Fetching events from GitHub');
+    // Fetching events from GitHub
     const { data: events } = await octokit.rest.activity.listPublicEventsForUser({
       username: githubUsername,
       per_page: 20
     });
 
-    console.log({ eventCount: events.length }, 'GitHub events retrieved');
+    // GitHub events retrieved
 
     // 3. Map to ActivityItem format
     const activities = events

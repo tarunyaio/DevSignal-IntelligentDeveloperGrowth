@@ -51,11 +51,11 @@ app.get('/repos/:id', async (c) => {
   if (!refreshRequested) {
     const cachedDetails = getCache<any>(cacheKey);
     if (cachedDetails) {
-      console.log({ repoId: repo.github_id }, 'Serving repo details from cache');
+      // Serving repo details from cache
       return c.json({ repo: { ...repo, ...cachedDetails } });
     }
   } else {
-    console.log({ repoId: repo.github_id }, 'Force refresh requested, bypassing cache');
+    // Force refresh requested, bypassing cache
   }
 
   // Parallel fetching from GitHub
