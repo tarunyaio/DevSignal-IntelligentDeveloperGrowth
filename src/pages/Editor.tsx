@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MonacoEditor from '@monaco-editor/react';
 import { Code2, Play, Save, ChevronDown, Check, Terminal, X, Zap, Cpu } from 'lucide-react';

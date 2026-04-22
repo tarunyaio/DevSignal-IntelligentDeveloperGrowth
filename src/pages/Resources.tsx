@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Award, BookOpen, Clock, ChevronRight, Terminal } from 'lucide-react';
+import { Search, BookOpen, Terminal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CourseCard } from '../components/CourseCard';
 import { LEARNING_PATHS } from '../data/learningPaths';
@@ -130,6 +130,8 @@ export function Resources() {
               >
                 <CourseCard
                   {...path}
+                  duration={`${path.totalHours}h`}
+                  lessonsCount={path.levels.length}
                   progress={progressData[path.id] || 0}
                 />
               </motion.div>

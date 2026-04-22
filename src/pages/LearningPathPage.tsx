@@ -10,9 +10,7 @@ import {
   Book, 
   Code2, 
   Layout,
-  Zap,
-  Terminal,
-  ChevronRight
+  Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LEARNING_PATHS } from '../data/learningPaths';
@@ -40,6 +38,7 @@ export function LearningPathPage() {
       const saved = localStorage.getItem(`progress_${path.id}`);
       if (saved) {
         try {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCompletedLevels(JSON.parse(saved));
         } catch {
           setCompletedLevels([]);

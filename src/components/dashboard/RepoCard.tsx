@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 interface RepoCardProps {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   stars: number;
   forks: number;
-  language: string;
+  language: string | null;
   lastUpdated?: string;
   url?: string;
 }

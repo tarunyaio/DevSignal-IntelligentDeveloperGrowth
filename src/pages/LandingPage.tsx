@@ -134,7 +134,7 @@ export function LandingPage() {
             ].map((feature, i) => (
               <div key={i} className="p-10 md:p-16 space-y-6 md:space-y-8 hover:bg-zinc-50 transition-colors group">
                 <div className="w-16 h-16 md:w-20 md:h-20 border-4 border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
-                  {React.cloneElement(feature.icon as React.ReactElement, { size: 32, strokeWidth: 3 })}
+                  {React.cloneElement(feature.icon as React.ReactElement<Record<string, unknown>>, { size: 32, strokeWidth: 3 })}
                 </div>
                 <h3 className="text-2xl md:text-3xl font-black">{feature.title}</h3>
                 <p className="text-base md:text-lg font-bold text-zinc-500 italic leading-relaxed">"{feature.desc}"</p>

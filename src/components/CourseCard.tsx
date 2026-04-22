@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { Clock, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 
 interface CourseCardProps {
   id: string;

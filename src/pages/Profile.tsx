@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
@@ -7,7 +7,6 @@ import {
   Clock, 
   Star, 
   GitFork, 
-  Code2, 
   Share2,
   ExternalLink,
   Cpu,
@@ -15,7 +14,6 @@ import {
   Terminal,
   Activity
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { SEO } from '@/components/layout/SEO';
 
 interface ProfileData {

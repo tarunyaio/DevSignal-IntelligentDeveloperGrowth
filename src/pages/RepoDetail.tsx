@@ -1,10 +1,10 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
-  Activity, ExternalLink, GitCommit,
+  Activity, ExternalLink,
   GitPullRequest, AlertCircle,
-  Users, Code2, Cpu, Terminal, Star, BarChart3
+  Users, Code2, Terminal, Star, BarChart3
 } from 'lucide-react';
 import { useRepo } from '@/hooks/queries';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
@@ -14,7 +14,7 @@ import { ReadmePreview } from '@/components/dashboard/ReadmePreview';
 import { cn } from '@/lib/utils';
 import { SEO } from '@/components/layout/SEO';
 
-function IndustrialMetric({ label, value, icon: Icon, color }: any) {
+function IndustrialMetric({ label, value, icon: Icon, color }: { label: string, value: string | number, icon: React.ElementType, color: string }) {
   return (
     <div className="surgical-card p-10 flex flex-col justify-between h-full bg-white group">
       <div className="flex items-center justify-between border-b-2 border-black pb-6">
@@ -38,6 +38,7 @@ function IndustrialMetric({ label, value, icon: Icon, color }: any) {
 
 export function RepoDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: repo, isLoading, error } = useRepo(id || '');
 
   if (isLoading) {
@@ -72,7 +73,7 @@ export function RepoDetail() {
 
   return (
     <div className="relative min-h-screen space-y-20 pb-40">
-      <SEO title={`${repo.name} | Repository Intelligence`} description={repo.description} />
+      <SEO title={`${repo.name} | Repository Intelligence`} description={repo.description || undefined} />
       
       {/* Navigation */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-8 border-b-4 border-black pb-12">

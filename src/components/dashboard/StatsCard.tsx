@@ -1,20 +1,17 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface StatsCardProps {
   title: string;
   value: string | number;
-  icon: React.ComponentType<any>;
-  color: 'blue' | 'purple' | 'emerald' | 'orange' | 'amber' | 'violet';
+  icon: React.ElementType;
   trend?: {
     value: number;
     isPositive: boolean;
   };
 }
 
-export function StatsCard({ title, value, icon: Icon, color, trend }: StatsCardProps) {
+export function StatsCard({ title, value, icon: Icon, trend }: StatsCardProps) {
   return (
     <motion.div 
       className="surgical-card p-10 flex flex-col justify-between h-full bg-white relative overflow-hidden"
