@@ -1,6 +1,7 @@
-import { Bell, Search, LogOut, Terminal } from 'lucide-react';
+import { Search, LogOut, Terminal } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSearch } from '@/contexts/SearchContext';
+import { NotificationsPanel } from '@/components/layout/NotificationsPanel';
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -32,10 +33,7 @@ export function Header() {
       </div>
       
       <div className="flex items-center gap-8">
-        <button className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all relative">
-          <Bell size={20} strokeWidth={3} />
-          <span className="absolute top-1 right-1 w-3 h-3 bg-yellow-400 border-2 border-black" />
-        </button>
+        <NotificationsPanel />
         
         <div className="h-10 w-1 bg-black mx-2 hidden md:block" />
         
