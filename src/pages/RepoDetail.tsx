@@ -10,6 +10,9 @@ import { useRepo } from '@/hooks/queries';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
 import { cn } from '@/lib/utils';
 import { SEO } from '@/components/layout/SEO';
+import { ContributorGrid } from '@/components/dashboard/ContributorGrid';
+import { LanguageStats } from '@/components/dashboard/LanguageStats';
+import { ReadmePreview } from '@/components/dashboard/ReadmePreview';
 
 const COLOR_MAP: Record<string, string> = {
   blue: 'text-blue-500 border-blue-500',
