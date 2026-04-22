@@ -2,7 +2,7 @@ import { Shield, Lock, Cpu, Terminal } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="relative mt-auto pt-40 pb-20 overflow-hidden border-t-8 border-black bg-zinc-50">
+    <footer className="relative mt-auto pt-40 pb-32 lg:pb-48 overflow-hidden border-t-8 border-black bg-zinc-50">
       <div className="max-w-7xl mx-auto px-10 relative z-10">
         <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-20">
           

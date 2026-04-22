@@ -175,8 +175,12 @@ export function LandingPage() {
             </div>
             <span className="text-2xl font-black tracking-tighter uppercase">DevSignal</span>
           </div>
-          <div className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400">
-            © 2026 SURGICAL INTELLIGENCE UNIT.
+          <div className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 flex flex-col md:flex-row items-center gap-4">
+            <span>© 2026 SURGICAL INTELLIGENCE UNIT.</span>
+            <span className="hidden md:block w-1.5 h-1.5 bg-zinc-400 rotate-45" />
+            <span>
+              GOD OF THE SITE: <a href="https://github.com/tarunyaio" target="_blank" rel="noopener noreferrer" className="text-black hover:text-accent-indigo transition-colors underline decoration-2 underline-offset-4">@Tarunyaio</a>
+            </span>
           </div>
           <div className="flex gap-8">
             <a href="#" className="font-black text-[10px] uppercase tracking-widest hover:underline decoration-2">GitHub</a>
