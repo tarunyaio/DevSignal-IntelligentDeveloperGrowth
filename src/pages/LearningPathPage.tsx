@@ -1,245 +1,258 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
   CheckCircle, 
   ExternalLink, 
   Clock, 
-  Trophy,
-  Play,
-  Book,
-  Code2,
-  Layout
+  Trophy, 
+  Play, 
+  Book, 
+  Code2, 
+  Layout,
+  Zap
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { LEARNING_PATHS } from '../data/learningPaths';
+import { cn } from '@/lib/utils';
+import { SEO } from '@/components/layout/SEO';
 
-const TypeIcon = ({ type }: { type: string }) => {
+const getIcon = (type: string) => {
   switch (type) {
-    case 'video': return <Play size={18} />;
-    case 'docs': return <Book size={18} />;
-    case 'course': return <Layout size={18} />;
-    case 'project': return <Code2 size={18} />;
-    default: return <ExternalLink size={18} />;
+    case 'video': return <Play size={18} strokeWidth={2.5} />;
+    case 'docs': return <Book size={18} strokeWidth={2.5} />;
+    case 'course': return <Layout size={18} strokeWidth={2.5} />;
+    case 'project': return <Code2 size={18} strokeWidth={2.5} />;
+    default: return <ExternalLink size={18} strokeWidth={2.5} />;
   }
 };
 
-export const LearningPathPage: React.FC = () => {
-  const { courseId } = useParams<{ courseId: string }>();
+export function LearningPathPage() {
+  const { pathId } = useParams();
   const navigate = useNavigate();
-  const path = LEARNING_PATHS.find(p => p.id === courseId);
-  
-  const [completedLevels, setCompletedLevels] = useState<number[]>(() => {
-    if (!courseId) return [];
-    const saved = localStorage.getItem(`progress_${courseId}`);
-    return saved ? JSON.parse(saved) : [];
-  });
+  const path = LEARNING_PATHS.find(p => p.id === pathId);
+  const [completedLevels, setCompletedLevels] = useState<number[]>([]);
 
-  const toggleLevel = (level: number) => {
-    const updated = completedLevels.includes(level)
-      ? completedLevels.filter(l => l !== level)
-      : [...completedLevels, level];
-    
-    setCompletedLevels(updated);
-    if (courseId) {
-      localStorage.setItem(`progress_${courseId}`, JSON.stringify(updated));
+  useEffect(() => {
+    if (path) {
+      const saved = localStorage.getItem(`progress_${path.id}`);
+      if (saved) {
+        try {
+          setCompletedLevels(JSON.parse(saved));
+        } catch {
+          setCompletedLevels([]);
+        }
+      }
     }
-  };
+  }, [path]);
 
   if (!path) {
     return (
-      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center text-white">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Path not found</h2>
-          <button 
-            onClick={() => navigate('/resources')}
-            className="px-6 py-2 neo-flat rounded-xl"
-          >
-            Go Back
-          </button>
+      <div className="min-h-screen flex flex-col items-center justify-center space-y-8 bg-neo-bg">
+        <div className="w-20 h-20 neo-icon text-slate-800">
+           <Zap size={40} />
         </div>
+        <div className="text-center">
+          <h2 className="text-3xl font-black italic tracking-tighter text-slate-200 uppercase">Archive Not Found</h2>
+          <p className="text-slate-500 font-bold text-xs tracking-widest uppercase mt-2">Error 404: Knowledge Sector Missing</p>
+        </div>
+        <button onClick={() => navigate('/resources')} className="neo-flat px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] text-neo-accent-blue hover:neo-pressed transition-all">
+           Re-initialize Discovery
+        </button>
       </div>
     );
   }
 
+  const toggleLevel = (level: number) => {
+    const newCompleted = completedLevels.includes(level)
+      ? completedLevels.filter(l => l !== level)
+      : [...completedLevels, level];
+    
+    setCompletedLevels(newCompleted);
+    localStorage.setItem(`progress_${path.id}`, JSON.stringify(newCompleted));
+    window.dispatchEvent(new Event('storage'));
+  };
+
   const progress = (completedLevels.length / path.levels.length) * 100;
-  const Icon = path.icon;
+  const PathIcon = path.icon;
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white pb-20">
-      {/* Header Section */}
-      <div className="sticky top-0 z-40 bg-[#0f172a]/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-4xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between mb-8">
-            <button 
-              onClick={() => navigate('/resources')}
-              className="p-2 rounded-xl neo-flat hover:neo-pressed transition-all text-white/60 hover:text-white"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="text-right">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Your Progress</p>
-                <p className="text-sm font-bold text-blue-400">{completedLevels.length}/{path.levels.length} Levels</p>
-              </div>
-              <div className="w-12 h-12 rounded-full neo-flat flex items-center justify-center relative">
-                 <svg className="w-10 h-10 transform -rotate-90">
-                  <circle
-                    cx="20"
-                    cy="20"
-                    r="18"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="transparent"
-                    className="text-white/5"
-                  />
-                  <circle
-                    cx="20"
-                    cy="20"
-                    r="18"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="transparent"
-                    strokeDasharray={2 * Math.PI * 18}
-                    strokeDashoffset={2 * Math.PI * 18 * (1 - progress / 100)}
-                    className="text-blue-400 transition-all duration-1000"
-                  />
-                </svg>
-                {completedLevels.length === path.levels.length && (
-                  <Trophy size={16} className="absolute text-yellow-400" />
-                )}
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-neo-bg text-slate-200 pb-32">
+      <SEO title={`${path.title} Archive`} description={path.tagline} />
 
-          <div className="flex items-start gap-6">
-            <div 
-              className="p-5 rounded-2xl neo-icon shrink-0"
-              style={{ color: path.accentColor }}
-            >
-              <Icon size={40} />
+      {/* Header Overlay */}
+      <div className="relative mb-16 px-4 md:px-0">
+        <motion.div 
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="neo-flat p-8 md:p-16 rounded-[3.5rem] md:rounded-[4.5rem] border border-white/[0.01]"
+        >
+          <button 
+            onClick={() => navigate('/resources')}
+            className="group mb-12 flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 hover:text-neo-accent-blue transition-colors"
+          >
+            <div className="w-10 h-10 neo-icon group-hover:neo-icon-pressed transition-all">
+               <ArrowLeft size={16} />
             </div>
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                  {path.category}
-                </span>
-                <span className="text-xs text-white/40">{path.difficulty}</span>
+            Archive Directory
+          </button>
+
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+            <div className="space-y-6 max-w-3xl">
+              <div className="flex items-center gap-5">
+                 <div className="w-16 h-16 neo-icon" style={{ color: path.accentColor }}>
+                    <PathIcon size={32} strokeWidth={2.5} />
+                 </div>
+                 <div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-500">{path.category} // Sector</span>
+                    <h1 className="text-4xl md:text-7xl font-black italic tracking-tighter text-slate-200">{path.title}</h1>
+                 </div>
               </div>
-              <h1 className="text-4xl font-black text-white mb-2">{path.title}</h1>
-              <p className="text-lg text-white/60 max-w-2xl">{path.tagline}</p>
+              <p className="text-lg md:text-2xl font-medium italic text-slate-500 leading-relaxed opacity-80">
+                {path.tagline}
+              </p>
+            </div>
+
+            <div className="neo-flat p-10 rounded-[2.5rem] min-w-[280px] space-y-6">
+               <div className="flex justify-between items-end">
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Synchronization</span>
+                  <span className="text-3xl font-black italic text-slate-200">{Math.round(progress)}%</span>
+               </div>
+               <div className="h-2 w-full neo-pressed rounded-full overflow-hidden p-[1px]">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    className="h-full rounded-full"
+                    style={{ backgroundColor: path.accentColor, boxShadow: `0 0 20px ${path.accentColor}40` }}
+                  />
+               </div>
+               <div className="flex items-center justify-between pt-2">
+                  <div className="flex items-center gap-3">
+                     <Clock size={14} className="text-slate-600" />
+                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{path.totalHours}H Est.</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                     <Trophy size={14} className="text-slate-600" />
+                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{completedLevels.length}/10 Verified</span>
+                  </div>
+               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Course Content */}
-      <div className="max-w-4xl mx-auto px-6 mt-12">
-        <div className="relative">
-          {/* Vertical Line */}
-          <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-white/5" />
+      {/* Mastery Roadmap */}
+      <div className="max-w-5xl mx-auto px-4 md:px-0">
+        <div className="space-y-12 relative pt-12">
+          {/* Vertical Backbone */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] neo-pressed opacity-20 hidden md:block" />
+          
+          {path.levels.map((level, index) => {
+            const isCompleted = completedLevels.includes(level.level);
+            const isNext = completedLevels.length === index;
 
-          <div className="space-y-12">
-            {path.levels.map((level, index) => {
-              const isCompleted = completedLevels.includes(level.level);
-              const isNext = index === 0 || completedLevels.includes(path.levels[index-1].level);
-              
-              return (
-                <div 
-                  key={level.level}
-                  className={`relative pl-16 transition-all duration-500 ${!isNext && !isCompleted ? 'opacity-40 grayscale' : ''}`}
-                >
-                  {/* Level Marker */}
-                  <div 
-                    onClick={() => toggleLevel(level.level)}
-                    className={`absolute left-0 top-1 w-12 h-12 rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300 z-10 ${
-                      isCompleted 
-                      ? 'bg-blue-500 text-white shadow-[0_0_20px_rgba(59,130,246,0.5)]' 
-                      : 'neo-flat text-white/40 hover:text-white'
-                    }`}
-                  >
-                    {isCompleted ? <CheckCircle size={24} /> : <span className="font-bold">{level.level}</span>}
-                  </div>
-
-                  <div className={`p-8 rounded-3xl transition-all duration-300 ${isCompleted ? 'bg-white/[0.02] border border-white/5' : 'neo-flat hover:bg-white/[0.02]'}`}>
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Level {level.level}</span>
-                          <span className="w-1 h-1 rounded-full bg-white/20" />
-                          <div className="flex items-center gap-1.5 text-xs text-blue-400/80 font-medium">
-                            <TypeIcon type={level.type} />
-                            <span className="capitalize">{level.type}</span>
-                          </div>
-                        </div>
-                        <h3 className="text-2xl font-bold text-white mb-3">{level.title}</h3>
-                        <p className="text-white/50 mb-6 leading-relaxed">
-                          {level.description}
-                        </p>
-                        
-                        <div className="flex flex-wrap items-center gap-4">
-                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/20 border border-white/5 text-xs text-white/60">
-                            <Clock size={14} />
-                            <span>{level.estimatedTime}</span>
-                          </div>
-                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/20 border border-white/5 text-xs text-white/60">
-                            <Layout size={14} />
-                            <span>{level.platform}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col gap-3 min-w-[200px]">
-                        <a 
-                          href={level.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full py-4 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-center flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-500/20 active:scale-95"
-                        >
-                          Explore Resource
-                          <ExternalLink size={18} />
-                        </a>
-                        <button 
-                          onClick={() => toggleLevel(level.level)}
-                          className={`w-full py-3 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
-                            isCompleted 
-                            ? 'bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20' 
-                            : 'neo-flat hover:neo-pressed text-white/60'
-                          }`}
-                        >
-                          {isCompleted ? 'Marked as Complete' : 'Mark as Done'}
-                          {isCompleted && <CheckCircle size={16} />}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+            return (
+              <motion.div
+                key={level.level}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className={cn(
+                  "relative flex flex-col md:flex-row items-center gap-8 md:gap-20",
+                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                )}
+              >
+                {/* Visual Connector Node */}
+                <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 hidden md:block">
+                   <motion.div 
+                    whileHover={{ scale: 1.2 }}
+                    className={cn(
+                      "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 border-4",
+                      isCompleted ? "neo-flat bg-neo-bg border-neo-accent-emerald" : 
+                      isNext ? "neo-pressed bg-neo-bg border-neo-accent-blue" : "neo-flat bg-neo-bg border-slate-800"
+                    )}
+                   >
+                      <span className="text-[11px] font-black italic">{level.level}</span>
+                   </motion.div>
                 </div>
-              );
-            })}
-          </div>
+
+                <div className="w-full md:w-1/2">
+                   <div className={cn(
+                     "neo-flat p-10 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/[0.01] transition-all duration-500 group",
+                     isCompleted && "bg-neo-accent-emerald/[0.02]",
+                     isNext && "border-neo-accent-blue/20"
+                   )}>
+                      <div className="flex items-center justify-between mb-8">
+                         <div className={cn("w-12 h-12 neo-icon", isCompleted ? "text-neo-accent-emerald" : "text-slate-700")}>
+                            {getIcon(level.type)}
+                         </div>
+                         <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-600 italic">Stage_{level.level.toString().padStart(2, '0')}</span>
+                      </div>
+
+                      <div className="space-y-4 mb-10">
+                         <h3 className={cn(
+                           "text-2xl font-black italic tracking-tighter leading-tight",
+                           isCompleted ? "text-slate-400 line-through" : "text-slate-200"
+                         )}>
+                           {level.title}
+                         </h3>
+                         <p className="text-xs font-bold text-slate-500 uppercase tracking-widest leading-loose italic opacity-70">
+                           {level.description}
+                         </p>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row items-center gap-6">
+                         <a 
+                           href={level.url} 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className="w-full sm:flex-1 py-4 rounded-2xl neo-flat flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 hover:neo-pressed transition-all"
+                         >
+                           Access Module <ExternalLink size={14} />
+                         </a>
+                         <button 
+                           onClick={() => toggleLevel(level.level)}
+                           className={cn(
+                             "w-full sm:w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500",
+                             isCompleted ? "neo-pressed text-neo-accent-emerald" : "neo-flat text-slate-600 hover:text-neo-accent-blue"
+                           )}
+                         >
+                            <CheckCircle size={24} strokeWidth={isCompleted ? 3 : 2} />
+                         </button>
+                      </div>
+                   </div>
+                </div>
+
+                {/* Desktop Spacer for alternating layout */}
+                <div className="w-1/2 hidden md:block" />
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Completion Card */}
-        {completedLevels.length === path.levels.length && (
-          <div className="mt-20 p-12 rounded-[40px] neo-flat text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10" />
-            <div className="relative z-10">
-              <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(250,204,21,0.4)]">
-                <Trophy size={40} className="text-[#0f172a]" />
+        {/* Completion Milestone */}
+        <AnimatePresence>
+          {completedLevels.length === path.levels.length && (
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-32 p-16 md:p-24 neo-flat rounded-[4rem] text-center space-y-10 border border-neo-accent-emerald/20 overflow-hidden relative"
+            >
+              <div className="absolute inset-0 bg-neo-accent-emerald/5 opacity-50" />
+              <div className="w-24 h-24 neo-icon text-neo-accent-emerald mx-auto relative z-10">
+                 <Trophy size={48} />
               </div>
-              <h2 className="text-3xl font-black text-white mb-4">Path Mastery Achieved!</h2>
-              <p className="text-white/60 max-w-md mx-auto mb-8">
-                You've completed all 10 levels of the {path.title} archive. Your knowledge is now significantly more structured and deep.
-              </p>
-              <button 
-                onClick={() => navigate('/resources')}
-                className="px-10 py-4 rounded-2xl bg-white text-[#0f172a] font-black hover:scale-105 transition-transform active:scale-95"
-              >
-                Explore More Archives
+              <div className="space-y-4 relative z-10">
+                 <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-slate-200 uppercase">Sector Mastered</h2>
+                 <p className="text-slate-500 font-bold uppercase tracking-[0.5em] text-xs">All intelligence nodes synchronized</p>
+              </div>
+              <button onClick={() => navigate('/resources')} className="relative z-10 neo-flat px-12 py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] text-neo-accent-blue hover:neo-pressed transition-all">
+                 Initialize Next Sector Discovery
               </button>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
-};
+}

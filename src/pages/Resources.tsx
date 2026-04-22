@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Search, Zap } from 'lucide-react';
+import { Search, Database } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CourseCard } from '../components/CourseCard';
 import { LEARNING_PATHS } from '../data/learningPaths';
 import { SEO } from '@/components/layout/SEO';
+import { cn } from '@/lib/utils';
 
 const CATEGORIES = ['All', 'Frontend', 'Backend', 'DevOps', 'Mobile', 'AI/ML', 'Systems', 'CS Fundamentals', 'Web3', 'Workflow'];
 
@@ -60,96 +62,128 @@ export function Resources() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0f172a] pb-20">
+    <div className="min-h-screen bg-neo-bg text-slate-200 pb-32">
       <SEO title="Learning Intelligence Archive" description="20 premium, hand-curated learning paths for developer growth." />
       
-      {/* Hero Section */}
-      <div className="relative pt-32 pb-20 px-6 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-full opacity-20 pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-[120px]" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500 rounded-full blur-[150px]" />
-        </div>
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full neo-flat mb-6 text-blue-400 font-bold text-sm">
-              <Zap size={16} />
-              <span>Learning Intelligence Archive</span>
+      {/* Immersive Header Bar */}
+      <div className="relative z-20 px-4 md:px-0 mb-16">
+        <motion.div 
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="neo-flat px-6 md:px-12 py-8 rounded-[2.5rem] md:rounded-[3.5rem] flex flex-col md:flex-row justify-between items-center gap-8 border border-white/[0.01]"
+        >
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 neo-icon text-neo-accent-blue">
+               <Database size={24} strokeWidth={2.5} />
             </div>
-            <h1 className="text-6xl md:text-7xl font-black text-white mb-6 tracking-tight">
-              Master the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Modern Stack</span>
-            </h1>
-            <p className="text-xl text-white/50 max-w-2xl mx-auto leading-relaxed">
-              20 premium, hand-curated learning paths designed to take you from foundational concepts to advanced systems engineering.
-            </p>
-          </div>
-
-          {/* Search and Filter */}
-          <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-6 mb-20">
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={20} />
-              <input
-                type="text"
-                placeholder="Search for an archive..."
-                className="w-full h-16 pl-12 pr-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.05] transition-all"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
-              {CATEGORIES.map(category => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-4 rounded-2xl font-bold whitespace-nowrap transition-all ${
-                    selectedCategory === category
-                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20 scale-105'
-                    : 'bg-white/[0.03] text-white/40 border border-white/5 hover:text-white hover:border-white/20'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+            <div>
+               <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase italic text-slate-200">Archives</h1>
+               <p className="text-[10px] text-neo-accent-blue font-black tracking-[0.4em] uppercase opacity-70">Intelligence Repository // v1.0</p>
             </div>
           </div>
 
-          {/* Grid Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredPaths.map(path => (
-              <CourseCard
-                key={path.id}
-                {...path}
-                progress={progressData[path.id] || 0}
-              />
-            ))}
+          {/* Search Integrated into Header */}
+          <div className="relative w-full md:w-96 group">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-neo-accent-blue transition-colors" size={18} />
+            <input
+              type="text"
+              placeholder="Query Repository..."
+              className="w-full neo-pressed h-14 pl-16 pr-6 rounded-2xl bg-transparent border-none text-slate-200 placeholder:text-slate-600 focus:outline-none text-xs font-bold tracking-widest uppercase"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-
-          {filteredPaths.length === 0 && (
-            <div className="text-center py-40">
-              <div className="w-20 h-20 rounded-full neo-flat flex items-center justify-center mx-auto mb-6 text-white/20">
-                <Search size={40} />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">No archives found</h3>
-              <p className="text-white/40">Try searching for a different keyword or category.</p>
-            </div>
-          )}
-        </div>
+        </motion.div>
       </div>
-      
-      {/* Stats Section */}
-      <div className="max-w-7xl mx-auto px-6 mt-20">
-        <div className="p-12 rounded-[40px] neo-flat grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-          <div>
-            <div className="text-4xl font-black text-white mb-2">200+</div>
-            <div className="text-white/40 text-sm font-bold uppercase tracking-widest">Levels of Mastery</div>
+
+      <div className="max-w-7xl mx-auto px-4 md:px-0">
+        {/* Category Filter - Surgical Design */}
+        <div className="flex items-center gap-4 overflow-x-auto pb-12 no-scrollbar scroll-smooth">
+          {CATEGORIES.map((category, index) => (
+            <motion.button
+              key={category}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              onClick={() => setSelectedCategory(category)}
+              className={cn(
+                "px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] whitespace-nowrap transition-all border border-white/[0.01]",
+                selectedCategory === category
+                ? 'neo-pressed text-neo-accent-blue bg-neo-accent-blue/5'
+                : 'neo-flat text-slate-500 hover:text-slate-200'
+              )}
+            >
+              {category}
+            </motion.button>
+          ))}
+        </div>
+
+        {/* Hero Headline Overlay */}
+        <div className="relative mb-24 text-center">
+          <motion.h2 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-5xl md:text-9xl font-black leading-tight tracking-tighter italic text-slate-200 mb-8"
+          >
+            Growth.<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neo-accent-blue via-purple-500 to-indigo-600 non-italic underline decoration-neo-accent-blue/10 underline-offset-8">
+              Systemized.
+            </span>
+          </motion.h2>
+          <p className="text-slate-500 text-lg md:text-2xl font-medium max-w-2xl mx-auto italic leading-relaxed opacity-70">
+            Select a sector to begin deep-sync. 20 high-fidelity technical archives waiting for your signal.
+          </p>
+        </div>
+
+        {/* Grid Section */}
+        <motion.div 
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-12"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredPaths.map((path, index) => (
+              <motion.div
+                key={path.id}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <CourseCard
+                  {...path}
+                  progress={progressData[path.id] || 0}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {filteredPaths.length === 0 && (
+          <div className="text-center py-40">
+            <div className="w-24 h-24 neo-icon flex items-center justify-center mx-auto mb-10 text-slate-800">
+              <Search size={40} />
+            </div>
+            <h3 className="text-2xl font-black italic uppercase tracking-tighter text-slate-200 mb-4">Signal Lost</h3>
+            <p className="text-slate-500 font-medium italic">No archives found in the current sector query.</p>
           </div>
-          <div className="border-x border-white/5">
-            <div className="text-4xl font-black text-white mb-2">20</div>
-            <div className="text-white/40 text-sm font-bold uppercase tracking-widest">Curated Archives</div>
-          </div>
-          <div>
-            <div className="text-4xl font-black text-white mb-2">100%</div>
-            <div className="text-white/40 text-sm font-bold uppercase tracking-widest">Free Resources</div>
+        )}
+
+        {/* Stats Section - Bento Node Style */}
+        <div className="mt-32">
+          <div className="neo-flat rounded-[3.5rem] md:rounded-[4.5rem] p-10 md:p-20 grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-24 border border-white/[0.01]">
+            <div className="space-y-4">
+              <div className="text-5xl md:text-7xl font-black text-slate-200 tracking-tighter italic">200+</div>
+              <p className="text-neo-accent-blue font-black text-[10px] tracking-[0.4em] uppercase opacity-70">Knowledge Nodes</p>
+            </div>
+            <div className="space-y-4 border-y md:border-y-0 md:border-x border-white/[0.03] py-12 md:py-0 md:px-12">
+              <div className="text-5xl md:text-7xl font-black text-slate-200 tracking-tighter italic">20</div>
+              <p className="text-neo-accent-orange font-black text-[10px] tracking-[0.4em] uppercase opacity-70">Active Archives</p>
+            </div>
+            <div className="space-y-4">
+              <div className="text-5xl md:text-7xl font-black text-slate-200 tracking-tighter italic">100%</div>
+              <p className="text-neo-accent-emerald font-black text-[10px] tracking-[0.4em] uppercase opacity-70">Open Source</p>
+            </div>
           </div>
         </div>
       </div>

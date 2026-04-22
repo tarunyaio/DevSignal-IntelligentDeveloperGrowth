@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Clock, Star } from 'lucide-react';
+import { ChevronRight, Clock, Star, ArrowUpRight } from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface CourseCardProps {
   id: string;
@@ -11,7 +13,7 @@ interface CourseCardProps {
   totalHours: number;
   accentColor: string;
   icon: any;
-  progress: number; // 0 to 10
+  progress: number;
 }
 
 export const CourseCard: React.FC<CourseCardProps> = ({
@@ -28,72 +30,109 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   const navigate = useNavigate();
   const progressPercentage = (progress / 10) * 100;
 
+  // Tilt Animation Logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   return (
-    <div 
+    <motion.div 
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onClick={() => navigate(`/resources/${id}`)}
-      className="neo-flat rounded-2xl p-6 cursor-pointer group hover:scale-[1.02] transition-all duration-300 relative overflow-hidden"
+      className="group relative"
     >
-      {/* Accent Gradient Background */}
-      <div 
-        className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 opacity-10 group-hover:opacity-20 transition-opacity"
-        style={{ 
-          background: `radial-gradient(circle, ${accentColor} 0%, transparent 70%)` 
-        }}
-      />
-
-      <div className="flex items-start justify-between mb-4">
-        <div 
-          className="p-3 rounded-xl neo-icon bg-white/5"
-          style={{ color: accentColor }}
-        >
-          <Icon size={24} />
-        </div>
-        <div className="flex flex-col items-end">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">
-            {category}
-          </span>
-          <div className="flex items-center gap-2">
-             <Star size={12} className={difficulty === 'Advanced' ? 'text-orange-400' : 'text-blue-400'} />
-             <span className="text-xs font-medium text-white/60">{difficulty}</span>
+      <div className="neo-flat rounded-[2.5rem] p-8 cursor-pointer border border-white/[0.01] transition-all duration-500 hover:neo-pressed h-full flex flex-col">
+        {/* Category Badge - Surgical Style */}
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex flex-col">
+            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-500 mb-2">Sector</span>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
+              <span className="text-xs font-black uppercase tracking-widest text-slate-300">{category}</span>
+            </div>
+          </div>
+          
+          <div className="w-10 h-10 neo-icon group-hover:neo-icon-pressed transition-all">
+            <ArrowUpRight size={16} className="text-slate-500 group-hover:text-neo-accent-blue transition-colors" />
           </div>
         </div>
-      </div>
 
-      <div className="mb-6">
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-          {title}
-        </h3>
-        <p className="text-sm text-white/50 line-clamp-2">
-          {tagline}
-        </p>
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex items-center justify-between text-xs text-white/40">
-          <div className="flex items-center gap-1.5">
-            <Clock size={14} />
-            <span>{totalHours}h estimated</span>
-          </div>
-          <span>{progress}/10 Levels</span>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="h-1.5 w-full bg-black/20 rounded-full overflow-hidden">
+        {/* Main Content */}
+        <div className="mb-10 space-y-4 flex-grow">
           <div 
-            className="h-full transition-all duration-1000 ease-out"
-            style={{ 
-              width: `${progressPercentage}%`,
-              backgroundColor: accentColor,
-              boxShadow: `0 0 10px ${accentColor}40`
-            }}
-          />
+            className="w-14 h-14 neo-icon mb-6"
+            style={{ color: accentColor }}
+          >
+            <Icon size={24} strokeWidth={2.5} />
+          </div>
+          <h3 className="text-2xl font-black italic tracking-tighter text-slate-200 leading-tight group-hover:text-neo-accent-blue transition-colors">
+            {title}
+          </h3>
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest leading-loose opacity-60 line-clamp-2 italic">
+            {tagline}
+          </p>
         </div>
 
-        <button className="w-full py-3 rounded-xl neo-flat flex items-center justify-center gap-2 text-sm font-bold text-white group-hover:neo-pressed transition-all">
-          {progress > 0 ? 'Continue Path' : 'Begin Journey'}
-          <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-        </button>
+        {/* Technical Metadata */}
+        <div className="space-y-6 pt-6 border-t border-white/[0.03]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Clock size={14} className="text-slate-600" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{totalHours}h Est.</span>
+            </div>
+            <div className="flex items-center gap-2">
+               <Star size={12} className={cn("fill-current", difficulty === 'Advanced' ? 'text-neo-accent-orange' : 'text-neo-accent-blue')} />
+               <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">{difficulty}</span>
+            </div>
+          </div>
+
+          {/* Surgical Progress Bar */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600">Sync Status</span>
+              <span className="text-[11px] font-black italic text-slate-300">{progress}/10</span>
+            </div>
+            <div className="h-[6px] w-full neo-pressed rounded-full overflow-hidden p-[1px]">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercentage}%` }}
+                className="h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_12px_rgba(255,255,255,0.1)]"
+                style={{ 
+                  backgroundColor: accentColor,
+                  boxShadow: `0 0 15px ${accentColor}30`
+                }}
+              />
+            </div>
+          </div>
+
+          <button className="w-full py-5 rounded-[1.5rem] neo-flat flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-slate-200 hover:neo-pressed transition-all group/btn">
+            {progress > 0 ? 'Initialize Continue' : 'Initialize Journey'}
+            <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+          </button>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
