@@ -25,7 +25,14 @@ type Variables = {
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 // 1. Plugins / Middleware
-app.use('*', cors());
+app.use('*', cors({
+  origin: (origin) => {
+    return origin; // Allow dynamically for credentials
+  },
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+}));
 
 // 2. Auth Middleware & Supabase Admin Initialization
 app.use('*', async (c, next) => {

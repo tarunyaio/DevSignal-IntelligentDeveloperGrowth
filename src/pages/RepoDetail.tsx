@@ -8,21 +8,28 @@ import {
 } from 'lucide-react';
 import { useRepo } from '@/hooks/queries';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
-import { ContributorGrid } from '@/components/dashboard/ContributorGrid';
-import { LanguageStats } from '@/components/dashboard/LanguageStats';
-import { ReadmePreview } from '@/components/dashboard/ReadmePreview';
 import { cn } from '@/lib/utils';
 import { SEO } from '@/components/layout/SEO';
 
+const COLOR_MAP: Record<string, string> = {
+  blue: 'text-blue-500 border-blue-500',
+  amber: 'text-amber-500 border-amber-500',
+  violet: 'text-violet-500 border-violet-500',
+  orange: 'text-orange-500 border-orange-500',
+  rose: 'text-rose-500 border-rose-500',
+  emerald: 'text-emerald-500 border-emerald-500',
+  indigo: 'text-indigo-500 border-indigo-500',
+  purple: 'text-purple-500 border-purple-500'
+};
+
 function IndustrialMetric({ label, value, icon: Icon, color }: { label: string, value: string | number, icon: React.ElementType, color: string }) {
+  const iconColor = color && COLOR_MAP[color] ? COLOR_MAP[color] : 'text-black border-black';
   return (
     <div className="surgical-card p-10 flex flex-col justify-between h-full bg-white group">
       <div className="flex items-center justify-between border-b-2 border-black pb-6">
         <div className={cn(
-          "w-14 h-14 border-4 border-black flex items-center justify-center transition-all",
-          color === 'blue' ? 'group-hover:bg-blue-500 group-hover:text-white' : 
-          color === 'purple' ? 'group-hover:bg-purple-500 group-hover:text-white' : 
-          'group-hover:bg-orange-500 group-hover:text-white'
+          "w-14 h-14 border-4 flex items-center justify-center transition-all group-hover:bg-black group-hover:text-white group-hover:border-black",
+          iconColor
         )}>
           <Icon size={24} strokeWidth={3} />
         </div>

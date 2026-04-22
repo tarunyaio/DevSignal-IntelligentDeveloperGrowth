@@ -9,9 +9,21 @@ interface StatsCardProps {
     value: number;
     isPositive: boolean;
   };
+  color?: string;
 }
 
-export function StatsCard({ title, value, icon: Icon, trend }: StatsCardProps) {
+const COLOR_MAP: Record<string, string> = {
+  blue: 'text-blue-500',
+  amber: 'text-amber-500',
+  violet: 'text-violet-500',
+  orange: 'text-orange-500',
+  rose: 'text-rose-500',
+  emerald: 'text-emerald-500',
+  indigo: 'text-indigo-500',
+};
+
+export function StatsCard({ title, value, icon: Icon, trend, color }: StatsCardProps) {
+  const iconColor = color && COLOR_MAP[color] ? COLOR_MAP[color] : 'text-black';
   return (
     <motion.div 
       className="surgical-card p-10 flex flex-col justify-between h-full bg-white relative overflow-hidden"
@@ -19,7 +31,7 @@ export function StatsCard({ title, value, icon: Icon, trend }: StatsCardProps) {
       <div className="absolute top-0 right-0 w-2 h-full bg-black opacity-5" />
       
       <div className="flex items-start justify-between">
-        <div className="w-16 h-16 border-4 border-black flex items-center justify-center text-black">
+        <div className={cn("w-16 h-16 border-4 border-black flex items-center justify-center transition-colors group-hover:bg-black group-hover:text-white", iconColor)}>
           <Icon size={32} strokeWidth={3} />
         </div>
         {trend && (

@@ -92,10 +92,10 @@ export function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <StatsCard title="Total_Repos" value={stats.total_repos} icon={Layout} />
-        <StatsCard title="Stars_Mapped" value={stats.total_stars} icon={Star} />
-        <StatsCard title="Forks_Detected" value={stats.total_forks} icon={GitFork} />
-        <StatsCard title="Active_Issues" value={stats.total_issues} icon={Zap} />
+        <StatsCard title="Total_Repos" value={stats.total_repos} icon={Layout} color="blue" />
+        <StatsCard title="Stars_Mapped" value={stats.total_stars} icon={Star} color="amber" />
+        <StatsCard title="Forks_Detected" value={stats.total_forks} icon={GitFork} color="violet" />
+        <StatsCard title="Active_Issues" value={stats.total_issues} icon={Zap} color="orange" />
       </div>
 
       {/* Main Content Grid */}

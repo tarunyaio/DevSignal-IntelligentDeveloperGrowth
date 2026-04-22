@@ -37,6 +37,10 @@ export function Footer() {
                 <span>© 2026 DEVSIGNAL_SYSTEMS</span>
                 <span className="w-2 h-2 bg-black rotate-45" />
                 <span className="italic">CORE_ONLINE</span>
+                <span className="w-2 h-2 bg-black rotate-45" />
+                <span>
+                  GOD OF THE SITE: <a href="https://github.com/tarunyaio" target="_blank" rel="noopener noreferrer" className="text-accent-indigo hover:text-black transition-colors underline decoration-2 underline-offset-4">@Tarunyaio</a>
+                </span>
               </div>
               <div className="flex items-center gap-4 text-accent-indigo">
                 <Cpu size={14} />
