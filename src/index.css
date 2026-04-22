@@ -4,12 +4,12 @@
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   
-  /* Neomorphic Colors - Deeper and Darker */
-  --color-neo-bg: #0a0a0b;
-  --color-neo-surface: #0a0a0b;
-  --color-neo-accent-blue: #6366f1;
+  /* Neomorphic Colors - Refined for Visibility */
+  --color-neo-bg: #0f1115;
+  --color-neo-surface: #0f1115;
+  --color-neo-accent-blue: #3b82f6;
   --color-neo-accent-emerald: #10b981;
-  --color-neo-accent-orange: #ff4d00;
+  --color-neo-accent-orange: #f97316;
 }
 
 @layer base {
@@ -29,30 +29,30 @@
   .neo-flat {
     @apply bg-neo-surface;
     box-shadow: 
-      10px 10px 20px rgba(0, 0, 0, 0.5),
-      -10px -10px 20px rgba(255, 255, 255, 0.03);
+      8px 8px 16px rgba(0, 0, 0, 0.5),
+      -8px -8px 16px rgba(255, 255, 255, 0.04);
   }
 
   /* Refined Pressed Surface */
   .neo-pressed {
     @apply bg-neo-surface;
     box-shadow: 
-      inset 10px 10px 20px rgba(0, 0, 0, 0.5),
-      inset -10px -10px 20px rgba(255, 255, 255, 0.03);
+      inset 6px 6px 12px rgba(0, 0, 0, 0.5),
+      inset -6px -6px 12px rgba(255, 255, 255, 0.04);
   }
 
   /* Circular Icon Buttons */
   .neo-icon {
     @apply flex items-center justify-center rounded-full bg-neo-surface transition-all active:scale-95;
     box-shadow: 
-      6px 6px 12px rgba(0, 0, 0, 0.4),
-      -6px -6px 12px rgba(255, 255, 255, 0.03);
+      4px 4px 8px rgba(0, 0, 0, 0.4),
+      -4px -4px 8px rgba(255, 255, 255, 0.04);
   }
   
   .neo-icon-pressed {
     @apply flex items-center justify-center rounded-full bg-neo-surface;
     box-shadow: 
-      inset 5px 5px 10px rgba(0, 0, 0, 0.4),
-      inset -5px -5px 10px rgba(255, 255, 255, 0.03);
+      inset 3px 3px 6px rgba(0, 0, 0, 0.4),
+      inset -3px -3px 6px rgba(255, 255, 255, 0.04);
   }
 }
