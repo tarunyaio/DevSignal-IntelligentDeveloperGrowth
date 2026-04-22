@@ -28,9 +28,9 @@ const getIcon = (type: string) => {
 };
 
 export function LearningPathPage() {
-  const { pathId } = useParams();
+  const { courseId } = useParams();
   const navigate = useNavigate();
-  const path = LEARNING_PATHS.find(p => p.id === pathId);
+  const path = LEARNING_PATHS.find(p => p.id === courseId);
   const [completedLevels, setCompletedLevels] = useState<number[]>([]);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export function LearningPathPage() {
                  </div>
                  <div>
                     <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-500">{path.category} // Sector</span>
-                    <h1 className="text-4xl md:text-7xl font-black italic tracking-tighter text-slate-200">{path.title}</h1>
+                    <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter text-slate-200">{path.title}</h1>
                  </div>
               </div>
               <p className="text-lg md:text-2xl font-medium italic text-slate-500 leading-relaxed opacity-80">

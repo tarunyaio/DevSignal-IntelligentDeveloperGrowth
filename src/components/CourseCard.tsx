@@ -30,13 +30,13 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   const navigate = useNavigate();
   const progressPercentage = (progress / 10) * 100;
 
-  // Tilt Animation Logic
+  // Reduced tilt for stability
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -63,73 +63,67 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       onClick={() => navigate(`/resources/${id}`)}
       className="group relative"
     >
-      <div className="neo-flat rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 cursor-pointer border border-white/[0.01] transition-all duration-500 hover:neo-pressed h-full flex flex-col">
-        {/* Category Badge - Surgical Style */}
-        <div className="flex items-center justify-between mb-10">
-          <div className="flex flex-col">
-            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-500 mb-2">Sector</span>
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
-              <span className="text-xs font-black uppercase tracking-widest text-slate-300">{category}</span>
-            </div>
+      <div className="neo-flat rounded-[2rem] p-6 cursor-pointer border border-white/[0.01] transition-all duration-500 hover:neo-pressed flex flex-col min-h-[380px]">
+        {/* Header Metadata */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">{category}</span>
           </div>
-          
-          <div className="w-10 h-10 neo-icon group-hover:neo-icon-pressed transition-all">
-            <ArrowUpRight size={16} className="text-slate-500 group-hover:text-neo-accent-blue transition-colors" />
-          </div>
+          <ArrowUpRight size={14} className="text-slate-600 group-hover:text-neo-accent-blue transition-colors" />
         </div>
 
-        {/* Main Content */}
-        <div className="mb-10 space-y-4 flex-grow">
+        {/* Content Node */}
+        <div className="mb-6 space-y-4">
           <div 
-            className="w-12 h-12 md:w-14 md:h-14 neo-icon mb-6"
+            className="w-12 h-12 neo-icon"
             style={{ color: accentColor }}
           >
-            <Icon size={20} className="md:size-[24px]" strokeWidth={2.5} />
+            <Icon size={20} strokeWidth={2.5} />
           </div>
-          <h3 className="text-2xl font-black italic tracking-tighter text-slate-200 leading-tight group-hover:text-neo-accent-blue transition-colors">
+          <h3 className="text-xl font-black italic tracking-tighter text-slate-200 leading-tight group-hover:text-neo-accent-blue transition-colors line-clamp-2">
             {title}
           </h3>
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest leading-loose opacity-60 line-clamp-2 italic">
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed opacity-60 line-clamp-2 italic">
             {tagline}
           </p>
         </div>
 
-        {/* Technical Metadata */}
-        <div className="space-y-6 pt-6 border-t border-white/[0.03]">
+        {/* Bottom Metadata - Fixed at bottom */}
+        <div className="mt-auto pt-6 border-t border-white/[0.03] space-y-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Clock size={14} className="text-slate-600" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{totalHours}h Est.</span>
+            <div className="flex items-center gap-2">
+              <Clock size={12} className="text-slate-600" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">{totalHours}H</span>
             </div>
             <div className="flex items-center gap-2">
-               <Star size={12} className={cn("fill-current", difficulty === 'Advanced' ? 'text-neo-accent-orange' : 'text-neo-accent-blue')} />
-               <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">{difficulty}</span>
+               <Star size={10} className={cn("fill-current", difficulty === 'Advanced' ? 'text-neo-accent-orange' : 'text-neo-accent-blue')} />
+               <span className="text-[9px] font-black uppercase tracking-widest text-slate-300">{difficulty}</span>
             </div>
           </div>
 
-          {/* Surgical Progress Bar */}
-          <div className="space-y-3">
-            <div className="flex justify-between items-end">
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600">Sync Status</span>
-              <span className="text-[11px] font-black italic text-slate-300">{progress}/10</span>
-            </div>
-            <div className="h-[6px] w-full neo-pressed rounded-full overflow-hidden p-[1px]">
+          {/* Progress Indicator */}
+          <div className="space-y-2">
+            <div className="h-[4px] w-full neo-pressed rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
-                className="h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_12px_rgba(255,255,255,0.1)]"
+                className="h-full rounded-full transition-all duration-1000 ease-out"
                 style={{ 
                   backgroundColor: accentColor,
-                  boxShadow: `0 0 15px ${accentColor}30`
+                  boxShadow: `0 0 10px ${accentColor}40`
                 }}
               />
             </div>
+            <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-slate-600">
+               <span>Sync</span>
+               <span>{progress}/10</span>
+            </div>
           </div>
 
-          <button className="w-full py-5 rounded-[1.5rem] neo-flat flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-slate-200 hover:neo-pressed transition-all group/btn">
-            {progress > 0 ? 'Initialize Continue' : 'Initialize Journey'}
-            <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+          <button className="w-full py-4 rounded-xl neo-flat flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-slate-200 hover:neo-pressed transition-all group/btn">
+            {progress > 0 ? 'Resume' : 'Start'}
+            <ChevronRight size={12} className="group-hover/btn:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

@@ -114,7 +114,7 @@ export function RepoDetail() {
               {repo.language || 'Multi-Stack'}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-8xl font-black tracking-tighter text-slate-200 opacity-95 leading-[1.1] max-w-5xl break-words">
+          <h1 className="text-3xl sm:text-4xl md:text-7xl font-black tracking-tighter text-slate-200 opacity-95 leading-[1.1] max-w-5xl break-words">
             {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
           </h1>
           <p className="text-2xl text-slate-500 max-w-3xl font-medium leading-relaxed italic border-l-4 border-neo-accent-blue/20 pl-8">
