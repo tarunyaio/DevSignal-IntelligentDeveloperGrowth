@@ -44,7 +44,7 @@ export function Header() {
           </div>
           {avatarUrl ? (
             <div className="w-12 h-12 border-2 border-black p-1 bg-white">
-              <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover grayscale contrast-125" />
+              <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
             </div>
           ) : (
             <div className="w-12 h-12 bg-black text-white flex items-center justify-center text-sm font-black">
@@ -57,6 +57,7 @@ export function Header() {
           onClick={logout}
           className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"
           title="TERMINATE_SESSION"
+          aria-label="Terminate session"
         >
           <LogOut size={20} strokeWidth={3} />
         </button>
