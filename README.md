@@ -25,7 +25,7 @@ Result:
 
 ## Proposed Solution
 
-DevPlatform connects directly to GitHub and transforms raw activity into:
+DevSignal connects directly to GitHub and transforms raw activity into:
 
 * Structured analytics
 * Growth signals
@@ -63,14 +63,15 @@ This is:
                           ▼
                 ┌──────────────────────┐
                 │     Backend API      │
-                │   Fastify + Node     │
+                │ Hono on Cloudflare   │
+                │       Workers        │
                 └─────────┬────────────┘
                           │
         ┌─────────────────┼─────────────────┐
         ▼                 ▼                 ▼
 ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  GitHub API  │  │  Supabase DB │  │    Redis     │
-│ (Octokit)    │  │  (Postgres)  │  │   (Cache)    │
+│  GitHub API  │  │  Supabase DB │  │  In-memory   │
+│  (Octokit)   │  │  (Postgres)  │  │ Worker cache │
 └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
@@ -120,20 +121,23 @@ Frontend reads from DB (NOT GitHub)
 
 ## Frontend
 
-* React + Vite
+* React 19 + Vite
 * TypeScript (strict)
-* Tailwind CSS
-* shadcn/ui
-* React Router
+* Tailwind CSS v4
+* React Router v7
 * TanStack Query
+* Framer Motion, lucide-react
+* Monaco Editor (in-browser code editor)
+* React Three Fiber / drei (3D landing visuals)
 
 ---
 
 ## Backend
 
-* Fastify
+* Hono
+* Cloudflare Workers (Wrangler dev / deploy)
 * Octokit (GitHub SDK)
-* Redis (Upstash) for caching and rate limiting
+* In-memory per-isolate cache (`server/src/utils/cache.ts`)
 
 ---
 
@@ -205,33 +209,6 @@ Refresh in background if stale
 
 ---
 
-# Backend API Design
-
-## Synchronization
-
-```http
-POST /sync
-```
-
----
-
-## Data Retrieval
-
-```http
-GET /repos
-GET /repos/:id
-GET /analytics
-```
-
----
-
-## Editor Execution
-
-```http
-POST /execute
-```
-
----
 
 # Data Model (Simplified)
 
@@ -301,14 +278,7 @@ Else:
 
 ---
 
-## 3. Onboarding (Initial)
-
-* Skill level setup
-* Goal setting
-
----
-
-## 4. Initial Synchronization
+## 3. Initial Synchronization
 
 ```text
 "Synchronizing your GitHub data..."
@@ -316,7 +286,7 @@ Else:
 
 ---
 
-## 5. Dashboard
+## 4. Dashboard
 
 * Repository list
 * Statistics
@@ -324,7 +294,7 @@ Else:
 
 ---
 
-## 6. Repository Detail
+## 5. Repository Detail
 
 ```text
 /dashboard -> /repo/:id
@@ -336,13 +306,13 @@ Else:
 
 ---
 
-## 7. Resource Library
+## 6. Resource Library
 
 * Add, filter, and search resources
 
 ---
 
-## 8. Code Editor
+## 7. Code Editor
 
 * Writing, running, and saving code
 
@@ -361,9 +331,10 @@ devsignal/
 │   └── test/         # Vitest tests
 ├── server/
 │   └── src/
-│       ├── routes/   # Fastify API routes (sync, repos, analytics, resources, snippets)
-│       ├── env.ts    # Zod-validated environment
-│       ├── server.ts # Entry point with auth middleware + rate limiting
+│       ├── routes/   # Hono API routes (sync, repos, analytics, profile, activity, resources, snippets)
+│       ├── utils/    # cache.ts (in-memory Worker cache)
+│       ├── env.ts    # Zod-validated environment (Node dev only)
+│       ├── server.ts # Hono app entry with CORS + Supabase auth middleware
 │       └── types.d.ts
 ├── supabase/
 │   └── migrations/   # SQL schema with RLS policies
@@ -371,31 +342,6 @@ devsignal/
 
 ---
 
-# Key Design Decisions
-
-## 1. Minimal direct GitHub calls from frontend
-
-Communication is centralized through the backend.
-
----
-
-## 2. No Personal Access Tokens
-
-Security is maintained through OAuth with no manual token input.
-
----
-
-## 3. Database-first rendering
-
-The frontend primarily reads from the database to ensure performance.
-
----
-
-## 4. Minimal editor
-
-Focused on core editing without terminal or filesystem access.
-
----
 
 # Project Risk Mitigation
 
@@ -415,13 +361,13 @@ Focused on core editing without terminal or filesystem access.
 * Analytics
 * Resources
 * Editor
+* Learning paths
 
 ---
 
 ## Phase 2 (v2)
 
 * Organization intelligence
-* Learning paths
 * Webhooks
 
 ---
@@ -434,21 +380,62 @@ Focused on core editing without terminal or filesystem access.
 
 # Local Setup
 
+### 1. Clone & install
+
 ```bash
-git clone https://github.com/TarunyaProgrammer/DevSignal-IntelligentDeveloperGrowth.git
+git clone https://github.com/tarunyaio/DevSignal-IntelligentDeveloperGrowth.git
 cd DevSignal-IntelligentDeveloperGrowth
 npm install
+cd server && npm install && cd ..
 ```
 
-### Start Frontend
+### 2. Configure environment
+
+DevSignal requires real Supabase credentials and a running backend — there is **no guest / mock mode**. The frontend will throw on boot if Supabase env vars are missing.
+
+Create `.env.local` in the project root:
 
 ```bash
-npm run dev
+# Frontend (Vite)
+VITE_SUPABASE_URL=https://<project-ref>.supabase.co
+VITE_SUPABASE_ANON_KEY=<anon-key>
+VITE_API_URL=http://localhost:3001
 ```
 
-### Start Backend
+Create `server/.dev.vars` (used by Wrangler in dev) — or `server/.env` if you run with Node tooling:
+
+```bash
+# Backend (Hono on Cloudflare Workers)
+SUPABASE_URL=https://<project-ref>.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+GITHUB_TOKEN=<github-personal-access-token>   # optional, used as a fallback when a user lacks a provider token
+```
+
+> The GitHub OAuth flow itself is handled by Supabase, so no `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` are needed in this repo — configure those in your Supabase project's Auth → Providers → GitHub settings.
+
+Apply the database schema from `supabase/migrations/001_initial_schema.sql` to your Supabase project (SQL editor or `supabase db push`).
+
+### 3. Start backend
 
 ```bash
 cd server
+npm run dev      # runs `wrangler dev` on port 3001
+```
+
+### 4. Start frontend
+
+```bash
 npm run dev
+```
+
+The app is served at `http://localhost:5173` and calls the API at `http://localhost:3001` (override with `VITE_API_URL`).
+
+---
+
+# Testing
+
+```bash
+npm run test        # vitest (unit + sanity)
+npm run lint        # eslint
+npm run build       # type-check + production build
 ```
