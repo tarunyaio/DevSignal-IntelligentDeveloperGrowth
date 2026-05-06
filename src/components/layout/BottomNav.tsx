@@ -30,10 +30,7 @@ export function BottomNav() {
               )}
             >
               <item.icon size={20} strokeWidth={3} className={cn("transition-transform", !isActive && "group-hover:scale-110")} />
-              <span className={cn(
-                "text-[8px] font-black uppercase tracking-[0.2em] mt-2",
-                isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"
-              )}>
+              <span className="text-[8px] font-black uppercase tracking-[0.2em] mt-2">
                 {item.label}
               </span>
             </Link>
