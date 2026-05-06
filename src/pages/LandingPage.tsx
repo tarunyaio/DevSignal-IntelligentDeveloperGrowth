@@ -23,7 +23,7 @@ export function LandingPage() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="relative min-h-screen bg-black text-[#E1E0CC] overflow-x-hidden selection:bg-primary/30">
+    <div className="relative min-h-screen bg-bg text-text overflow-x-hidden selection:bg-primary/30">
       <SEO 
         description="DevSignal: The high-fidelity intelligence layer for modern engineering teams. Decipher repository velocity and scale technical standards with mathematical precision."
       />
@@ -117,7 +117,7 @@ export function LandingPage() {
       </section>
 
       {/* SECTION 2: PLATFORM / ABOUT */}
-      <section id="platform" className="bg-black py-32 md:py-48 px-6 md:px-12 relative overflow-hidden">
+      <section id="platform" className="bg-bg py-32 md:py-48 px-6 md:px-12 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto flex flex-col items-center text-center space-y-12 md:space-y-20">
@@ -131,7 +131,7 @@ export function LandingPage() {
             <span className="text-primary text-[10px] md:text-xs tracking-[0.6em] uppercase font-bold mb-12 md:mb-16">Core Architecture</span>
             
             <WordsPullUpMultiStyle 
-              className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl max-w-6xl mx-auto leading-[0.9] tracking-tighter text-[#E1E0CC] font-bold"
+              className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl max-w-6xl mx-auto leading-[0.9] tracking-tighter text-text font-bold"
               segments={[
                 { text: "Beyond tracking. " },
                 { text: "Deep intelligence", className: "font-serif italic text-primary px-2" },
@@ -150,8 +150,8 @@ export function LandingPage() {
       </section>
 
       {/* SECTION 3: SIGNALS / FEATURES */}
-      <section id="analytics" className="relative bg-black py-32 md:py-48 px-6 md:px-12">
-        <div className="absolute inset-0 bg-noise opacity-[0.2] pointer-events-none" />
+      <section id="analytics" className="relative bg-bg py-32 md:py-48 px-6 md:px-12">
+        <div className="absolute inset-0 bg-noise opacity-[0.1] pointer-events-none" />
         
         <div className="relative z-10 max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start mb-32">

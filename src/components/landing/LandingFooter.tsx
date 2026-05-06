@@ -2,7 +2,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 export function LandingFooter() {
   return (
-    <footer className="bg-black text-[#E1E0CC] pt-32 pb-0 px-6 md:px-12 lg:px-16 overflow-hidden border-t border-white/5">
+    <footer className="bg-bg text-text pt-32 pb-0 px-6 md:px-12 lg:px-16 overflow-hidden border-t border-border/20">
       <div className="max-w-[1600px] mx-auto">
         {/* Top Row: Drop us a line + Socials */}
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-32">
@@ -40,7 +40,7 @@ export function LandingFooter() {
             tarunyak.10@gmail.com
             <ArrowUpRight strokeWidth={1} className="w-[6vw] h-[6vw] group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-700 ease-[0.16,1,0.3,1]" />
           </a>
-          <div className="w-full h-px bg-[#E1E0CC]/10 mt-12" />
+          <div className="w-full h-px bg-border/20 mt-12" />
         </div>
 
         {/* Bottom Grid */}
@@ -55,14 +55,14 @@ export function LandingFooter() {
           </div>
 
           <div className="md:col-span-2 space-y-4">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-[#E1E0CC] mb-8 font-bold">EXPLORE</p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-text mb-8 font-bold">EXPLORE</p>
             {['Works', 'Expertise', 'About', 'Insights'].map((link) => (
               <a key={link} href="#" className="block text-[11px] uppercase tracking-[0.15em] text-primary/60 hover:text-primary transition-colors font-medium">{link}</a>
             ))}
           </div>
 
           <div className="md:col-span-2 space-y-4">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-[#E1E0CC] mb-8 font-bold">HELP</p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-text mb-8 font-bold">HELP</p>
             <a href="mailto:tarunyak.10@gmail.com" className="block text-[11px] uppercase tracking-[0.15em] text-primary/60 hover:text-primary transition-colors font-medium">Support</a>
             <a href="#" className="block text-[11px] uppercase tracking-[0.15em] text-primary/60 hover:text-primary transition-colors font-medium">Privacy</a>
             <a href="#" className="block text-[11px] uppercase tracking-[0.15em] text-primary/60 hover:text-primary transition-colors font-medium">Terms</a>

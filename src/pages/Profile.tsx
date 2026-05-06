@@ -110,7 +110,7 @@ export function Profile() {
           className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 opacity-60"
         />
         <div className="absolute inset-0 noise-overlay opacity-[0.5] mix-blend-overlay pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/40 to-transparent" />
         
         <div className="absolute bottom-0 left-0 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-10 z-10 w-full">
            {/* Avatar */}
@@ -122,7 +122,7 @@ export function Profile() {
                    className="w-full h-full rounded-2xl object-cover"
                  />
               </div>
-              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-black border border-primary/30 text-primary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest flex items-center gap-1.5 shadow-xl whitespace-nowrap">
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-bg border border-primary/30 text-primary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest flex items-center gap-1.5 shadow-xl whitespace-nowrap">
                  <ShieldCheck size={12} className="fill-primary/20" />
                  VERIFIED ID
               </div>
@@ -135,7 +135,7 @@ export function Profile() {
                   <Terminal size={12} className="fill-primary" />
                   System Identity
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-[#E1E0CC]">
+                <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-text">
                   {user?.user_metadata.full_name || user?.user_metadata.user_name}
                 </h1>
               </div>

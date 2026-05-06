@@ -43,7 +43,7 @@ function IndustrialMetric({ label, value, icon: Icon, color }: { label: string, 
         <div className="w-12 h-1 rounded-full bg-white/5 group-hover:bg-primary/20 transition-colors duration-500" />
       </div>
       <div className="mt-8 space-y-2">
-        <p className="text-4xl md:text-5xl font-bold tracking-tighter text-[#E1E0CC] leading-none group-hover:text-primary transition-colors duration-500">{value}</p>
+        <p className="text-4xl md:text-5xl font-bold tracking-tighter text-text leading-none group-hover:text-primary transition-colors duration-500">{value}</p>
         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40">{label}</p>
       </div>
     </motion.div>
@@ -150,7 +150,7 @@ export function RepoDetail() {
               <Terminal size={14} className="fill-primary" />
               Intelligence Layer: <span className="font-serif italic ml-1">{repo.language || 'MULTI_ARRAY'}</span>
             </motion.div>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter text-[#E1E0CC] leading-[0.9]">
+            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter text-text leading-[0.9]">
                {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
             </h1>
             <p className="text-primary/60 font-medium max-w-2xl text-sm md:text-lg leading-relaxed">

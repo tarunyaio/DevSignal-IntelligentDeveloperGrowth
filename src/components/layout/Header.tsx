@@ -41,7 +41,7 @@ export function Header() {
         
         <div className="flex items-center gap-3">
           <div className="text-right hidden md:block">
-            <p className="text-sm font-medium text-[#E1E0CC] leading-tight">{displayName}</p>
+            <p className="text-sm font-medium text-text leading-tight">{displayName}</p>
             <p className="text-xs text-text-muted font-bold uppercase tracking-widest text-[9px]">Developer</p>
           </div>
           {avatarUrl ? (

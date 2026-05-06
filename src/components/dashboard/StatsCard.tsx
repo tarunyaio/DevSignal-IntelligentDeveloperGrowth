@@ -47,7 +47,7 @@ export function StatsCard({ title, value, icon: Icon, trend, color }: StatsCardP
       <div className="mt-8 space-y-2">
         <p className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.2em]">{title}</p>
         <div className="flex items-baseline gap-2">
-          <h4 className="text-4xl font-bold tracking-tighter text-[#E1E0CC] leading-none group-hover:text-primary transition-colors duration-500">{value}</h4>
+          <h4 className="text-4xl font-bold tracking-tighter text-text leading-none group-hover:text-primary transition-colors duration-500">{value}</h4>
         </div>
       </div>
       

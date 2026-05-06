@@ -16,13 +16,24 @@
 }
 
 @layer base {
-  :root, .dark {
+  :root {
+    --bg: #FDFCF5; /* Light Warm Cream */
+    --surface: #F8F6EB;
+    --surface-hover: #F2F0E0;
+    --border: #DEDAC2;
+    --text: #1C1B17; /* Deep Charcoal/Black for contrast */
+    --text-muted: #6B685B;
+    --primary: #8C783D; /* Slightly darker gold for light mode readability */
+    --primary-hover: #756432;
+  }
+
+  .dark {
     --bg: #000000;
     --surface: #101010;
-    --surface-hover: #212121;
-    --border: #333333;
+    --surface-hover: #1A1A1A;
+    --border: #262626;
     --text: #E1E0CC;
-    --text-muted: #9ca3af;
+    --text-muted: #9A9887;
     --primary: #DEDBC8;
     --primary-hover: #C5C2B1;
   }

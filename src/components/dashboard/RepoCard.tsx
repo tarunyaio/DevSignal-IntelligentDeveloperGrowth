@@ -37,7 +37,7 @@ export function RepoCard({ id, name, description, stars, forks, language, url }:
         </div>
 
         <div className="space-y-3">
-          <h4 className="text-lg font-bold text-[#E1E0CC] group-hover:text-primary transition-colors leading-tight line-clamp-1" title={name}>
+          <h4 className="text-lg font-bold text-text group-hover:text-primary transition-colors leading-tight line-clamp-1" title={name}>
             {name}
           </h4>
           <p className="text-sm text-primary/50 line-clamp-2 leading-relaxed font-medium">

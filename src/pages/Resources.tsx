@@ -95,7 +95,7 @@ export function Resources() {
               <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20 shadow-[0_0_20px_-5px_rgba(222,219,200,0.3)]">
                 <BookOpen size={28} strokeWidth={2} />
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-[#E1E0CC]">
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-text">
                 Codex <span className="text-primary font-serif italic">Archive</span>
               </h1>
             </motion.div>
@@ -189,7 +189,7 @@ export function Resources() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
                 <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-12">
                    <div className="space-y-4">
-                      <p className="text-5xl md:text-8xl font-bold tracking-tighter text-[#E1E0CC]">
+                      <p className="text-5xl md:text-8xl font-bold tracking-tighter text-text">
                         {LEARNING_PATHS.length}<span className="text-primary font-serif italic">+</span>
                       </p>
                       <div className="flex items-center gap-4 text-xs font-bold text-primary/40 uppercase tracking-[0.3em]">
@@ -198,7 +198,7 @@ export function Resources() {
                       </div>
                    </div>
                    <div className="space-y-4">
-                      <p className="text-5xl md:text-8xl font-bold tracking-tighter text-[#E1E0CC]">
+                      <p className="text-5xl md:text-8xl font-bold tracking-tighter text-text">
                         100<span className="text-primary font-serif italic">%</span>
                       </p>
                       <div className="flex items-center gap-4 text-xs font-bold text-primary/40 uppercase tracking-[0.3em]">

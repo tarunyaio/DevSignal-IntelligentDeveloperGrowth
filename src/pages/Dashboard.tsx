@@ -72,7 +72,7 @@ export function Dashboard() {
           className="absolute inset-0 w-full h-full object-cover grayscale-[0.3] group-hover:scale-110 transition-transform duration-[3000ms] ease-out"
         />
         <div className="absolute inset-0 noise-overlay opacity-[0.5] mix-blend-overlay pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/30 to-transparent" />
         
         <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16 space-y-4 md:space-y-6">
           <motion.div 
@@ -85,7 +85,7 @@ export function Dashboard() {
               <Zap size={14} className="fill-primary" />
               Intelligence Node Active
             </div>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter text-[#E1E0CC] leading-[0.9]">
+            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter text-text leading-[0.9]">
                Systems online, <br />
                <span className="text-primary font-serif italic">{user?.user_metadata?.full_name?.split(' ')[0] || user?.user_metadata?.user_name || 'Architect'}</span>
             </h1>
@@ -94,7 +94,7 @@ export function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 1 }}
-            className="text-primary/60 font-medium max-w-xl text-sm md:text-lg leading-relaxed"
+            className="text-text/60 font-medium max-w-xl text-sm md:text-lg leading-relaxed"
           >
             Decoding <span className="text-primary font-bold">{(repos || []).length}</span> repository vectors. 
             Your velocity matrix is reaching optimal performance thresholds.
@@ -103,13 +103,13 @@ export function Dashboard() {
       </section>
       
       {/* Header & Sync */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-10">
         <div className="space-y-3">
-          <div className="flex items-center gap-3 text-xs md:text-sm text-primary/40 font-bold uppercase tracking-[0.2em]">
+          <div className="flex items-center gap-3 text-xs md:text-sm text-text/40 font-bold uppercase tracking-[0.2em]">
             <Database size={18} className="text-primary/60" />
             <span>Telemetry Overview</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-[#E1E0CC]">
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-text">
             Signal <span className="text-primary font-serif italic">Matrix</span>
           </h2>
         </div>
@@ -137,8 +137,8 @@ export function Dashboard() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-10">
-          <div className="flex items-center justify-between border-b border-white/5 pb-5">
-            <h3 className="text-xl font-bold text-white tracking-tight uppercase tracking-wider">Repository Vectors</h3>
+          <div className="flex items-center justify-between border-b border-border pb-5">
+            <h3 className="text-xl font-bold text-text tracking-tight uppercase tracking-wider">Repository Vectors</h3>
             <span className="text-[10px] font-bold text-primary/60 bg-primary/5 px-4 py-1.5 rounded-full border border-primary/10 tracking-widest">NODES: {repoList.length}</span>
           </div>
           
@@ -151,10 +151,10 @@ export function Dashboard() {
                 />
               ))
             ) : (
-              <div className="col-span-full py-24 bg-white/[0.02] border border-white/5 border-dashed rounded-[2rem] flex flex-col items-center justify-center text-center space-y-6">
+              <div className="col-span-full py-24 bg-surface border border-border border-dashed rounded-[2rem] flex flex-col items-center justify-center text-center space-y-6">
                 <AlertCircle size={48} className="text-primary/20" />
                 <div className="space-y-2">
-                  <p className="text-xl font-bold text-white">No vectors detected</p>
+                  <p className="text-xl font-bold text-text">No vectors detected</p>
                   <p className="text-sm text-primary/40 font-medium">Mathematical match failed for "{searchQuery}"</p>
                 </div>
               </div>
@@ -164,7 +164,7 @@ export function Dashboard() {
           {visibleRepos < repoList.length && (
             <button 
               onClick={() => setVisibleRepos(prev => prev + 6)}
-              className="w-full py-5 bg-white/[0.03] border border-white/5 rounded-2xl font-bold text-[10px] uppercase tracking-[0.3em] text-primary/60 hover:bg-primary/10 hover:text-primary transition-all duration-500 shadow-sm"
+              className="w-full py-5 bg-surface border border-border rounded-2xl font-bold text-[10px] uppercase tracking-[0.3em] text-primary/60 hover:bg-primary/10 hover:text-primary transition-all duration-500 shadow-sm"
             >
               Expand Matrix
             </button>
@@ -173,15 +173,15 @@ export function Dashboard() {
 
         <div className="space-y-12">
           <div className="space-y-8">
-            <div className="flex items-center justify-between border-b border-white/5 pb-5">
-              <h3 className="text-xl font-bold text-white tracking-tight uppercase tracking-wider">Syntax Mix</h3>
+            <div className="flex items-center justify-between border-b border-border pb-5">
+              <h3 className="text-xl font-bold text-text tracking-tight uppercase tracking-wider">Syntax Mix</h3>
             </div>
             <LanguageChart languages={analytics?.languages} />
           </div>
           
           <div className="space-y-8">
-            <div className="flex items-center justify-between border-b border-white/5 pb-5">
-              <h3 className="text-xl font-bold text-white tracking-tight uppercase tracking-wider">Real-time Telemetry</h3>
+            <div className="flex items-center justify-between border-b border-border pb-5">
+              <h3 className="text-xl font-bold text-text tracking-tight uppercase tracking-wider">Real-time Telemetry</h3>
             </div>
             <ActivityFeed />
           </div>
