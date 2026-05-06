@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import app from '../server';
+import app from '../server.js';
 
 describe('DevSignal API', () => {
   it('GET /health should return status alive', async () => {

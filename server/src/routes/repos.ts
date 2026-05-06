@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { Octokit } from 'octokit';
 import { env as honoEnv } from 'hono/adapter';
-import { getCache, setCache } from '../utils/cache';
+import { getCache, setCache } from '../utils/cache.js';
 
 const app = new Hono<{ 
   Bindings: { GITHUB_TOKEN: string }; 

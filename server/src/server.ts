@@ -2,13 +2,13 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { env as honoEnv } from 'hono/adapter';
 import { createClient } from '@supabase/supabase-js';
-import { syncRoutes } from './routes/sync';
-import { repoRoutes } from './routes/repos';
-import { analyticsRoutes } from './routes/analytics';
-import { resourceRoutes } from './routes/resources';
-import { snippetRoutes } from './routes/snippets';
-import { profileRoutes } from './routes/profile';
-import { activityRoutes } from './routes/activity';
+import { syncRoutes } from './routes/sync.js';
+import { repoRoutes } from './routes/repos.js';
+import { analyticsRoutes } from './routes/analytics.js';
+import { resourceRoutes } from './routes/resources.js';
+import { snippetRoutes } from './routes/snippets.js';
+import { profileRoutes } from './routes/profile.js';
+import { activityRoutes } from './routes/activity.js';
 
 type Bindings = {
   SUPABASE_URL: string;
