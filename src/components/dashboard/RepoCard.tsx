@@ -19,46 +19,47 @@ export function RepoCard({ id, name, description, stars, forks, language, url }:
   return (
     <motion.div 
       onClick={() => navigate(`/repo/${id}`)}
-      className="glass-panel p-5 cursor-pointer flex flex-col justify-between group h-full"
+      whileHover={{ y: -5, scale: 1.01 }}
+      className="glass-panel p-6 cursor-pointer flex flex-col justify-between group h-full transition-all duration-500 border-white/5 hover:border-primary/20 hover:shadow-[0_0_30px_-10px_rgba(222,219,200,0.2)]"
     >
-      <div className="space-y-4">
-        <div className="flex items-center justify-between border-b border-border pb-3">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-            <Code size={16} strokeWidth={2} />
+      <div className="space-y-5">
+        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center border border-primary/10">
+            <Code size={20} strokeWidth={2} />
           </div>
           <button 
             onClick={(e) => { e.stopPropagation(); window.open(url, '_blank'); }}
-            className="w-8 h-8 rounded-lg text-text-muted hover:bg-surface hover:text-text transition-all flex items-center justify-center"
+            className="w-10 h-10 rounded-xl text-primary/40 hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center border border-transparent hover:border-primary/20"
             aria-label={`Open ${name} on GitHub`}
           >
-            <ExternalLink size={16} />
+            <ExternalLink size={18} />
           </button>
         </div>
 
-        <div className="space-y-2">
-          <h4 className="text-base font-semibold text-text group-hover:text-primary transition-colors leading-tight line-clamp-1" title={name}>
+        <div className="space-y-3">
+          <h4 className="text-lg font-bold text-[#E1E0CC] group-hover:text-primary transition-colors leading-tight line-clamp-1" title={name}>
             {name}
           </h4>
-          <p className="text-sm text-text-muted line-clamp-2 leading-relaxed">
-            {description || 'No description provided.'}
+          <p className="text-sm text-primary/50 line-clamp-2 leading-relaxed font-medium">
+            {description || 'No intelligence description provided for this node.'}
           </p>
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-between">
-        <div className="flex items-center gap-4 text-text-muted">
-          <div className="flex items-center gap-1.5 text-sm font-medium">
-            <Star size={14} className="text-amber-500" />
+      <div className="mt-8 flex items-center justify-between">
+        <div className="flex items-center gap-5 text-primary/40 font-bold">
+          <div className="flex items-center gap-2 text-xs">
+            <Star size={14} className="text-primary fill-primary/20" />
             {stars}
           </div>
-          <div className="flex items-center gap-1.5 text-sm font-medium">
+          <div className="flex items-center gap-2 text-xs">
             <GitFork size={14} />
             {forks}
           </div>
         </div>
         
         {language && (
-          <div className="px-2.5 py-1 rounded-full bg-surface border border-border text-xs font-medium text-text-muted">
+          <div className="px-3 py-1 rounded-full bg-primary/5 border border-primary/10 text-[10px] font-bold text-primary uppercase tracking-widest">
             {language}
           </div>
         )}

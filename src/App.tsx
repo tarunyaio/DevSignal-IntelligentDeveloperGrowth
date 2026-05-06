@@ -14,6 +14,7 @@ import { Editor } from './pages/Editor';
 import { RepoDetail } from './pages/RepoDetail';
 import { Profile } from './pages/Profile';
 import { NotFound } from './pages/NotFound';
+import { CustomCursor } from './components/layout/CustomCursor';
 
 export default function App() {
   const location = useLocation();
@@ -23,6 +24,7 @@ export default function App() {
       <ThemeProvider>
         <AuthProvider>
           <SearchProvider>
+            <CustomCursor />
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<LandingPage />} />

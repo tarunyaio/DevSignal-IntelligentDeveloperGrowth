@@ -69,7 +69,7 @@ export function Editor() {
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-semibold text-text-muted uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(222,219,200,0.5)] animate-pulse" />
               Execution Core v2.0
             </div>
             <h2 className="text-3xl font-semibold tracking-tight text-text leading-none">Logic <span className="text-primary">Processor</span></h2>
@@ -126,7 +126,7 @@ export function Editor() {
               "flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all shadow-md",
               isExecuting 
                 ? "bg-surface border border-border text-text-muted opacity-70 cursor-not-allowed" 
-                : "bg-primary text-white hover:bg-primary-hover hover:shadow-lg hover:-translate-y-0.5"
+                : "bg-primary text-black hover:bg-primary-hover hover:shadow-lg hover:-translate-y-0.5"
             )}
           >
             {isExecuting ? <Cpu size={16} className="animate-spin" /> : <Play size={16} className="fill-current" strokeWidth={2} />}
@@ -214,7 +214,7 @@ export function Editor() {
 
       {/* Footer Info */}
       <div className="flex items-center gap-2 text-xs font-medium text-text-muted shrink-0 pb-4 md:pb-0">
-        <Zap size={14} className="text-amber-500" />
+        <Zap size={14} className="text-primary" />
         <span>Status: System synchronized. Logic environment active.</span>
       </div>
     </div>

@@ -99,55 +99,58 @@ export function Profile() {
         </button>
       </div>
 
-      {/* Main Hero Card */}
-      <div className="glass-panel p-8 md:p-10 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
+          {/* Cinematic Identity Header */}
+      <section className="relative w-full h-[280px] md:h-[350px] rounded-[2rem] overflow-hidden mb-12 group">
+        <video 
+          src="https://www.pexels.com/download/video/7986491/" 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 opacity-60"
+        />
+        <div className="absolute inset-0 noise-overlay opacity-[0.5] mix-blend-overlay pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
         
-        <div className="relative z-10 flex flex-col lg:flex-row items-center gap-10 md:gap-14">
-          {/* Avatar Section */}
-          <div className="relative shrink-0">
-             <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl p-2 bg-surface shadow-xl shadow-black/5 group-hover:shadow-2xl group-hover:shadow-primary/20 transition-all duration-500">
-                <div className="w-full h-full rounded-2xl overflow-hidden relative">
-                  <img 
-                    src={user?.user_metadata.avatar_url} 
-                    alt="Profile" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 border border-border rounded-2xl pointer-events-none" />
-                </div>
-             </div>
-             <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-surface backdrop-blur-md text-emerald-600 dark:text-emerald-400 px-4 py-1.5 rounded-full text-xs font-semibold border border-border shadow-md flex items-center gap-2">
-                <ShieldCheck size={14} />
-                ID VERIFIED
-             </div>
-          </div>
+        <div className="absolute bottom-0 left-0 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-10 z-10 w-full">
+           {/* Avatar */}
+           <div className="relative shrink-0">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl p-1.5 bg-primary/20 backdrop-blur-sm border border-primary/30 shadow-2xl">
+                 <img 
+                   src={user?.user_metadata.avatar_url} 
+                   alt="Profile" 
+                   className="w-full h-full rounded-2xl object-cover"
+                 />
+              </div>
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-black border border-primary/30 text-primary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest flex items-center gap-1.5 shadow-xl whitespace-nowrap">
+                 <ShieldCheck size={12} className="fill-primary/20" />
+                 VERIFIED ID
+              </div>
+           </div>
 
-          {/* Identity Details */}
-          <div className="flex-1 space-y-6 text-center lg:text-left">
-            <div className="space-y-2">
-              <p className="text-primary font-medium text-xs tracking-widest uppercase">Auth Token Ready</p>
-              <h2 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight text-text">
-                {user?.user_metadata.full_name || user?.user_metadata.user_name}
-              </h2>
-            </div>
-            
-            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-              <div className="px-5 py-3 rounded-2xl bg-surface border border-border shadow-sm flex flex-col items-center lg:items-start">
-                 <p className="text-xs font-medium text-text-muted mb-1 uppercase tracking-wider">Persona Class</p>
-                 <p className="text-lg font-semibold text-text">{data?.persona.title}</p>
+           {/* Info */}
+           <div className="flex-1 text-center md:text-left space-y-4">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-primary text-[10px] uppercase tracking-widest font-bold mb-2">
+                  <Terminal size={12} className="fill-primary" />
+                  System Identity
+                </div>
+                <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-[#E1E0CC]">
+                  {user?.user_metadata.full_name || user?.user_metadata.user_name}
+                </h1>
               </div>
-              <div className="px-5 py-3 rounded-2xl bg-surface border border-border shadow-sm flex flex-col items-center lg:items-start">
-                 <p className="text-xs font-medium text-text-muted mb-1 uppercase tracking-wider">Integrity Level</p>
-                 <p className="text-lg font-semibold text-text">{data?.persona.level ? data.persona.level * 10 : 0}%</p>
+              
+              <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                 <div className="px-4 py-2 rounded-xl bg-black/40 backdrop-blur-md border border-primary/10 text-xs font-medium text-text-muted">
+                    Class: <span className="text-primary font-bold">{data?.persona.title}</span>
+                 </div>
+                 <div className="px-4 py-2 rounded-xl bg-black/40 backdrop-blur-md border border-primary/10 text-xs font-medium text-text-muted">
+                    Integrity: <span className="text-primary font-bold">{data?.persona.level ? data.persona.level * 10 : 0}%</span>
+                 </div>
               </div>
-            </div>
-            
-            <p className="text-base text-text-muted leading-relaxed max-w-2xl bg-surface-hover/50 p-4 rounded-xl border border-border/50">
-              Systemized identity operating as <span className="text-primary font-semibold">{data?.persona.title}</span> with <span className="font-semibold text-text">{data?.stats.totalProjects}</span> validated project blocks.
-            </p>
-          </div>
+           </div>
         </div>
-      </div>
+      </section>
 
       {/* Bento Grid Nodes */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -155,9 +158,9 @@ export function Profile() {
         {/* Left Vertical Stack */}
         <div className="flex flex-col gap-6">
           <div className="glass-panel p-6 flex flex-col justify-between h-[180px] group overflow-hidden relative">
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-amber-500/10 blur-[40px] rounded-full pointer-events-none" />
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/10 blur-[40px] rounded-full pointer-events-none" />
             <div className="flex justify-between items-center border-b border-border pb-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-white transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors">
                 <Star size={20} strokeWidth={2} />
               </div>
               <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Impact Array</span>
@@ -169,9 +172,9 @@ export function Profile() {
           </div>
 
           <div className="glass-panel p-6 flex flex-col justify-between h-[180px] group overflow-hidden relative">
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-emerald-500/10 blur-[40px] rounded-full pointer-events-none" />
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/10 blur-[40px] rounded-full pointer-events-none" />
             <div className="flex justify-between items-center border-b border-border pb-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors">
                 <GitFork size={20} strokeWidth={2} />
               </div>
               <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Iteration Depth</span>
@@ -206,9 +209,9 @@ export function Profile() {
 
         {/* Right: Rhythm Node */}
         <div className="glass-panel p-6 flex flex-col justify-between h-full group overflow-hidden relative">
-          <div className="absolute -top-6 -right-6 w-40 h-40 bg-emerald-500/10 blur-[50px] rounded-full pointer-events-none" />
+          <div className="absolute -top-6 -right-6 w-40 h-40 bg-primary/10 blur-[50px] rounded-full pointer-events-none" />
           <div className="flex justify-between items-center border-b border-border pb-4">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors">
               <Clock size={20} strokeWidth={2} />
             </div>
             <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Temporal Sync</span>

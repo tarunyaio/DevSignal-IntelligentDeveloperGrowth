@@ -4,10 +4,10 @@ import { useActivity } from '@/hooks/queries';
 import { cn } from '@/lib/utils';
 
 const iconMap: Record<string, { Icon: React.ElementType; color: string }> = {
-  commit: { Icon: GitCommit, color: 'text-teal-500 bg-teal-500/10' },
-  pr: { Icon: GitPullRequest, color: 'text-cyan-500 bg-cyan-500/10' },
-  merge: { Icon: GitMerge, color: 'text-emerald-500 bg-emerald-500/10' },
-  issue: { Icon: AlertCircle, color: 'text-orange-500 bg-orange-500/10' },
+  commit: { Icon: GitCommit, color: 'text-primary bg-primary/10' },
+  pr: { Icon: GitPullRequest, color: 'text-blue-400 bg-blue-400/10' },
+  merge: { Icon: GitMerge, color: 'text-primary bg-primary/10' },
+  issue: { Icon: AlertCircle, color: 'text-rose-400 bg-rose-400/10' },
   other: { Icon: Terminal, color: 'text-zinc-500 bg-zinc-500/10' },
 };
 

@@ -57,7 +57,7 @@ export function CourseCard({ id, title, tagline, category, difficulty, duration,
               initial={{ width: 0 }}
               animate={{ width: `${completionPercentage}%` }}
               transition={{ duration: 1.5, ease: "easeOut" }}
-              className="h-full bg-primary rounded-full shadow-[0_0_8px_rgba(79,70,229,0.4)]"
+               className="h-full bg-primary rounded-full shadow-[0_0_8px_rgba(222,219,200,0.4)]"
             />
           </div>
         </div>

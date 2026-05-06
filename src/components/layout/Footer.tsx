@@ -5,13 +5,13 @@ import { cn } from '@/lib/utils';
 
 export function Footer() {
   return (
-    <footer className="relative mt-auto pt-24 pb-32 md:pt-32 md:pb-36 overflow-hidden border-t border-border bg-surface">
+    <footer className="relative mt-auto pt-24 pb-32 md:pt-32 md:pb-36 overflow-hidden border-t border-border bg-black">
       <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
         {/* Top row: brand + links + status */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-start">
           {/* Brand */}
           <div className="md:col-span-5 flex items-center gap-4 justify-center md:justify-start text-center md:text-left">
-            <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-primary text-black flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
               <Terminal size={24} strokeWidth={2.5} />
             </div>
             <div>
@@ -56,17 +56,20 @@ export function Footer() {
                 </a>
               )
             )}
+            <a href="mailto:tarunyak.10@gmail.com" className="text-sm font-medium text-text-muted hover:text-primary transition-colors">
+              Help
+            </a>
           </nav>
 
           {/* Status badges */}
           <div className="md:col-span-3 flex flex-wrap justify-center md:justify-end gap-3 self-center">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-hover">
-              <Shield size={14} className="text-emerald-500" />
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-white/5">
+              <Shield size={14} className="text-primary" />
               <span className="text-xs font-medium text-text-muted">
                 Secured
               </span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-hover">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-white/5">
               <Lock size={14} className="text-primary" />
               <span className="text-xs font-medium text-text-muted">
                 Encrypted

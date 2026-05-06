@@ -2,9 +2,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
-  Activity, ExternalLink,
+  ExternalLink,
   GitPullRequest, AlertCircle,
-  Users, Code2, Terminal, Star, BarChart3
+  Terminal, Star, Zap
 } from 'lucide-react';
 import { useRepo } from '@/hooks/queries';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
@@ -13,35 +13,40 @@ import { SEO } from '@/components/layout/SEO';
 import { ContributorGrid } from '@/components/dashboard/ContributorGrid';
 import { LanguageStats } from '@/components/dashboard/LanguageStats';
 
+const SMOOTH_EASE = [0.16, 1, 0.3, 1] as const;
+
 const COLOR_MAP: Record<string, string> = {
-  blue: 'text-blue-500 bg-blue-500/10',
-  amber: 'text-amber-500 bg-amber-500/10',
-  teal: 'text-teal-500 bg-teal-500/10',
-  orange: 'text-orange-500 bg-orange-500/10',
-  rose: 'text-rose-500 bg-rose-500/10',
-  emerald: 'text-emerald-500 bg-emerald-500/10',
-  green: 'text-green-500 bg-green-500/10',
-  cyan: 'text-cyan-500 bg-cyan-500/10'
+  blue: 'text-primary bg-primary/10 border-primary/20',
+  amber: 'text-primary bg-primary/10 border-primary/20',
+  teal: 'text-primary bg-primary/10 border-primary/20',
+  orange: 'text-primary bg-primary/10 border-primary/20',
+  rose: 'text-rose-500 bg-rose-500/10 border-rose-500/20',
+  emerald: 'text-primary bg-primary/10 border-primary/20',
+  green: 'text-primary bg-primary/10 border-primary/20',
+  cyan: 'text-primary bg-primary/10 border-primary/20'
 };
 
 function IndustrialMetric({ label, value, icon: Icon, color }: { label: string, value: string | number, icon: React.ElementType, color: string }) {
-  const iconStyle = color && COLOR_MAP[color] ? COLOR_MAP[color] : 'text-text bg-surface-hover';
+  const iconStyle = color && COLOR_MAP[color] ? COLOR_MAP[color] : 'text-primary bg-primary/10 border-primary/20';
   return (
-    <div className="glass-panel p-6 flex flex-col justify-between h-full group hover:-translate-y-1 transition-all duration-300">
-      <div className="flex items-center justify-between border-b border-border pb-3">
+    <motion.div 
+      whileHover={{ y: -5 }}
+      className="glass-panel p-8 flex flex-col justify-between h-full group border-white/5 hover:border-primary/20 transition-all duration-500 shadow-xl"
+    >
+      <div className="flex items-center justify-between border-b border-white/5 pb-4">
         <div className={cn(
-          "w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+          "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 border group-hover:scale-110",
           iconStyle
         )}>
-          <Icon size={18} strokeWidth={2} />
+          <Icon size={22} strokeWidth={2} />
         </div>
-        <div className="w-10 h-1 rounded-full bg-surface-hover" />
+        <div className="w-12 h-1 rounded-full bg-white/5 group-hover:bg-primary/20 transition-colors duration-500" />
       </div>
-      <div className="mt-5 space-y-1">
-        <p className="text-3xl md:text-4xl font-semibold tracking-tight text-text leading-none">{value}</p>
-        <p className="text-xs font-medium uppercase tracking-wider text-text-muted">{label}</p>
+      <div className="mt-8 space-y-2">
+        <p className="text-4xl md:text-5xl font-bold tracking-tighter text-[#E1E0CC] leading-none group-hover:text-primary transition-colors duration-500">{value}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40">{label}</p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -52,15 +57,15 @@ export function RepoDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-6">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-8 px-6">
         <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-          className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full"
+          animate={{ rotate: 360, scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="w-20 h-20 border-2 border-primary/10 border-t-primary rounded-full shadow-[0_0_30px_-5px_rgba(222,219,200,0.3)]"
         />
-        <div className="text-center space-y-2">
-          <p className="text-lg font-medium text-text">Parsing Repository Structure...</p>
-          <p className="text-sm text-text-muted">Fetching intelligence data</p>
+        <div className="text-center space-y-3">
+          <p className="text-xl font-bold tracking-tight text-primary uppercase tracking-[0.2em]">Synchronizing Intelligence Node</p>
+          <p className="text-sm text-primary/40 font-medium">Decoding high-fidelity repository sectors...</p>
         </div>
       </div>
     );
@@ -68,157 +73,155 @@ export function RepoDetail() {
 
   if (error || !repo) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-6 text-text">
-        <div className="w-20 h-20 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center">
-          <AlertCircle size={40} strokeWidth={2} />
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-8 text-white px-6">
+        <div className="w-24 h-24 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center border border-rose-500/20 shadow-[0_0_40px_-10px_rgba(244,63,94,0.3)]">
+          <AlertCircle size={48} strokeWidth={2} />
         </div>
-        <div className="text-center space-y-2">
-          <p className="font-semibold text-lg">Connection Terminated</p>
-          <p className="text-text-muted text-sm">Error Code: RECON_LOST</p>
+        <div className="text-center space-y-3">
+          <p className="text-2xl font-bold tracking-tighter">Connection Terminated</p>
+          <p className="text-primary/40 text-sm font-bold uppercase tracking-widest">Error Code: RECON_LOST_IN_ARRAY</p>
         </div>
-        <Link to="/dashboard" className="px-8 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-hover transition-all mt-4">
-          Reboot Dashboard
+        <Link to="/dashboard" className="px-10 py-4 bg-primary text-black rounded-2xl font-bold text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-primary/20 transition-all">
+          Reboot Console
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen space-y-8 pb-32">
-      <SEO title={`${repo.name} | Repository Intelligence`} description={repo.description || undefined} />
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: SMOOTH_EASE }}
+      className="relative min-h-screen space-y-12 pb-32 px-4 md:px-0"
+    >
+      <SEO title={`${repo.name} | Node Intelligence`} description={repo.description || undefined} />
       
       {/* Background elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] opacity-60" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] opacity-60" />
       </div>
 
-      <div className="relative z-10 space-y-8">
+      <div className="relative z-10 space-y-12">
         {/* Navigation */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 border-b border-white/5 pb-8">
           <button 
             onClick={() => navigate(-1)}
-            className="group flex items-center gap-2 text-sm font-medium text-text-muted hover:text-text transition-colors"
+            className="group flex items-center gap-4 text-xs font-bold text-primary/40 hover:text-primary transition-all uppercase tracking-widest"
           >
-            <div className="w-8 h-8 rounded-lg bg-surface border border-border flex items-center justify-center group-hover:bg-surface-hover transition-all">
-               <ArrowLeft size={16} />
+            <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/20 transition-all shadow-sm">
+               <ArrowLeft size={18} />
             </div>
-            Return to Array
+            Return to Matrix
           </button>
 
-          <a 
+          <motion.a 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             href={repo.url} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="px-5 py-2.5 rounded-xl bg-surface border border-border text-text text-sm font-medium hover:bg-surface-hover transition-all flex items-center gap-2 shadow-sm"
+            className="px-8 py-3.5 rounded-2xl bg-primary text-black text-xs font-bold uppercase tracking-[0.2em] hover:shadow-xl hover:shadow-primary/20 transition-all flex items-center gap-4"
           >
-            View on GitHub <ExternalLink size={16} />
-          </a>
+            Terminal View <ExternalLink size={18} />
+          </motion.a>
         </div>
 
-        {/* Hero Header */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          <div className="lg:col-span-8 glass-panel p-8 md:p-10 rounded-3xl flex flex-col justify-center space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-semibold uppercase tracking-wider self-start">
-              <Terminal size={14} />
-              STACK: {repo.language || 'MULTI_ARRAY'}
-            </div>
-            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-text leading-tight break-words">
-              {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
+        {/* Cinematic Header */}
+        <section className="relative w-full h-[300px] md:h-[450px] rounded-[2rem] md:rounded-[3.5rem] overflow-hidden group shadow-2xl">
+          <video 
+            src="https://www.pexels.com/download/video/12692028/" 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[3000ms] ease-out grayscale-[0.2]"
+          />
+          <div className="absolute inset-0 noise-overlay opacity-[0.4] mix-blend-overlay pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+          
+          <div className="absolute bottom-0 left-0 p-10 md:p-16 space-y-6 z-10">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 1, ease: SMOOTH_EASE }}
+              className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/10 text-primary text-[10px] uppercase tracking-[0.3em] font-bold backdrop-blur-md shadow-inner"
+            >
+              <Terminal size={14} className="fill-primary" />
+              Intelligence Layer: <span className="font-serif italic ml-1">{repo.language || 'MULTI_ARRAY'}</span>
+            </motion.div>
+            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter text-[#E1E0CC] leading-[0.9]">
+               {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
             </h1>
-            <p className="text-base font-medium text-text-muted leading-relaxed max-w-3xl">
-              {repo.description || 'Systemized repository synchronized for deep architectural analysis and contribution tracking.'}
+            <p className="text-primary/60 font-medium max-w-2xl text-sm md:text-lg leading-relaxed">
+              {repo.description || 'Systemized repository node synchronized for high-fidelity architectural analysis and real-time contribution telemetry.'}
             </p>
-          </div>
-
-          {/* Global Impact Card */}
-          <div className="lg:col-span-4 glass-panel p-8 rounded-3xl flex items-center justify-center relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-transparent pointer-events-none" />
-            
-            <div className="relative z-10 flex flex-col items-center text-center space-y-4 w-full">
-               <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
-                  <Star size={28} strokeWidth={2} className="fill-amber-500/20" />
-               </div>
-               <div className="space-y-1">
-                  <h4 className="text-4xl md:text-5xl font-semibold tracking-tight text-text">{repo.stars.toLocaleString()}</h4>
-                  <p className="text-xs font-medium uppercase tracking-wider text-text-muted">Global Star Array</p>
-               </div>
-               <div className="w-full h-2 bg-surface-hover rounded-full overflow-hidden mt-4">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.min((repo.stars / 100) * 100, 100)}%` }}
-                    className="h-full bg-amber-500 rounded-full"
-                    transition={{ duration: 1.5, ease: "easeOut" }}
-                  />
-               </div>
-            </div>
           </div>
         </section>
 
         {/* Analytics Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
           {/* Activity Graph */}
-          <div className="lg:col-span-8 space-y-6">
-            <div className="glass-panel p-6 md:p-8 rounded-3xl">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6 border-b border-border pb-4">
-                <h3 className="text-lg font-semibold flex items-center gap-3 text-text">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                    <Activity size={18} />
-                  </div> 
-                  Signal Pulse
-                </h3>
-                <span className="text-xs font-medium uppercase tracking-wider text-text-muted bg-surface px-3 py-1 rounded-full border border-border">12 Month Logs</span>
+          <div className="lg:col-span-8 space-y-10">
+            <div className="glass-panel p-8 md:p-12 rounded-[2.5rem] border-white/5 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-white/5 pb-6">
+                <div className="space-y-1">
+                  <h3 className="text-2xl font-bold flex items-center gap-4 text-white tracking-tight uppercase tracking-wider">
+                    Temporal <span className="text-primary font-serif italic">Velocity</span>
+                  </h3>
+                  <p className="text-[10px] font-bold text-primary/30 uppercase tracking-[0.2em]">Real-time signal pulse over 12 months</p>
+                </div>
+                <div className="px-4 py-2 rounded-xl bg-primary/5 border border-primary/10 flex items-center gap-3">
+                  <Zap size={14} className="text-primary animate-pulse" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Live Stream</span>
+                </div>
               </div>
-              <div className="relative z-10 min-h-[300px]">
+              <div className="relative z-10 min-h-[350px]">
                 <ActivityChart data={repo.activity} />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <IndustrialMetric label="STARS" value={repo.stars} icon={Star} color="amber" />
-              <IndustrialMetric label="FORKS" value={repo.forks} icon={GitPullRequest} color="teal" />
-              <IndustrialMetric label="ISSUES" value={repo.open_issues} icon={AlertCircle} color="rose" />
+              <IndustrialMetric label="Node Impact" value={repo.stars} icon={Star} color="amber" />
+              <IndustrialMetric label="Branch Logic" value={repo.forks} icon={GitPullRequest} color="teal" />
+              <IndustrialMetric label="Logic Faults" value={repo.open_issues} icon={AlertCircle} color="rose" />
             </div>
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-10">
             {/* Languages */}
-            <div className="glass-panel p-6 md:p-8 rounded-3xl">
-              <h3 className="text-lg font-semibold mb-6 border-b border-border pb-4 flex items-center gap-3 text-text">
-                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-500">
-                  <Code2 size={18} />
-                </div> 
-                Stack Density
+            <div className="glass-panel p-8 md:p-10 rounded-[2.5rem] border-white/5">
+              <h3 className="text-xl font-bold mb-8 border-b border-white/5 pb-6 flex items-center gap-4 text-white uppercase tracking-wider">
+                Neural <span className="text-primary font-serif italic">Composition</span>
               </h3>
               <LanguageStats languages={repo.languages} />
             </div>
 
             {/* Metadata */}
-            <div className="glass-panel p-6 md:p-8 rounded-3xl group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 blur-[40px] rounded-full pointer-events-none" />
-              <h3 className="text-lg font-semibold mb-6 border-b border-border pb-4 flex items-center gap-3 text-text">
-                <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-500">
-                  <BarChart3 size={18} />
-                </div> 
-                Metadata
+            <div className="glass-panel p-8 md:p-10 rounded-[2.5rem] group relative overflow-hidden border-white/5">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-[60px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              <h3 className="text-xl font-bold mb-8 border-b border-white/5 pb-6 flex items-center gap-4 text-white uppercase tracking-wider">
+                Node <span className="text-primary font-serif italic">Config</span>
               </h3>
-              <div className="space-y-3 relative z-10">
-                <div className="flex justify-between items-center p-3 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors">
-                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Branch</span>
-                  <span className="px-2.5 py-1 rounded-md bg-surface-hover font-mono text-xs font-semibold text-text">
+              <div className="space-y-4 relative z-10">
+                <div className="flex justify-between items-center p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/20 transition-all duration-500">
+                  <span className="text-[10px] font-bold text-primary/30 uppercase tracking-widest">Master Node</span>
+                  <span className="px-3 py-1.5 rounded-lg bg-primary/5 border border-primary/10 font-mono text-xs font-bold text-primary">
                     {repo.default_branch}
                   </span>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors">
-                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Synced</span>
-                  <span className="text-sm font-semibold text-text">
+                <div className="flex justify-between items-center p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/20 transition-all duration-500">
+                  <span className="text-[10px] font-bold text-primary/30 uppercase tracking-widest">Last Sync</span>
+                  <span className="text-xs font-bold text-white tracking-widest">
                     {repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'N/A'}
                   </span>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors">
-                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Updated</span>
-                  <span className="text-sm font-semibold text-text">
+                <div className="flex justify-between items-center p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/20 transition-all duration-500">
+                  <span className="text-[10px] font-bold text-primary/30 uppercase tracking-widest">Temporal Update</span>
+                  <span className="text-xs font-bold text-white tracking-widest">
                     {repo.updated_at ? new Date(repo.updated_at).toLocaleDateString() : 'Unknown'}
                   </span>
                 </div>
@@ -228,19 +231,22 @@ export function RepoDetail() {
         </div>
 
         {/* Contributors */}
-        <div className="glass-panel p-8 md:p-10 rounded-3xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none" />
-          <h3 className="text-lg font-semibold mb-8 border-b border-border pb-4 flex items-center gap-3 text-text relative z-10">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
-              <Users size={18} />
-            </div> 
-            Top Contributors
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: SMOOTH_EASE }}
+          className="glass-panel p-10 md:p-16 rounded-[3rem] relative overflow-hidden border-white/5"
+        >
+          <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 blur-[100px] rounded-full pointer-events-none opacity-40" />
+          <h3 className="text-2xl font-bold mb-12 border-b border-white/5 pb-8 flex items-center gap-5 text-white uppercase tracking-wider relative z-10">
+             Archival <span className="text-primary font-serif italic">Collective</span>
           </h3>
           <div className="relative z-10">
             <ContributorGrid contributors={repo.contributors} />
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

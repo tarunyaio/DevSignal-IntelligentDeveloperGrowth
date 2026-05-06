@@ -10,17 +10,17 @@ import {
 import { cn } from '../../lib/utils';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
-  { icon: BarChart3, label: 'Analytics', href: '/analytics' },
-  { icon: BookOpen, label: 'Resources', href: '/resources' },
-  { icon: Code2, label: 'Editor', href: '/editor' },
+  { icon: LayoutDashboard, label: 'Console', href: '/dashboard' },
+  { icon: BarChart3, label: 'Signals', href: '/analytics' },
+  { icon: BookOpen, label: 'Codex', href: '/resources' },
+  { icon: Code2, label: 'Logic', href: '/editor' },
 ];
 
 export function Sidebar() {
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-slate-900 border-r border-slate-800 h-screen sticky top-0">
+    <aside className="hidden md:flex flex-col w-64 bg-black border-r border-border h-screen sticky top-0">
       <div className="p-6">
-        <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+        <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
           DevSignal
         </h1>
       </div>
@@ -33,27 +33,27 @@ export function Sidebar() {
             className={({ isActive }) => cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
               isActive 
-                ? "bg-blue-600/10 text-blue-400 font-medium" 
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                ? "bg-primary/10 text-primary font-medium" 
+                : "text-text-muted hover:bg-white/5 hover:text-text"
             )}
           >
             <item.icon size={20} className={cn(
               "transition-transform duration-200 group-hover:scale-110",
-              "group-[.active]:text-blue-400"
+              "group-[.active]:text-primary"
             )} />
             <span>{item.label}</span>
           </NavLink>
         ))}
       </nav>
 
-      <div className="p-4 border-t border-slate-800 space-y-2">
-        <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 hover:text-white w-full transition-all group">
-          <Settings size={20} className="group-hover:rotate-45 transition-transform" />
-          <span>Settings</span>
+      <div className="p-4 border-t border-white/5 space-y-2">
+        <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-primary/40 hover:bg-primary/5 hover:text-primary w-full transition-all group font-bold text-xs uppercase tracking-widest">
+          <Settings size={18} className="group-hover:rotate-90 transition-transform duration-700" />
+          <span>Config</span>
         </button>
-        <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-400/10 w-full transition-all group">
-          <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span>Logout</span>
+        <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-rose-500/40 hover:bg-rose-500/10 hover:text-rose-400 w-full transition-all group font-bold text-xs uppercase tracking-widest">
+          <LogOut size={18} className="group-hover:-translate-x-1 transition-transform duration-500" />
+          <span>Terminate</span>
         </button>
       </div>
     </aside>

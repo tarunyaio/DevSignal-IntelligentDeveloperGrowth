@@ -3,11 +3,11 @@ import { LayoutDashboard, BookOpen, User, Code2, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Feed', path: '/dashboard' },
-  { icon: BarChart3, label: 'Signal', path: '/analytics' },
-  { icon: BookOpen, label: 'Archive', path: '/resources' },
+  { icon: LayoutDashboard, label: 'Console', path: '/dashboard' },
+  { icon: BarChart3, label: 'Signals', path: '/analytics' },
+  { icon: BookOpen, label: 'Codex', path: '/resources' },
   { icon: Code2, label: 'Logic', path: '/editor' },
-  { icon: User, label: 'User', path: '/profile' },
+  { icon: User, label: 'Identity', path: '/profile' },
 ];
 
 export function BottomNav() {

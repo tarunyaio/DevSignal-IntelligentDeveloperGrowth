@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Outfit", "Inter", sans-serif;
+  --font-sans: "Almarai", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Almarai", sans-serif;
+  --font-serif: "Instrument Serif", serif;
   
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -15,31 +16,30 @@
 }
 
 @layer base {
-  :root {
-    --bg: #fdfdfd;
-    --surface: #ffffff;
-    --surface-hover: #f3f4f6;
-    --border: #e5e7eb;
-    --text: #111827;
-    --text-muted: #6b7280;
-    --primary: #047857; /* Emerald 700 - Rich and luxurious */
-    --primary-hover: #065f46; /* Emerald 800 */
-  }
-
-  .dark {
-    --bg: #030712; /* Gray 950 - Extremely deep, rich black/blue */
-    --surface: #111827; /* Gray 900 */
-    --surface-hover: #1f2937; /* Gray 800 */
-    --border: #374151; /* Gray 700 */
-    --text: #f9fafb; /* Gray 50 */
-    --text-muted: #9ca3af; /* Gray 400 */
-    --primary: #10b981; /* Emerald 500 */
-    --primary-hover: #34d399; /* Emerald 400 */
+  :root, .dark {
+    --bg: #000000;
+    --surface: #101010;
+    --surface-hover: #212121;
+    --border: #333333;
+    --text: #E1E0CC;
+    --text-muted: #9ca3af;
+    --primary: #DEDBC8;
+    --primary-hover: #C5C2B1;
   }
 
   body {
     @apply font-sans bg-bg text-text antialiased transition-colors duration-200;
     min-height: 100vh;
+  }
+
+  @media (pointer: fine) {
+    body {
+      cursor: none !important;
+    }
+    
+    a, button, [role="button"], .cursor-pointer {
+      cursor: none !important;
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -85,5 +85,13 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .noise-overlay {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 }

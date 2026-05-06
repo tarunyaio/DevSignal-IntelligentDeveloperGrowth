@@ -126,7 +126,7 @@ export function LearningPathPage() {
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    className="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(79,70,229,0.5)]"
+                    className="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(222,219,200,0.5)]"
                     transition={{ duration: 1, ease: "easeOut" }}
                   />
                </div>
@@ -170,7 +170,7 @@ export function LearningPathPage() {
                    <div className={cn(
                       "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-md",
                       isCompleted 
-                        ? "bg-primary text-white border-none shadow-primary/30" 
+                        ? "bg-primary text-black border-none shadow-primary/30" 
                         : "bg-surface border-2 border-border text-text group-hover/node:border-primary/50"
                    )}>
                       {isCompleted ? (
@@ -189,7 +189,7 @@ export function LearningPathPage() {
                       <div className="flex items-center justify-between mb-5">
                          <div className={cn(
                            "w-12 h-12 rounded-xl flex items-center justify-center transition-colors", 
-                           isCompleted ? "bg-primary text-white shadow-md shadow-primary/20" : "bg-primary/10 text-primary group-hover/card:bg-primary group-hover/card:text-white"
+                           isCompleted ? "bg-primary text-black shadow-md shadow-primary/20" : "bg-primary/10 text-primary group-hover/card:bg-primary group-hover/card:text-black"
                          )}>
                             {getIcon(level.type)}
                          </div>
@@ -223,7 +223,7 @@ export function LearningPathPage() {
                              "w-full sm:w-auto px-6 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all duration-500",
                              isCompleted 
                                ? "bg-surface border border-border text-text-muted hover:text-text" 
-                               : "bg-primary text-white hover:bg-primary-hover shadow-md shadow-primary/20"
+                               : "bg-primary text-black hover:bg-primary-hover shadow-md shadow-primary/20"
                            )}
                            aria-label={isCompleted ? 'Mark incomplete' : 'Mark complete'}
                          >
@@ -250,12 +250,12 @@ export function LearningPathPage() {
             >
               {/* Outer glass card */}
               <div className="glass-panel rounded-3xl relative overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-primary/10 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/10 pointer-events-none" />
 
                 {/* Top status bar */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface-hover/50">
                   <div className="flex items-center gap-3">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(222,219,200,0.8)] animate-pulse" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-text">Status: Verified</span>
                   </div>
                   <span className="text-xs font-medium uppercase tracking-wider text-text-muted">
@@ -272,7 +272,7 @@ export function LearningPathPage() {
                     transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                     className="relative mx-auto md:mx-0"
                   >
-                    <div className="w-28 h-28 md:w-32 md:h-32 rounded-3xl bg-emerald-500 text-white flex items-center justify-center shadow-xl shadow-emerald-500/30 relative overflow-hidden">
+                    <div className="w-28 h-28 md:w-32 md:h-32 rounded-3xl bg-primary text-black flex items-center justify-center shadow-xl shadow-primary/30 relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
                       <Trophy size={48} strokeWidth={2} className="relative z-10" />
                     </div>
@@ -284,11 +284,11 @@ export function LearningPathPage() {
                   {/* Content */}
                   <div className="text-center md:text-left space-y-6">
                     <div className="space-y-3">
-                      <span className="inline-flex px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider">
+                      <span className="inline-flex px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider">
                         Achievement Unlocked
                       </span>
                       <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text leading-tight">
-                        Sector <span className="text-emerald-500">Mastered.</span>
+                        Sector <span className="text-primary">Mastered.</span>
                       </h2>
                       <p className="text-sm font-medium text-text-muted">
                         All Intelligence Nodes Synchronized successfully.
@@ -306,7 +306,7 @@ export function LearningPathPage() {
                         <div className="text-xs font-medium uppercase tracking-wider text-text-muted">Logged</div>
                       </div>
                       <div className="space-y-1">
-                        <div className="text-2xl md:text-3xl font-semibold tracking-tight text-emerald-500">A+</div>
+                        <div className="text-2xl md:text-3xl font-semibold tracking-tight text-primary">A+</div>
                         <div className="text-xs font-medium uppercase tracking-wider text-text-muted">Grade</div>
                       </div>
                     </div>
@@ -315,7 +315,7 @@ export function LearningPathPage() {
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">
                       <button 
                         onClick={() => navigate('/resources')} 
-                        className="flex-1 px-8 py-4 rounded-xl bg-emerald-500 text-white font-semibold text-sm hover:bg-emerald-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                        className="flex-1 px-8 py-4 rounded-xl bg-primary text-black font-semibold text-sm hover:bg-primary-hover transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
                       >
                         Next Archive <ExternalLink size={16} />
                       </button>
