@@ -15,33 +15,33 @@ interface Notification {
 const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: '1',
-    title: 'System_Sync_Complete',
+    title: 'System Sync Complete',
     description: 'Successfully mapped 12 new repositories to your DevSignal profile.',
-    time: '2M_AGO',
+    time: '2m ago',
     isRead: false,
     type: 'system'
   },
   {
     id: '2',
-    title: 'Pull_Request_Merged',
+    title: 'Pull Request Merged',
     description: 'Your PR #42 in tarunyaio/DevSignal was merged into main.',
-    time: '1H_AGO',
+    time: '1h ago',
     isRead: false,
     type: 'github'
   },
   {
     id: '3',
-    title: 'New_Star_Received',
+    title: 'New Star Received',
     description: 'tarunyaio/Photon gained a new star.',
-    time: '3H_AGO',
+    time: '3h ago',
     isRead: true,
     type: 'success'
   },
   {
     id: '4',
-    title: 'Anomaly_Detected',
+    title: 'Anomaly Detected',
     description: 'High iteration depth noticed in local branch. Consider pushing.',
-    time: '1D_AGO',
+    time: '1d ago',
     isRead: true,
     type: 'alert'
   }
@@ -88,19 +88,19 @@ export function NotificationsPanel() {
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-12 h-12 border-2 border-black flex items-center justify-center transition-all relative z-50",
-          isOpen ? "bg-black text-white" : "hover:bg-black hover:text-white bg-white text-black"
+          "w-10 h-10 rounded-full border border-border flex items-center justify-center transition-all relative z-50",
+          isOpen ? "bg-surface-hover text-text" : "hover:bg-surface-hover bg-surface text-text-muted hover:text-text"
         )}
       >
         <motion.div
           animate={unreadCount > 0 ? { rotate: [0, -10, 10, -10, 10, 0] } : {}}
           transition={{ duration: 0.5, delay: 2, repeat: Infinity, repeatDelay: 5 }}
         >
-          <Bell size={20} strokeWidth={3} />
+          <Bell size={18} strokeWidth={2} />
         </motion.div>
         
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 w-3 h-3 bg-yellow-400 border-2 border-black" />
+          <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full" />
         )}
       </button>
 
@@ -112,58 +112,57 @@ export function NotificationsPanel() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, pointerEvents: 'none' }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full right-0 mt-4 w-[380px] bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] z-50"
+            className="absolute top-full right-0 mt-3 w-[360px] glass-panel shadow-lg z-50 overflow-hidden"
           >
             {/* Header */}
-            <div className="p-6 border-b-4 border-black flex items-center justify-between bg-zinc-50">
-              <h3 className="font-black uppercase tracking-tighter text-xl italic flex items-center gap-3">
-                <Activity size={20} className="text-accent-indigo" />
-                ACTIVITY_LOG
+            <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-surface/50">
+              <h3 className="font-semibold text-text flex items-center gap-2">
+                <Activity size={16} className="text-primary" />
+                Activity Log
               </h3>
               {unreadCount > 0 && (
                 <button 
                   onClick={markAllRead}
-                  className="text-[8px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-black hover:underline transition-all"
+                  className="text-xs font-medium text-text-muted hover:text-primary transition-all"
                 >
-                  MARK_ALL_READ
+                  Mark all read
                 </button>
               )}
             </div>
 
             {/* List */}
-            <div className="max-h-[400px] overflow-y-auto no-scrollbar bg-white">
+            <div className="max-h-[360px] overflow-y-auto no-scrollbar bg-bg/50">
               {notifications.length > 0 ? (
                 <div className="flex flex-col">
                   {notifications.map((notif, index) => (
                     <motion.div
                       key={notif.id}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
                       onClick={() => markAsRead(notif.id)}
                       className={cn(
-                        "group cursor-pointer p-6 border-b-2 border-black last:border-b-0 hover:bg-black transition-colors relative overflow-hidden",
-                        notif.isRead ? "opacity-70" : ""
+                        "group cursor-pointer p-5 border-b border-border last:border-b-0 hover:bg-surface-hover transition-colors relative overflow-hidden",
+                        notif.isRead ? "opacity-70" : "bg-primary/5 hover:bg-primary/10"
                       )}
                     >
                       <div className="relative z-10 flex gap-4">
-                        <div className="mt-1 flex-shrink-0 w-8 h-8 border-2 border-black bg-white flex items-center justify-center group-hover:border-transparent group-hover:bg-zinc-800 transition-all">
+                        <div className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center transition-all">
                           {getIcon(notif.type)}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-1">
                             <h4 className={cn(
-                              "font-black text-xs uppercase tracking-widest transition-colors",
-                              "group-hover:text-white",
-                              !notif.isRead ? "text-black" : "text-zinc-600"
+                              "font-semibold text-sm transition-colors",
+                              !notif.isRead ? "text-text" : "text-text-muted"
                             )}>
                               {notif.title}
                             </h4>
-                            <span className="text-[8px] font-black text-zinc-400 uppercase tracking-widest group-hover:text-zinc-500">
+                            <span className="text-[10px] font-medium text-text-muted/60 group-hover:text-text-muted transition-colors">
                               {notif.time}
                             </span>
                           </div>
-                          <p className="text-xs text-zinc-500 font-bold group-hover:text-zinc-400">
+                          <p className="text-xs text-text-muted leading-relaxed">
                             {notif.description}
                           </p>
                         </div>
@@ -171,24 +170,24 @@ export function NotificationsPanel() {
                       
                       {/* Unread dot */}
                       {!notif.isRead && (
-                        <div className="absolute top-1/2 -translate-y-1/2 right-6 w-2 h-2 bg-yellow-400 border border-black rounded-full" />
+                        <div className="absolute top-1/2 -translate-y-1/2 right-4 w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(79,70,229,0.5)]" />
                       )}
                     </motion.div>
                   ))}
                 </div>
               ) : (
-                <div className="p-12 text-center flex flex-col items-center justify-center text-zinc-400">
-                  <CheckCircle2 size={32} className="mb-4 opacity-20" />
-                  <p className="font-black text-xs uppercase tracking-widest">SYSTEM_CLEAR</p>
-                  <p className="text-[10px] font-bold mt-2 tracking-widest">NO NEW LOGS FOUND.</p>
+                <div className="p-10 text-center flex flex-col items-center justify-center text-text-muted">
+                  <CheckCircle2 size={32} className="mb-3 opacity-20" />
+                  <p className="font-medium text-sm">You're all caught up!</p>
+                  <p className="text-xs mt-1 opacity-70">No new notifications.</p>
                 </div>
               )}
             </div>
             
             {/* Footer */}
-            <div className="p-4 border-t-4 border-black bg-zinc-50 text-center">
-              <button className="text-[10px] font-black uppercase tracking-[0.2em] text-accent-indigo hover:text-black transition-colors underline decoration-2 underline-offset-4">
-                VIEW_FULL_ARCHIVE
+            <div className="p-3 border-t border-border bg-surface/50 text-center">
+              <button className="text-xs font-medium text-primary hover:text-primary-hover transition-colors">
+                View Full Archive
               </button>
             </div>
           </motion.div>

@@ -14,32 +14,32 @@ import { ContributorGrid } from '@/components/dashboard/ContributorGrid';
 import { LanguageStats } from '@/components/dashboard/LanguageStats';
 
 const COLOR_MAP: Record<string, string> = {
-  blue: 'text-blue-500 border-blue-500',
-  amber: 'text-amber-500 border-amber-500',
-  violet: 'text-violet-500 border-violet-500',
-  orange: 'text-orange-500 border-orange-500',
-  rose: 'text-rose-500 border-rose-500',
-  emerald: 'text-emerald-500 border-emerald-500',
-  indigo: 'text-indigo-500 border-indigo-500',
-  purple: 'text-purple-500 border-purple-500'
+  blue: 'text-blue-500 bg-blue-500/10',
+  amber: 'text-amber-500 bg-amber-500/10',
+  violet: 'text-violet-500 bg-violet-500/10',
+  orange: 'text-orange-500 bg-orange-500/10',
+  rose: 'text-rose-500 bg-rose-500/10',
+  emerald: 'text-emerald-500 bg-emerald-500/10',
+  indigo: 'text-indigo-500 bg-indigo-500/10',
+  purple: 'text-purple-500 bg-purple-500/10'
 };
 
 function IndustrialMetric({ label, value, icon: Icon, color }: { label: string, value: string | number, icon: React.ElementType, color: string }) {
-  const iconColor = color && COLOR_MAP[color] ? COLOR_MAP[color] : 'text-black border-black';
+  const iconStyle = color && COLOR_MAP[color] ? COLOR_MAP[color] : 'text-text bg-surface-hover';
   return (
-    <div className="surgical-card p-6 flex flex-col justify-between h-full bg-white group">
-      <div className="flex items-center justify-between border-b-2 border-black pb-3">
+    <div className="glass-panel p-6 flex flex-col justify-between h-full group hover:-translate-y-1 transition-all duration-300">
+      <div className="flex items-center justify-between border-b border-border pb-3">
         <div className={cn(
-          "w-10 h-10 border-2 flex items-center justify-center transition-all group-hover:bg-black group-hover:text-white group-hover:border-black",
-          iconColor
+          "w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+          iconStyle
         )}>
-          <Icon size={16} strokeWidth={3} />
+          <Icon size={18} strokeWidth={2} />
         </div>
-        <div className="w-8 h-1 bg-black/10" />
+        <div className="w-10 h-1 rounded-full bg-surface-hover" />
       </div>
       <div className="mt-5 space-y-1">
-        <p className="text-3xl md:text-4xl font-black tracking-tighter text-black leading-none">{value}</p>
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-400">{label}_VALUE</p>
+        <p className="text-3xl md:text-4xl font-semibold tracking-tight text-text leading-none">{value}</p>
+        <p className="text-xs font-medium uppercase tracking-wider text-text-muted">{label}</p>
       </div>
     </div>
   );
@@ -52,181 +52,194 @@ export function RepoDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-12 industrial-grid">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-6">
         <motion.div 
           animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-24 h-24 border-8 border-black border-t-transparent"
+          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full"
         />
-        <p className="text-xl font-black uppercase tracking-tighter">Parsing_Repository_Structure...</p>
+        <div className="text-center space-y-2">
+          <p className="text-lg font-medium text-text">Parsing Repository Structure...</p>
+          <p className="text-sm text-text-muted">Fetching intelligence data</p>
+        </div>
       </div>
     );
   }
 
   if (error || !repo) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-10 text-black industrial-grid">
-        <div className="w-24 h-24 border-4 border-black flex items-center justify-center">
-          <AlertCircle size={48} strokeWidth={3} className="text-red-500" />
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-6 text-text">
+        <div className="w-20 h-20 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center">
+          <AlertCircle size={40} strokeWidth={2} />
         </div>
-        <div className="text-center space-y-4">
-          <p className="font-black uppercase tracking-[0.5em] text-sm">CONNECTION_TERMINATED</p>
-          <p className="text-zinc-400 font-bold italic">Error_Code: 0xRECON_LOST</p>
+        <div className="text-center space-y-2">
+          <p className="font-semibold text-lg">Connection Terminated</p>
+          <p className="text-text-muted text-sm">Error Code: RECON_LOST</p>
         </div>
-        <Link to="/dashboard" className="px-12 py-6 border-4 border-black font-black uppercase text-xs tracking-widest hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-          REBOOT_DASHBOARD
+        <Link to="/dashboard" className="px-8 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-hover transition-all mt-4">
+          Reboot Dashboard
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen space-y-10 pb-24">
+    <div className="relative min-h-screen space-y-8 pb-32">
       <SEO title={`${repo.name} | Repository Intelligence`} description={repo.description || undefined} />
       
-      {/* Navigation */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b-2 border-black pb-6">
-        <button 
-          onClick={() => navigate(-1)}
-          className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 hover:text-black transition-colors"
-        >
-          <div className="w-9 h-9 border-2 border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
-             <ArrowLeft size={14} strokeWidth={3} />
-          </div>
-          Return_To_Array
-        </button>
-
-        <a 
-          href={repo.url} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="px-5 py-3 border-2 border-black font-black text-[10px] uppercase tracking-widest bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-2.5"
-        >
-          SOURCE_GITHUB <ExternalLink size={12} strokeWidth={3} />
-        </a>
+      {/* Background elements */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] opacity-60" />
       </div>
 
-      {/* Hero Header */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-        <div className="lg:col-span-8 space-y-5">
-          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 border-2 border-black bg-zinc-50 font-black text-[9px] uppercase tracking-widest">
-            <Terminal size={12} strokeWidth={3} className="text-accent-indigo" />
-            STACK: {repo.language || 'MULTI_ARRAY'}
-          </div>
-          <h1 className="text-3xl md:text-6xl font-black tracking-tighter text-black leading-[0.9] uppercase break-words">
-            {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
-          </h1>
-          <p className="text-sm md:text-base font-bold leading-relaxed italic border-l-4 border-black pl-4 max-w-3xl text-zinc-500">
-            "{repo.description || 'Systemized repository synchronized for deep architectural analysis and contribution tracking.'}"
-          </p>
+      <div className="relative z-10 space-y-8">
+        {/* Navigation */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-6">
+          <button 
+            onClick={() => navigate(-1)}
+            className="group flex items-center gap-2 text-sm font-medium text-text-muted hover:text-text transition-colors"
+          >
+            <div className="w-8 h-8 rounded-lg bg-surface border border-border flex items-center justify-center group-hover:bg-surface-hover transition-all">
+               <ArrowLeft size={16} />
+            </div>
+            Return to Array
+          </button>
+
+          <a 
+            href={repo.url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="px-5 py-2.5 rounded-xl bg-surface border border-border text-text text-sm font-medium hover:bg-surface-hover transition-all flex items-center gap-2 shadow-sm"
+          >
+            View on GitHub <ExternalLink size={16} />
+          </a>
         </div>
 
-        {/* Global Impact Card */}
-        <div className="lg:col-span-4 surgical-card p-6 bg-white text-black relative overflow-hidden group">
-          <div className="relative z-10 flex flex-col items-center text-center space-y-4">
-             <div className="w-12 h-12 border-2 border-black flex items-center justify-center">
-                <Star size={20} strokeWidth={3} className="text-yellow-400 fill-yellow-400" />
-             </div>
-             <div className="space-y-1">
-                <h4 className="text-4xl md:text-5xl font-black tracking-tighter leading-none text-black">{repo.stars.toLocaleString()}</h4>
-                <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500">Global_Star_Array</p>
-             </div>
-             <div className="w-full h-1.5 bg-black/10 relative">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.min((repo.stars / 100) * 100, 100)}%` }}
-                  className="absolute inset-0 bg-accent-indigo"
-                  transition={{ duration: 1.5 }}
-                />
-             </div>
+        {/* Hero Header */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <div className="lg:col-span-8 glass-panel p-8 md:p-10 rounded-3xl flex flex-col justify-center space-y-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-semibold uppercase tracking-wider self-start">
+              <Terminal size={14} />
+              STACK: {repo.language || 'MULTI_ARRAY'}
+            </div>
+            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-text leading-tight break-words">
+              {repo.name.includes('/') ? repo.name.split('/')[1] : repo.name}
+            </h1>
+            <p className="text-base font-medium text-text-muted leading-relaxed max-w-3xl">
+              {repo.description || 'Systemized repository synchronized for deep architectural analysis and contribution tracking.'}
+            </p>
           </div>
-          <div className="industrial-grid absolute inset-0 opacity-10" />
-        </div>
-      </section>
 
-      {/* Analytics Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* Activity Graph */}
-        <div className="lg:col-span-8 space-y-6">
-          <div className="surgical-card p-6 bg-white relative overflow-hidden">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-5 border-b-2 border-black pb-3">
-              <h3 className="text-base font-black flex items-center gap-3 text-black uppercase tracking-tighter italic">
-                <div className="w-9 h-9 border-2 border-black flex items-center justify-center text-accent-indigo">
-                  <Activity size={16} strokeWidth={3} />
+          {/* Global Impact Card */}
+          <div className="lg:col-span-4 glass-panel p-8 rounded-3xl flex items-center justify-center relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-transparent pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col items-center text-center space-y-4 w-full">
+               <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
+                  <Star size={28} strokeWidth={2} className="fill-amber-500/20" />
+               </div>
+               <div className="space-y-1">
+                  <h4 className="text-4xl md:text-5xl font-semibold tracking-tight text-text">{repo.stars.toLocaleString()}</h4>
+                  <p className="text-xs font-medium uppercase tracking-wider text-text-muted">Global Star Array</p>
+               </div>
+               <div className="w-full h-2 bg-surface-hover rounded-full overflow-hidden mt-4">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min((repo.stars / 100) * 100, 100)}%` }}
+                    className="h-full bg-amber-500 rounded-full"
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                  />
+               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Analytics Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          {/* Activity Graph */}
+          <div className="lg:col-span-8 space-y-6">
+            <div className="glass-panel p-6 md:p-8 rounded-3xl">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6 border-b border-border pb-4">
+                <h3 className="text-lg font-semibold flex items-center gap-3 text-text">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    <Activity size={18} />
+                  </div> 
+                  Signal Pulse
+                </h3>
+                <span className="text-xs font-medium uppercase tracking-wider text-text-muted bg-surface px-3 py-1 rounded-full border border-border">12 Month Logs</span>
+              </div>
+              <div className="relative z-10 min-h-[300px]">
+                <ActivityChart data={repo.activity} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <IndustrialMetric label="STARS" value={repo.stars} icon={Star} color="amber" />
+              <IndustrialMetric label="FORKS" value={repo.forks} icon={GitPullRequest} color="purple" />
+              <IndustrialMetric label="ISSUES" value={repo.open_issues} icon={AlertCircle} color="rose" />
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Languages */}
+            <div className="glass-panel p-6 md:p-8 rounded-3xl">
+              <h3 className="text-lg font-semibold mb-6 border-b border-border pb-4 flex items-center gap-3 text-text">
+                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-500">
+                  <Code2 size={18} />
                 </div> 
-                RECENT_SIGNAL_PULSE
+                Stack Density
               </h3>
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500">12_MONTH_LOGS</span>
+              <LanguageStats languages={repo.languages} />
             </div>
-            <div className="relative z-10">
-              <ActivityChart data={repo.activity} />
-            </div>
-            <div className="industrial-grid absolute inset-0 opacity-5 pointer-events-none" />
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <IndustrialMetric label="STARS" value={repo.stars} icon={Star} color="blue" />
-            <IndustrialMetric label="FORKS" value={repo.forks} icon={GitPullRequest} color="purple" />
-            <IndustrialMetric label="ISSUES" value={repo.open_issues} icon={AlertCircle} color="orange" />
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Languages */}
-          <div className="surgical-card p-6 bg-white">
-            <h3 className="text-base font-black mb-5 border-b-2 border-black pb-3 flex items-center gap-3 uppercase tracking-tighter italic">
-              <div className="w-9 h-9 border-2 border-black flex items-center justify-center text-orange-500">
-                <Code2 size={16} strokeWidth={3} />
-              </div> 
-              STACK_DENSITY
-            </h3>
-            <LanguageStats languages={repo.languages} />
-          </div>
-
-          {/* Metadata */}
-          <div className="surgical-card p-6 bg-white group">
-            <h3 className="text-base font-black mb-5 border-b-2 border-black pb-3 flex items-center gap-3 uppercase tracking-tighter italic">
-              <div className="w-9 h-9 border-2 border-black flex items-center justify-center text-violet-500 group-hover:bg-black group-hover:text-white transition-all">
-                <BarChart3 size={16} strokeWidth={3} />
-              </div> 
-              METADATA
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center group/item">
-                <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Branch</span>
-                <span className="px-2.5 py-1 border border-black font-mono text-[10px] font-black uppercase bg-zinc-50 group-hover/item:bg-black group-hover/item:text-white transition-all">
-                  {repo.default_branch}
-                </span>
-              </div>
-              <div className="flex justify-between items-center group/item">
-                <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Synced</span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-black">
-                  {repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'N/A'}
-                </span>
-              </div>
-              <div className="flex justify-between items-center group/item">
-                <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Updated</span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-black">
-                  {repo.updated_at ? new Date(repo.updated_at).toLocaleDateString() : 'UNKNOWN'}
-                </span>
+            {/* Metadata */}
+            <div className="glass-panel p-6 md:p-8 rounded-3xl group relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 blur-[40px] rounded-full pointer-events-none" />
+              <h3 className="text-lg font-semibold mb-6 border-b border-border pb-4 flex items-center gap-3 text-text">
+                <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-500">
+                  <BarChart3 size={18} />
+                </div> 
+                Metadata
+              </h3>
+              <div className="space-y-3 relative z-10">
+                <div className="flex justify-between items-center p-3 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Branch</span>
+                  <span className="px-2.5 py-1 rounded-md bg-surface-hover font-mono text-xs font-semibold text-text">
+                    {repo.default_branch}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-3 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Synced</span>
+                  <span className="text-sm font-semibold text-text">
+                    {repo.last_sync ? new Date(repo.last_sync).toLocaleDateString() : 'N/A'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-3 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Updated</span>
+                  <span className="text-sm font-semibold text-text">
+                    {repo.updated_at ? new Date(repo.updated_at).toLocaleDateString() : 'Unknown'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Contributors */}
-      <div className="surgical-card p-8 md:p-10 bg-white relative overflow-hidden">
-        <h3 className="text-base font-black mb-6 border-b-2 border-black pb-4 flex items-center gap-3 uppercase tracking-tighter italic">
-          <div className="w-9 h-9 border-2 border-black flex items-center justify-center text-green-500">
-            <Users size={16} strokeWidth={3} />
-          </div> 
-          TOP_CONTRIBUTORS_ARRAY
-        </h3>
-        <ContributorGrid contributors={repo.contributors} />
-        <div className="industrial-grid absolute inset-0 opacity-10 pointer-events-none" />
+        {/* Contributors */}
+        <div className="glass-panel p-8 md:p-10 rounded-3xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none" />
+          <h3 className="text-lg font-semibold mb-8 border-b border-border pb-4 flex items-center gap-3 text-text relative z-10">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+              <Users size={18} />
+            </div> 
+            Top Contributors
+          </h3>
+          <div className="relative z-10">
+            <ContributorGrid contributors={repo.contributors} />
+          </div>
+        </div>
       </div>
     </div>
   );

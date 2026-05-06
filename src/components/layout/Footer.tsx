@@ -5,24 +5,24 @@ import { cn } from '@/lib/utils';
 
 export function Footer() {
   return (
-    <footer className="relative mt-auto pt-32 pb-80 md:pt-40 md:pb-44 overflow-hidden border-t-4 border-black bg-zinc-50">
+    <footer className="relative mt-auto pt-24 pb-32 md:pt-32 md:pb-36 overflow-hidden border-t border-border bg-surface">
       <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
         {/* Top row: brand + links + status */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-start">
           {/* Brand */}
           <div className="md:col-span-5 flex items-center gap-4 justify-center md:justify-start text-center md:text-left">
-            <div className="w-11 h-11 border-2 border-black bg-black text-white flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,0.25)] shrink-0">
-              <Terminal size={20} strokeWidth={3} />
+            <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+              <Terminal size={24} strokeWidth={2.5} />
             </div>
             <div>
-              <h2 className="text-xl font-black tracking-tighter uppercase italic leading-none">
-                DEVSIGNAL{' '}
-                <span className="text-accent-indigo not-italic underline decoration-2 underline-offset-4">
-                  V2.1
+              <h2 className="text-2xl font-semibold tracking-tight text-text leading-none">
+                DevSignal{' '}
+                <span className="text-primary text-base font-medium ml-1 bg-primary/10 px-2 py-0.5 rounded-md">
+                  v2.1
                 </span>
               </h2>
-              <p className="text-[9px] text-zinc-500 font-black uppercase tracking-[0.35em] mt-2">
-                Intelligent_Developer_Growth_Engine
+              <p className="text-sm text-text-muted mt-2">
+                Intelligent Developer Growth Engine
               </p>
             </div>
           </div>
@@ -35,7 +35,7 @@ export function Footer() {
                   key={link.label}
                   to={link.href}
                   className={cn(
-                    'text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 hover:text-accent-indigo transition-colors',
+                    'text-sm font-medium text-text-muted hover:text-primary transition-colors',
                     link.italic && 'italic'
                   )}
                 >
@@ -48,7 +48,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
-                    'text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 hover:text-accent-indigo transition-colors',
+                    'text-sm font-medium text-text-muted hover:text-primary transition-colors',
                     link.italic && 'italic'
                   )}
                 >
@@ -60,15 +60,15 @@ export function Footer() {
 
           {/* Status badges */}
           <div className="md:col-span-3 flex flex-wrap justify-center md:justify-end gap-3 self-center">
-            <div className="flex items-center gap-2 px-3 py-1.5 border-2 border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-              <Shield size={12} strokeWidth={3} className="text-green-600" />
-              <span className="text-[9px] font-black uppercase tracking-widest text-zinc-600">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-hover">
+              <Shield size={14} className="text-emerald-500" />
+              <span className="text-xs font-medium text-text-muted">
                 Secured
               </span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 border-2 border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-              <Lock size={12} strokeWidth={3} className="text-accent-indigo" />
-              <span className="text-[9px] font-black uppercase tracking-widest text-zinc-600">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-hover">
+              <Lock size={14} className="text-primary" />
+              <span className="text-xs font-medium text-text-muted">
                 Encrypted
               </span>
             </div>
@@ -76,19 +76,18 @@ export function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="mt-8 md:mt-10 pt-5 border-t-2 border-black flex flex-col md:flex-row items-center justify-between gap-4 text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500">
+        <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-text-muted">
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <span>© 2026 DEVSIGNAL_SYSTEMS</span>
-            <span className="w-1.5 h-1.5 bg-black rotate-45" />
-            <span className="italic">CORE_ONLINE</span>
+            <span>© 2026 DevSignal Systems</span>
+            <span className="w-1 h-1 rounded-full bg-border" />
+            <span>All rights reserved.</span>
           </div>
-          <div className="flex items-center gap-2 text-accent-indigo">
-            <Cpu size={11} />
-            <span>BUILD: SURGICAL_INDUSTRIAL_2.1</span>
+          <div className="flex items-center gap-2 text-primary">
+            <Cpu size={14} />
+            <span>System Status: Optimal</span>
           </div>
         </div>
       </div>
-      <div className="industrial-grid absolute inset-0 opacity-5 pointer-events-none" />
     </footer>
   );
 }

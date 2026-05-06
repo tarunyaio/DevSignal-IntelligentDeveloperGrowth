@@ -14,8 +14,8 @@ export function BottomNav() {
   const location = useLocation();
 
   return (
-    <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-6">
-      <div className="bg-white border-4 border-black p-2 flex items-center justify-between gap-2 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-6 transition-all duration-300 md:bottom-8">
+      <div className="glass-panel p-2 flex items-center justify-between gap-1 shadow-xl rounded-2xl">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -23,16 +23,27 @@ export function BottomNav() {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center py-4 transition-all relative group",
+                "flex-1 flex flex-col items-center justify-center py-3 px-1 transition-all relative group rounded-xl",
                 isActive 
-                  ? "bg-black text-white" 
-                  : "text-zinc-500 hover:bg-zinc-50 hover:text-black"
+                  ? "bg-primary/10 text-primary" 
+                  : "text-text-muted hover:bg-surface-hover hover:text-text"
               )}
             >
-              <item.icon size={20} strokeWidth={3} className={cn("transition-transform", !isActive && "group-hover:scale-110")} />
-              <span className="text-[8px] font-black uppercase tracking-[0.2em] mt-2">
+              <item.icon 
+                size={22} 
+                strokeWidth={isActive ? 2.5 : 2} 
+                className={cn("transition-transform duration-300", !isActive && "group-hover:scale-110", isActive && "scale-110")} 
+              />
+              <span className={cn(
+                "text-[10px] font-medium mt-1.5 transition-all duration-300",
+                isActive ? "opacity-100" : "opacity-0 h-0 mt-0 group-hover:opacity-100 group-hover:h-auto group-hover:mt-1.5"
+              )}>
                 {item.label}
               </span>
+              
+              {isActive && (
+                <span className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-primary" />
+              )}
             </Link>
           );
         })}

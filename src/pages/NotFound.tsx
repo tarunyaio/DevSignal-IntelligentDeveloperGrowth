@@ -4,32 +4,40 @@ import { Terminal, ArrowLeft } from 'lucide-react';
 
 export function NotFound() {
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center px-6 industrial-grid">
+    <div className="min-h-screen bg-bg text-text flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      
+      {/* Background gradients */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/5 rounded-full blur-[100px] pointer-events-none" />
+
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center space-y-12 surgical-card p-24 bg-white max-w-2xl w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center space-y-10 glass-panel p-16 md:p-24 rounded-[3rem] max-w-2xl w-full relative z-10 shadow-2xl"
       >
-        <div className="w-24 h-24 bg-black text-white flex items-center justify-center mx-auto mb-12">
-          <Terminal size={48} strokeWidth={3} />
+        <div className="w-24 h-24 rounded-3xl bg-surface border border-border flex items-center justify-center mx-auto mb-8 shadow-inner relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-transparent" />
+          <Terminal size={40} className="text-text relative z-10" />
         </div>
         
         <div className="space-y-4">
-          <h1 className="text-8xl font-black tracking-tighter text-black uppercase leading-none">404</h1>
-          <p className="text-zinc-400 font-black uppercase tracking-[0.5em] text-[10px]">ROUTE_NOT_PARSED</p>
+          <h1 className="text-8xl font-semibold tracking-tight text-text leading-none">404</h1>
+          <p className="text-primary font-medium uppercase tracking-widest text-sm">Route Not Parsed</p>
         </div>
 
-        <p className="text-lg font-bold italic text-zinc-500 max-w-sm mx-auto">
-          "The requested intelligence node does not exist in the current archive directory."
+        <p className="text-lg font-medium text-text-muted max-w-sm mx-auto leading-relaxed">
+          The requested intelligence node does not exist in the current archive directory.
         </p>
 
-        <Link
-          to="/dashboard"
-          className="inline-flex items-center gap-4 px-12 py-6 border-4 border-black bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
-        >
-          <ArrowLeft size={16} strokeWidth={3} />
-          REBOOT_DASHBOARD
-        </Link>
+        <div className="pt-8">
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-xl font-medium hover:bg-primary-hover transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+          >
+            <ArrowLeft size={18} />
+            Reboot Dashboard
+          </Link>
+        </div>
       </motion.div>
     </div>
   );

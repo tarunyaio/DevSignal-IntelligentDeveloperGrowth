@@ -19,11 +19,11 @@ import { SEO } from '@/components/layout/SEO';
 
 const getIcon = (type: string) => {
   switch (type) {
-    case 'video': return <Play size={20} strokeWidth={3} />;
-    case 'docs': return <Book size={20} strokeWidth={3} />;
-    case 'course': return <Layout size={20} strokeWidth={3} />;
-    case 'project': return <Code2 size={20} strokeWidth={3} />;
-    default: return <ExternalLink size={20} strokeWidth={3} />;
+    case 'video': return <Play size={18} strokeWidth={2.5} />;
+    case 'docs': return <Book size={18} strokeWidth={2.5} />;
+    case 'course': return <Layout size={18} strokeWidth={2.5} />;
+    case 'project': return <Code2 size={18} strokeWidth={2.5} />;
+    default: return <ExternalLink size={18} strokeWidth={2.5} />;
   }
 };
 
@@ -49,16 +49,19 @@ export function LearningPathPage() {
 
   if (!path) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center space-y-12 bg-white industrial-grid">
-        <div className="w-24 h-24 border-4 border-black flex items-center justify-center">
-           <Zap size={48} strokeWidth={3} />
+      <div className="min-h-screen flex flex-col items-center justify-center space-y-8 bg-bg text-text">
+        <div className="w-20 h-20 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center shadow-inner">
+           <Zap size={40} strokeWidth={2} />
         </div>
-        <div className="text-center space-y-4">
-          <h2 className="text-5xl font-black tracking-tighter text-black uppercase">Archive_Lost</h2>
-          <p className="text-zinc-500 font-bold text-[10px] tracking-[0.5em] uppercase italic">Error 404: Knowledge Sector Null</p>
+        <div className="text-center space-y-2">
+          <h2 className="text-3xl font-semibold tracking-tight">Archive Lost</h2>
+          <p className="text-text-muted font-medium">Error 404: Knowledge Sector Null</p>
         </div>
-        <button onClick={() => navigate('/resources')} className="px-12 py-6 border-4 border-black font-black uppercase text-xs tracking-widest hover:bg-black hover:text-white transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-           Return_to_Archive
+        <button 
+          onClick={() => navigate('/resources')} 
+          className="px-8 py-3 bg-surface border border-border text-text rounded-xl font-medium hover:bg-surface-hover transition-all mt-4"
+        >
+           Return to Archive
         </button>
       </div>
     );
@@ -78,72 +81,75 @@ export function LearningPathPage() {
   const PathIcon = path.icon;
 
   return (
-    <div className="min-h-screen bg-white text-black pb-32">
+    <div className="min-h-screen pb-32">
       <SEO title={`${path.title} | Technical Archive`} description={path.tagline} />
 
       {/* Header Overlay */}
-      <div className="relative mb-12">
-        <div className="surgical-card p-8 md:p-12 bg-white relative overflow-hidden group">
+      <div className="relative mb-12 max-w-6xl mx-auto pt-6 px-6">
+        <div className="glass-panel p-8 md:p-12 relative overflow-hidden rounded-3xl shadow-xl">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+          
           <button 
             onClick={() => navigate('/resources')}
-            className="group mb-8 flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 hover:text-black transition-colors"
+            className="group mb-8 flex items-center gap-2 text-xs font-semibold text-text-muted hover:text-text transition-colors relative z-10"
           >
-            <div className="w-8 h-8 border-2 border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
-               <ArrowLeft size={14} strokeWidth={3} />
+            <div className="w-8 h-8 rounded-lg bg-surface border border-border flex items-center justify-center group-hover:bg-surface-hover transition-all">
+               <ArrowLeft size={16} strokeWidth={2} />
             </div>
-            BACK_TO_ARCHIVE
+            BACK TO ARCHIVE
           </button>
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 relative z-10">
-            <div className="space-y-5 max-w-3xl">
-              <div className="flex items-center gap-5">
-                 <div className="w-12 h-12 border-2 border-black flex items-center justify-center text-black shrink-0">
-                    <PathIcon size={22} strokeWidth={3} />
+            <div className="space-y-4 max-w-2xl">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                 <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20 shadow-inner">
+                    <PathIcon size={32} strokeWidth={2} />
                  </div>
-                 <div className="space-y-1">
-                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-accent-indigo">Sector: {path.category}</span>
-                    <h1 className="text-2xl md:text-4xl font-black tracking-tighter text-black uppercase leading-[0.95]">{path.title}</h1>
+                 <div className="space-y-1.5">
+                    <span className="inline-block px-3 py-1 rounded-full bg-surface border border-border text-xs font-semibold text-primary uppercase tracking-wider">
+                      Sector: {path.category}
+                    </span>
+                    <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-text leading-tight">{path.title}</h1>
                  </div>
               </div>
-              <p className="text-sm md:text-base font-bold italic border-l-4 border-black pl-4 max-w-2xl leading-relaxed text-zinc-500">
-                "{path.tagline}"
+              <p className="text-base md:text-lg font-medium text-text-muted leading-relaxed">
+                {path.tagline}
               </p>
             </div>
 
-            <div className="surgical-card p-6 min-w-[260px] space-y-5 bg-zinc-50">
+            <div className="glass-panel p-6 rounded-2xl min-w-[280px] space-y-5 bg-surface-hover/50 border border-border/50">
                <div className="flex justify-between items-end">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500">Sync_Progress</span>
-                  <span className="text-2xl font-black tracking-tighter italic">{Math.round(progress)}%</span>
+                  <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Sync Progress</span>
+                  <span className="text-3xl font-semibold text-primary">{Math.round(progress)}%</span>
                </div>
-               <div className="h-3 w-full border-2 border-black p-[2px] bg-white">
+               <div className="h-2.5 w-full bg-surface rounded-full overflow-hidden border border-border/50 shadow-inner">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    className="h-full bg-black"
-                    transition={{ duration: 1, ease: "circOut" }}
+                    className="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(79,70,229,0.5)]"
+                    transition={{ duration: 1, ease: "easeOut" }}
                   />
                </div>
-               <div className="flex items-center justify-between pt-2 border-t border-black/20">
+               <div className="flex items-center justify-between pt-3 border-t border-border/50">
                   <div className="flex items-center gap-2">
-                     <Clock size={12} strokeWidth={3} className="text-zinc-500" />
-                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">{path.totalHours}H_EST</span>
+                     <Clock size={14} className="text-text-muted" />
+                     <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">{path.totalHours}H EST</span>
                   </div>
                   <div className="flex items-center gap-2">
-                     <Trophy size={12} strokeWidth={3} className="text-zinc-500" />
-                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">{completedLevels.length}/{path.levels.length}_VERIFIED</span>
+                     <Trophy size={14} className="text-text-muted" />
+                     <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">{completedLevels.length}/{path.levels.length} VERIFIED</span>
                   </div>
                </div>
             </div>
           </div>
-          <div className="industrial-grid absolute inset-0 opacity-10 pointer-events-none" />
         </div>
       </div>
 
       {/* Mastery Roadmap */}
       <div className="max-w-5xl mx-auto px-6">
-        <div className="space-y-10 relative pt-6">
+        <div className="space-y-8 relative pt-6">
           {/* Vertical Line */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-black/10 hidden md:block" />
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] bg-border hidden md:block rounded-full" />
           
           {path.levels.map((level, index) => {
             const isCompleted = completedLevels.includes(level.level);
@@ -155,62 +161,73 @@ export function LearningPathPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 className={cn(
-                  "relative flex flex-col md:flex-row items-center gap-8 md:gap-16",
+                  "relative flex flex-col md:flex-row items-center gap-6 md:gap-12 group/node",
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 )}
               >
                 {/* Node Center */}
                 <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 hidden md:block">
                    <div className={cn(
-                      "w-10 h-10 border-2 border-black flex items-center justify-center transition-all duration-500",
-                      isCompleted ? "bg-black text-white" : "bg-white text-black"
+                      "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-md",
+                      isCompleted 
+                        ? "bg-primary text-white border-none shadow-primary/30" 
+                        : "bg-surface border-2 border-border text-text group-hover/node:border-primary/50"
                    )}>
-                      <span className="text-xs font-black">{level.level.toString().padStart(2, '0')}</span>
+                      {isCompleted ? (
+                        <CheckCircle size={20} strokeWidth={3} />
+                      ) : (
+                        <span className="text-sm font-semibold">{level.level.toString().padStart(2, '0')}</span>
+                      )}
                    </div>
                 </div>
 
                 <div className="w-full md:w-1/2">
                    <div className={cn(
-                     "surgical-card p-6 md:p-7 transition-all duration-500 group relative overflow-hidden",
-                     isCompleted ? "bg-zinc-50 border-zinc-200 shadow-none" : "bg-white"
+                     "glass-panel p-6 md:p-8 rounded-3xl transition-all duration-500 relative overflow-hidden group/card hover:shadow-lg",
+                     isCompleted ? "bg-surface-hover/50 border-border opacity-70" : "hover:-translate-y-1"
                    )}>
                       <div className="flex items-center justify-between mb-5">
-                         <div className={cn("w-10 h-10 border-2 border-black flex items-center justify-center", isCompleted ? "bg-black text-white border-white" : "bg-white text-black")}>
+                         <div className={cn(
+                           "w-12 h-12 rounded-xl flex items-center justify-center transition-colors", 
+                           isCompleted ? "bg-primary text-white shadow-md shadow-primary/20" : "bg-primary/10 text-primary group-hover/card:bg-primary group-hover/card:text-white"
+                         )}>
                             {getIcon(level.type)}
                          </div>
-                         <span className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 italic">Stage_{level.level.toString().padStart(2, '0')}</span>
+                         <span className="text-xs font-semibold uppercase tracking-widest text-text-muted">Stage {level.level.toString().padStart(2, '0')}</span>
                       </div>
 
                       <div className="space-y-3 mb-6">
                          <h3 className={cn(
-                           "text-lg font-black tracking-tighter leading-tight uppercase",
-                           isCompleted ? "text-zinc-500 line-through" : "text-black"
+                           "text-xl font-semibold tracking-tight",
+                           isCompleted ? "text-text-muted line-through decoration-text-muted/50" : "text-text"
                          )}>
                            {level.title}
                          </h3>
-                         <p className="text-xs font-bold text-zinc-600 italic leading-relaxed border-l-2 border-black/20 pl-3">
-                           "{level.description}"
+                         <p className="text-sm font-medium text-text-muted leading-relaxed">
+                           {level.description}
                          </p>
                       </div>
 
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-col sm:flex-row items-center gap-3">
                          <a 
                            href={level.url} 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           className="flex-1 py-3 border-2 border-black bg-white flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all"
+                           className="w-full sm:w-auto flex-1 py-3 px-4 rounded-xl bg-surface border border-border flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-text hover:bg-surface-hover transition-all"
                          >
-                           ACCESS_MODULE <ExternalLink size={12} strokeWidth={3} />
+                           Access Module <ExternalLink size={14} />
                          </a>
                          <button 
                            onClick={() => toggleLevel(level.level)}
                            className={cn(
-                             "w-11 h-11 border-2 border-black flex items-center justify-center transition-all duration-500 shrink-0",
-                             isCompleted ? "bg-black text-white" : "bg-white text-zinc-400 hover:text-black"
+                             "w-full sm:w-auto px-6 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all duration-500",
+                             isCompleted 
+                               ? "bg-surface border border-border text-text-muted hover:text-text" 
+                               : "bg-primary text-white hover:bg-primary-hover shadow-md shadow-primary/20"
                            )}
                            aria-label={isCompleted ? 'Mark incomplete' : 'Mark complete'}
                          >
-                            <CheckCircle size={18} strokeWidth={3} />
+                            {isCompleted ? "Revert" : "Verify"}
                          </button>
                       </div>
                    </div>
@@ -226,23 +243,23 @@ export function LearningPathPage() {
         <AnimatePresence>
           {completedLevels.length === path.levels.length && (
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "circOut" }}
-              className="mt-24 relative"
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.6, type: "spring" }}
+              className="mt-20 relative"
             >
-              {/* Outer hard shadow card */}
-              <div className="border-2 border-black bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
-                <div className="industrial-grid absolute inset-0 opacity-[0.07] pointer-events-none" />
+              {/* Outer glass card */}
+              <div className="glass-panel rounded-3xl relative overflow-hidden shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-primary/10 pointer-events-none" />
 
                 {/* Top status bar */}
-                <div className="flex items-center justify-between px-6 py-3 border-b-2 border-black bg-black text-white">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface-hover/50">
                   <div className="flex items-center gap-3">
-                    <span className="w-2 h-2 bg-green-400 animate-pulse" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.4em]">Status: Verified</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-text">Status: Verified</span>
                   </div>
-                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-400">
-                    Log_ID: {path.id.slice(0, 8).toUpperCase()}
+                  <span className="text-xs font-medium uppercase tracking-wider text-text-muted">
+                    Log ID: {path.id.slice(0, 8).toUpperCase()}
                   </span>
                 </div>
 
@@ -255,62 +272,58 @@ export function LearningPathPage() {
                     transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                     className="relative mx-auto md:mx-0"
                   >
-                    <div className="w-24 h-24 md:w-28 md:h-28 bg-black text-white flex items-center justify-center border-4 border-black relative">
-                      <Trophy size={40} strokeWidth={3} />
-                      {/* Corner ticks */}
-                      <span className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-black bg-white" />
-                      <span className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-black bg-white" />
-                      <span className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-black bg-white" />
-                      <span className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-black bg-white" />
+                    <div className="w-28 h-28 md:w-32 md:h-32 rounded-3xl bg-emerald-500 text-white flex items-center justify-center shadow-xl shadow-emerald-500/30 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+                      <Trophy size={48} strokeWidth={2} className="relative z-10" />
                     </div>
-                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-accent-indigo text-white text-[8px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-                      100%
+                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-surface border border-border text-text text-xs font-bold uppercase tracking-widest shadow-md whitespace-nowrap">
+                      100% Complete
                     </div>
                   </motion.div>
 
                   {/* Content */}
-                  <div className="text-center md:text-left space-y-5">
-                    <div className="space-y-2">
-                      <span className="inline-block px-2 py-0.5 bg-black text-white text-[8px] font-black uppercase tracking-[0.4em]">
+                  <div className="text-center md:text-left space-y-6">
+                    <div className="space-y-3">
+                      <span className="inline-flex px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider">
                         Achievement Unlocked
                       </span>
-                      <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-black uppercase leading-[0.95]">
-                        Sector <span className="text-accent-indigo italic">Mastered.</span>
+                      <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text leading-tight">
+                        Sector <span className="text-emerald-500">Mastered.</span>
                       </h2>
-                      <p className="text-[10px] font-black uppercase tracking-[0.35em] text-zinc-400">
-                        All_Intelligence_Nodes_Synchronized
+                      <p className="text-sm font-medium text-text-muted">
+                        All Intelligence Nodes Synchronized successfully.
                       </p>
                     </div>
 
                     {/* Stat row */}
-                    <div className="grid grid-cols-3 gap-3 pt-4 border-t-2 border-black/10">
-                      <div className="space-y-0.5">
-                        <div className="text-xl md:text-2xl font-black tracking-tighter leading-none">{path.levels.length}</div>
-                        <div className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-500">Stages</div>
+                    <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border">
+                      <div className="space-y-1">
+                        <div className="text-2xl md:text-3xl font-semibold tracking-tight text-text">{path.levels.length}</div>
+                        <div className="text-xs font-medium uppercase tracking-wider text-text-muted">Stages</div>
                       </div>
-                      <div className="space-y-0.5 border-x border-black/10 px-3">
-                        <div className="text-xl md:text-2xl font-black tracking-tighter leading-none">{path.totalHours}h</div>
-                        <div className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-500">Logged</div>
+                      <div className="space-y-1 border-x border-border px-4">
+                        <div className="text-2xl md:text-3xl font-semibold tracking-tight text-text">{path.totalHours}h</div>
+                        <div className="text-xs font-medium uppercase tracking-wider text-text-muted">Logged</div>
                       </div>
-                      <div className="space-y-0.5">
-                        <div className="text-xl md:text-2xl font-black tracking-tighter leading-none text-accent-indigo">A+</div>
-                        <div className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-500">Grade</div>
+                      <div className="space-y-1">
+                        <div className="text-2xl md:text-3xl font-semibold tracking-tight text-emerald-500">A+</div>
+                        <div className="text-xs font-medium uppercase tracking-wider text-text-muted">Grade</div>
                       </div>
                     </div>
 
                     {/* CTA */}
-                    <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
                       <button 
                         onClick={() => navigate('/resources')} 
-                        className="flex-1 px-6 py-3.5 bg-black text-white font-black uppercase text-[11px] tracking-[0.2em] shadow-[4px_4px_0px_0px_rgba(67,56,202,0.6)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2"
+                        className="flex-1 px-8 py-4 rounded-xl bg-emerald-500 text-white font-semibold text-sm hover:bg-emerald-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
                       >
-                        Next_Archive <ExternalLink size={12} strokeWidth={3} />
+                        Next Archive <ExternalLink size={16} />
                       </button>
                       <button 
                         onClick={() => { setCompletedLevels([]); localStorage.removeItem(`progress_${path.id}`); window.dispatchEvent(new Event('storage')); }}
-                        className="px-6 py-3.5 border-2 border-black bg-white font-black uppercase text-[11px] tracking-[0.2em] hover:bg-zinc-50 transition-all flex items-center justify-center gap-2"
+                        className="px-6 py-4 rounded-xl bg-surface border border-border text-text font-semibold text-sm hover:bg-rose-500/10 hover:text-rose-500 hover:border-rose-500/20 transition-all flex items-center justify-center"
                       >
-                        Reset_Progress
+                        Reset Progress
                       </button>
                     </div>
                   </div>
