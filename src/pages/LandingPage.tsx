@@ -23,7 +23,8 @@ export function LandingPage() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="relative min-h-screen bg-bg text-text overflow-x-hidden selection:bg-primary/30">
+    <div className="dark">
+      <div className="relative min-h-screen bg-bg text-text overflow-x-hidden selection:bg-primary/30">
       <SEO 
         description="DevSignal: The high-fidelity intelligence layer for modern engineering teams. Decipher repository velocity and scale technical standards with mathematical precision."
       />
@@ -239,7 +240,8 @@ export function LandingPage() {
 
       <LandingFooter />
     </div>
-  );
+  </div>
+);
 }
 
 function FeatureCard({ children, delay, className }: { children: React.ReactNode, delay: number, className?: string }) {
