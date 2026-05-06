@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './contexts/AuthContext';
 import { SearchProvider } from './contexts/SearchContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { LandingPage } from './pages/LandingPage';
@@ -19,25 +20,27 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <SearchProvider>
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<LandingPage />} />
-              <Route element={<ProtectedRoute />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/repo/:id" element={<RepoDetail />} />
-                <Route path="/resources" element={<Resources />} />
-                <Route path="/learning-path/:courseId" element={<LearningPathPage />} />
-                <Route path="/editor" element={<Editor />} />
-                <Route path="/profile" element={<Profile />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AnimatePresence>
-        </SearchProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <SearchProvider>
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<LandingPage />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/repo/:id" element={<RepoDetail />} />
+                  <Route path="/resources" element={<Resources />} />
+                  <Route path="/learning-path/:courseId" element={<LearningPathPage />} />
+                  <Route path="/editor" element={<Editor />} />
+                  <Route path="/profile" element={<Profile />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AnimatePresence>
+          </SearchProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

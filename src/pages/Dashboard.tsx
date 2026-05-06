@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Layout, Star, GitFork, Zap, RefreshCcw, AlertCircle } from 'lucide-react';
+import { Layout, Star, GitFork, Zap, RefreshCcw, AlertCircle, Database } from 'lucide-react';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { RepoCard } from '@/components/dashboard/RepoCard';
 import { LanguageChart } from '@/components/dashboard/LanguageChart';
@@ -30,29 +30,19 @@ export function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-8 industrial-grid">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-6">
         <motion.div 
           animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-24 h-24 border-8 border-black border-t-transparent flex items-center justify-center"
-        >
-          <RefreshCcw size={32} strokeWidth={3} />
-        </motion.div>
-        <div className="text-center space-y-4">
-          <p className="text-2xl font-black uppercase tracking-tighter">Initializing Probe...</p>
-          <div className="h-2 w-48 bg-zinc-100 border-2 border-black overflow-hidden mx-auto">
-            <motion.div 
-              initial={{ x: '-100%' }}
-              animate={{ x: '100%' }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-              className="h-full w-1/2 bg-black"
-            />
-          </div>
+          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full"
+        />
+        <div className="text-center space-y-2">
+          <p className="text-lg font-medium text-text">Loading Intelligence Data...</p>
+          <p className="text-sm text-text-muted">Syncing with source nodes</p>
         </div>
       </div>
     );
   }
-
 
   const repoList = (repos || []).filter(repo => 
     repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -62,50 +52,51 @@ export function Dashboard() {
 
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-10 pb-24"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-8 pb-24"
     >
-      <SEO title="Dashboard" description="Surgical monitoring of repository signals." />
+      <SEO title="Dashboard" description="Overview of your repository signals." />
       
       {/* Header & Sync */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-2 border-black pb-6">
-        <div className="space-y-3">
-          <div className="inline-block px-2.5 py-1 bg-black text-white text-[9px] font-black uppercase tracking-[0.3em]">
-            Sector: Alpha-1
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm text-text-muted font-medium">
+            <Database size={16} />
+            <span>Workspace Overview</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase leading-none whitespace-nowrap">
-            Intelligence <span className="text-accent-indigo">Feed.</span>
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-text">
+            Intelligence <span className="text-primary">Feed</span>
           </h2>
         </div>
         
         <button 
           onClick={handleSync}
           disabled={syncMutation.isPending}
-          className="px-5 py-3 border-2 border-black font-black text-[10px] uppercase tracking-widest bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-2.5 group"
+          className="px-5 py-2.5 bg-primary text-white rounded-xl font-medium text-sm shadow-sm hover:bg-primary-hover hover:shadow-md transition-all flex items-center gap-2.5 disabled:opacity-50 disabled:pointer-events-none"
         >
-          <RefreshCcw size={14} className={cn("transition-transform", syncMutation.isPending && 'animate-spin')} strokeWidth={3} />
-          {syncMutation.isPending ? 'Processing...' : 'Rescan Repositories'}
+          <RefreshCcw size={16} className={cn("transition-transform", syncMutation.isPending && 'animate-spin')} />
+          {syncMutation.isPending ? 'Processing...' : 'Sync Repositories'}
         </button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        <StatsCard title="Total_Repos" value={stats.total_repos} icon={Layout} color="blue" />
-        <StatsCard title="Stars_Mapped" value={stats.total_stars} icon={Star} color="amber" />
-        <StatsCard title="Forks_Detected" value={stats.total_forks} icon={GitFork} color="violet" />
-        <StatsCard title="Active_Issues" value={stats.total_issues} icon={Zap} color="orange" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatsCard title="Total Repos" value={stats.total_repos} icon={Layout} />
+        <StatsCard title="Stars Earned" value={stats.total_stars} icon={Star} />
+        <StatsCard title="Forks Generated" value={stats.total_forks} icon={GitFork} />
+        <StatsCard title="Active Issues" value={stats.total_issues} icon={Zap} />
       </div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between border-b-2 border-black pb-3">
-            <h3 className="text-base font-black uppercase tracking-tighter">Signal Array</h3>
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">Total: {repoList.length}</span>
+          <div className="flex items-center justify-between border-b border-border pb-3">
+            <h3 className="text-lg font-semibold text-text">Repositories</h3>
+            <span className="text-xs font-medium text-text-muted bg-surface px-2 py-1 rounded-full border border-border">Total: {repoList.length}</span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {repoList.length > 0 ? (
               repoList.slice(0, visibleRepos).map((repo) => (
                 <RepoCard 
@@ -114,11 +105,11 @@ export function Dashboard() {
                 />
               ))
             ) : (
-              <div className="col-span-full py-12 border-2 border-dashed border-black/10 flex flex-col items-center justify-center text-center space-y-3">
-                <AlertCircle size={28} className="text-zinc-400" />
+              <div className="col-span-full py-16 bg-surface border border-border border-dashed rounded-2xl flex flex-col items-center justify-center text-center space-y-3">
+                <AlertCircle size={32} className="text-text-muted/50" />
                 <div className="space-y-1">
-                  <p className="text-sm font-black uppercase tracking-tighter text-zinc-600">Zero Results Detected</p>
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">Archive query returned null for "{searchQuery}"</p>
+                  <p className="text-base font-medium text-text">No repositories found</p>
+                  <p className="text-sm text-text-muted">Could not find any matches for "{searchQuery}"</p>
                 </div>
               </div>
             )}
@@ -127,24 +118,24 @@ export function Dashboard() {
           {visibleRepos < repoList.length && (
             <button 
               onClick={() => setVisibleRepos(prev => prev + 6)}
-              className="w-full py-4 border-2 border-dashed border-black font-black text-sm uppercase tracking-widest hover:bg-zinc-50 transition-colors shadow-[3px_3px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+              className="w-full py-3.5 bg-surface border border-border rounded-xl font-medium text-sm text-text hover:bg-surface-hover hover:text-text transition-colors shadow-sm"
             >
-              Load Remaining Repos
+              Load more repositories
             </button>
           )}
         </div>
 
-        <div className="space-y-8">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between border-b-2 border-black pb-3">
-              <h3 className="text-base font-black uppercase tracking-tighter">Metrics</h3>
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-lg font-semibold text-text">Language Distribution</h3>
             </div>
             <LanguageChart languages={analytics?.languages} />
           </div>
           
-          <div className="space-y-3">
-            <div className="flex items-center justify-between border-b-2 border-black pb-3">
-              <h3 className="text-base font-black uppercase tracking-tighter">Logs</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-lg font-semibold text-text">Recent Activity</h3>
             </div>
             <ActivityFeed />
           </div>

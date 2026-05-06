@@ -1,75 +1,74 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Outfit", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Outfit", "Inter", sans-serif;
   
-  /* Surgical / Industrial Palette */
-  --color-primary-50: #f8fafc;
-  --color-primary-100: #f1f5f9;
-  --color-primary-200: #e2e8f0;
-  --color-primary-300: #cbd5e1;
-  --color-primary-400: #94a3b8;
-  --color-primary-500: #64748b;
-  --color-primary-600: #475569;
-  --color-primary-700: #334155;
-  --color-primary-800: #1e293b;
-  --color-primary-900: #0f172a;
-
-  --color-app-bg: #ffffff;
-  --color-app-surface: #f8fafc;
-  --color-app-border: #000000;
-  --color-app-text: #000000;
-  --color-app-text-muted: #666666;
-  
-  --color-accent-indigo: #4338ca;
-  --color-accent-blue: #2563eb;
-  --color-accent-emerald: #059669;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
 }
 
 @layer base {
+  :root {
+    --bg: #ffffff;
+    --surface: #fafafa;
+    --surface-hover: #f4f4f5;
+    --border: #e4e4e7;
+    --text: #18181b;
+    --text-muted: #71717a;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+  }
+
+  .dark {
+    --bg: #09090b;
+    --surface: #18181b;
+    --surface-hover: #27272a;
+    --border: #27272a;
+    --text: #fafafa;
+    --text-muted: #a1a1aa;
+    --primary: #6366f1;
+    --primary-hover: #818cf8;
+  }
+
   body {
-    @apply font-sans bg-white text-black antialiased selection:bg-black selection:text-white;
+    @apply font-sans bg-bg text-text antialiased transition-colors duration-200;
     min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-black tracking-tight uppercase;
+    @apply font-heading font-semibold tracking-tight;
   }
 }
 
 @layer utilities {
-  .surgical-card {
-    @apply bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200;
+  .glass-panel {
+    @apply bg-surface/80 backdrop-blur-md border border-border shadow-sm rounded-xl transition-all duration-200;
   }
 
-  .industrial-grid {
-    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-    background-size: 24px 24px;
+  .glass-panel:hover {
+    @apply bg-surface-hover/80 border-border/80 shadow-md;
   }
 
-  /* Industrial Scrollbar */
+  /* Minimal Scrollbar */
   ::-webkit-scrollbar {
-    width: 12px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-left: 2px solid #000000;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #000000;
-    border: 2px solid #f1f5f9;
+    @apply bg-border rounded-full;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #4338ca;
-  }
-
-  .accent-text {
-    @apply text-accent-indigo font-black uppercase tracking-tighter;
-  }
-
-  .pill-badge {
-    @apply px-3 py-1 border border-black text-[10px] font-black uppercase tracking-widest bg-white;
+    @apply bg-text-muted;
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -78,17 +77,5 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-
-  /* Flowing line animation - simplified for industrial look */
-  @keyframes dash {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-  .animate-draw {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: dash 5s linear forwards;
   }
 }

@@ -19,45 +19,49 @@ export function RepoCard({ id, name, description, stars, forks, language, url }:
   return (
     <motion.div 
       onClick={() => navigate(`/repo/${id}`)}
-      className="surgical-card p-6 cursor-pointer flex flex-col justify-between group h-full bg-white relative"
+      className="glass-panel p-5 cursor-pointer flex flex-col justify-between group h-full"
     >
-      <div className="space-y-5">
-        <div className="flex items-center justify-between border-b-2 border-black pb-3">
-          <div className="w-9 h-9 bg-black flex items-center justify-center text-white">
-            <Code size={16} strokeWidth={3} />
+      <div className="space-y-4">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+            <Code size={16} strokeWidth={2} />
           </div>
           <button 
             onClick={(e) => { e.stopPropagation(); window.open(url, '_blank'); }}
-            className="w-8 h-8 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all"
+            className="w-8 h-8 rounded-lg text-text-muted hover:bg-surface hover:text-text transition-all flex items-center justify-center"
             aria-label={`Open ${name} on GitHub`}
           >
-            <ExternalLink size={14} />
+            <ExternalLink size={16} />
           </button>
         </div>
 
-        <div className="space-y-2.5">
-          <h4 className="text-base font-black tracking-tighter uppercase group-hover:text-accent-indigo transition-colors leading-tight">{name}</h4>
-          <p className="text-xs text-zinc-500 font-bold italic line-clamp-3 leading-relaxed border-l-2 border-black/5 pl-3">
-            {description || 'System description unavailable for this repository.'}
+        <div className="space-y-2">
+          <h4 className="text-base font-semibold text-text group-hover:text-primary transition-colors leading-tight line-clamp-1" title={name}>
+            {name}
+          </h4>
+          <p className="text-sm text-text-muted line-clamp-2 leading-relaxed">
+            {description || 'No description provided.'}
           </p>
         </div>
       </div>
 
       <div className="mt-6 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5 font-black text-[10px] uppercase tracking-widest">
-            <Star size={12} strokeWidth={3} className="text-yellow-600 fill-yellow-600" />
+        <div className="flex items-center gap-4 text-text-muted">
+          <div className="flex items-center gap-1.5 text-sm font-medium">
+            <Star size={14} className="text-amber-500" />
             {stars}
           </div>
-          <div className="flex items-center gap-1.5 font-black text-[10px] uppercase tracking-widest text-zinc-600">
-            <GitFork size={12} strokeWidth={3} />
+          <div className="flex items-center gap-1.5 text-sm font-medium">
+            <GitFork size={14} />
             {forks}
           </div>
         </div>
         
-        <div className="flex items-center gap-2 px-2 py-0.5 bg-zinc-100 border border-black font-black text-[8px] uppercase tracking-widest">
-          {language}
-        </div>
+        {language && (
+          <div className="px-2.5 py-1 rounded-full bg-surface border border-border text-xs font-medium text-text-muted">
+            {language}
+          </div>
+        )}
       </div>
     </motion.div>
   );

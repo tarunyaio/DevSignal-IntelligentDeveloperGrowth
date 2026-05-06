@@ -2,6 +2,7 @@ import { Search, LogOut, Terminal } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSearch } from '@/contexts/SearchContext';
 import { NotificationsPanel } from '@/components/layout/NotificationsPanel';
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -10,44 +11,43 @@ export function Header() {
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.user_name || 'User';
 
   return (
-    <header className="h-24 bg-white border-b-4 border-black px-10 flex items-center justify-between sticky top-0 z-40">
-      <div className="flex items-center gap-12 flex-1">
+    <header className="h-20 bg-surface/80 backdrop-blur-md border-b border-border px-6 md:px-10 flex items-center justify-between sticky top-0 z-40 transition-colors duration-200">
+      <div className="flex items-center gap-8 flex-1">
         <div className="flex items-center gap-4 md:hidden">
-          <div className="w-10 h-10 bg-black flex items-center justify-center text-white">
-            <Terminal size={20} strokeWidth={3} />
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-sm">
+            <Terminal size={20} strokeWidth={2.5} />
           </div>
         </div>
         
         <div className="relative w-full max-w-md hidden sm:block group">
-          <div className="border-2 border-black flex items-center px-6 py-3 bg-zinc-50 group-focus-within:bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-focus-within:shadow-none group-focus-within:translate-x-[2px] group-focus-within:translate-y-[2px] transition-all">
-            <Search className="text-zinc-500 mr-4" size={20} strokeWidth={3} />
+          <div className="flex items-center px-4 py-2.5 bg-bg border border-border rounded-xl focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all shadow-sm">
+            <Search className="text-text-muted mr-3" size={18} />
             <input 
               type="text" 
-              placeholder="SEARCH_REPOS..." 
+              placeholder="Search repositories..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none text-xs font-black focus:outline-none w-full text-black placeholder:text-black/30 uppercase tracking-widest"
+              className="bg-transparent border-none text-sm focus:outline-none w-full text-text placeholder:text-text-muted/60"
             />
           </div>
         </div>
       </div>
       
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-4 md:gap-6">
+        <ThemeToggle />
         <NotificationsPanel />
         
-        <div className="h-10 w-1 bg-black mx-2 hidden md:block" />
+        <div className="h-8 w-px bg-border mx-1 hidden md:block" />
         
-        <div className="flex items-center gap-4">
-          <div className="text-right hidden md:block space-y-1">
-            <p className="text-[10px] font-black uppercase tracking-widest text-black">{displayName}</p>
-            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-zinc-500">_AUTH_VERIFIED</p>
+        <div className="flex items-center gap-3">
+          <div className="text-right hidden md:block">
+            <p className="text-sm font-medium text-text leading-tight">{displayName}</p>
+            <p className="text-xs text-text-muted">Developer</p>
           </div>
           {avatarUrl ? (
-            <div className="w-12 h-12 border-2 border-black p-1 bg-white">
-              <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
-            </div>
+            <img src={avatarUrl} alt={displayName} className="w-10 h-10 rounded-full border border-border object-cover shadow-sm" />
           ) : (
-            <div className="w-12 h-12 bg-black text-white flex items-center justify-center text-sm font-black">
+            <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
               {displayName.charAt(0).toUpperCase()}
             </div>
           )}
@@ -55,11 +55,11 @@ export function Header() {
 
         <button 
           onClick={logout}
-          className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"
-          title="TERMINATE_SESSION"
-          aria-label="Terminate session"
+          className="p-2.5 rounded-xl border border-border text-text-muted hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 dark:hover:border-red-500/30 transition-all ml-2"
+          title="Sign out"
+          aria-label="Sign out"
         >
-          <LogOut size={20} strokeWidth={3} />
+          <LogOut size={18} />
         </button>
       </div>
     </header>
