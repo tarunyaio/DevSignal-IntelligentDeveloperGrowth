@@ -16,8 +16,30 @@ import { Profile } from './pages/Profile';
 import { NotFound } from './pages/NotFound';
 import { CustomCursor } from './components/layout/CustomCursor';
 
+import { useEffect } from 'react';
+
 export default function App() {
   const location = useLocation();
+
+  useEffect(() => {
+    const isLandingPage = location.pathname === '/';
+    if (isLandingPage) {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+    } else {
+      // Re-trigger theme logic from context if needed
+      // Actually, ThemeProvider will handle it if we just force a class update here based on localStorage
+      const savedTheme = localStorage.getItem('vite-ui-theme') || 'system';
+      if (savedTheme !== 'system') {
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(savedTheme);
+      } else {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(systemTheme);
+      }
+    }
+  }, [location.pathname]);
 
   return (
     <ErrorBoundary>
