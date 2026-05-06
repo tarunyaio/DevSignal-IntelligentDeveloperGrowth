@@ -113,7 +113,7 @@ export function Profile() {
                     alt="Profile" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 border border-black/5 rounded-2xl pointer-events-none" />
+                  <div className="absolute inset-0 border border-border rounded-2xl pointer-events-none" />
                 </div>
              </div>
              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-surface backdrop-blur-md text-emerald-600 dark:text-emerald-400 px-4 py-1.5 rounded-full text-xs font-semibold border border-border shadow-md flex items-center gap-2">

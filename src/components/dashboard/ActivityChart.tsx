@@ -14,25 +14,25 @@ export function ActivityChart({ data }: ActivityChartProps) {
 
   if (isComputing) {
     return (
-      <div className="h-48 flex flex-col items-center justify-center text-zinc-400 space-y-6 industrial-grid bg-zinc-50 border-2 border-black border-dashed">
-        <div className="flex gap-2">
+      <div className="h-56 flex flex-col items-center justify-center text-text-muted space-y-4 rounded-2xl bg-surface-hover/30 border border-border border-dashed">
+        <div className="flex gap-2.5">
           {[0, 1, 2].map(i => (
             <motion.div
               key={i}
-              animate={{ height: [8, 24, 8] }}
-              transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
-              className="w-2 bg-black"
+              animate={{ height: [12, 32, 12] }}
+              transition={{ repeat: Infinity, duration: 1.2, delay: i * 0.2, ease: "easeInOut" }}
+              className="w-3 rounded-full bg-primary/60"
             />
           ))}
         </div>
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Syncing_Activity_Buffer...</p>
+        <p className="text-xs font-semibold uppercase tracking-widest animate-pulse text-primary">Syncing Activity Pulse...</p>
       </div>
     );
   }
 
   const maxCommits = Math.max(...data.map(w => w.total), 1);
   const width = 800;
-  const height = 120;
+  const height = 140;
   const padding = 10;
 
   // Generate points for the sparkline
@@ -42,59 +42,87 @@ export function ActivityChart({ data }: ActivityChartProps) {
     return { x, y, total: week.total };
   });
 
-  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+  // Calculate a smooth bezier curve path instead of harsh straight lines
+  const linePath = points.reduce((path, p, i) => {
+    if (i === 0) return `M ${p.x} ${p.y}`;
+    const prev = points[i - 1];
+    const cpX1 = prev.x + (p.x - prev.x) / 2;
+    const cpX2 = p.x - (p.x - prev.x) / 2;
+    return `${path} C ${cpX1} ${prev.y}, ${cpX2} ${p.y}, ${p.x} ${p.y}`;
+  }, '');
+
   const areaPath = `${linePath} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`;
 
   return (
-    <div className="relative group p-4 border-2 border-black bg-white">
-      <div className="absolute top-4 right-4 flex items-center gap-3 text-[10px] text-black font-black uppercase tracking-widest bg-yellow-400 px-3 py-1 border-2 border-black">
-        <div className="w-2 h-2 bg-black" />
-        PULSE: ACTIVE
+    <div className="relative group rounded-2xl border border-border bg-surface overflow-hidden">
+      <div className="absolute top-4 right-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full z-10 shadow-sm border border-emerald-500/20">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
+        Pulse: Active
       </div>
 
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-52"
-        preserveAspectRatio="none"
-      >
-        {/* Area Fill - Industrial Pattern instead of gradient */}
-        <motion.path
-          d={areaPath}
-          fill="rgba(0,0,0,0.03)"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        />
+      <div className="p-4 relative">
+        {/* Soft glow behind the chart */}
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
 
-        {/* Sparkline Path */}
-        <motion.path
-          d={linePath}
-          fill="none"
-          stroke="black"
-          strokeWidth="6"
-          strokeLinecap="square"
-          strokeLinejoin="miter"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, ease: "circOut" }}
-        />
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="w-full h-56"
+          preserveAspectRatio="none"
+        >
+          {/* Defs for gradient fill */}
+          <defs>
+            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0.0" />
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
 
-        {/* Hover Bars instead of circles */}
-        {points.map((p, i) => (
-          <rect
-            key={i}
-            x={p.x - 1}
-            y={p.y}
-            width="2"
-            height={height - p.y}
-            className="fill-black opacity-0 group-hover:opacity-10 transition-opacity"
+          {/* Area Fill - Gradient */}
+          <motion.path
+            d={areaPath}
+            fill="url(#chartGradient)"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5 }}
           />
-        ))}
-      </svg>
 
-      <div className="flex justify-between mt-6 text-[10px] font-black uppercase tracking-widest text-zinc-400 border-t-2 border-black pt-4">
-        <span className="flex items-center gap-2"><span className="w-2 h-2 bg-zinc-200" /> T-12_WEEKS</span>
-        <span className="flex items-center gap-2">CURRENT_SIGNAL <span className="w-2 h-2 bg-black" /></span>
+          {/* Sparkline Path - Smooth Curve with Glow */}
+          <motion.path
+            d={linePath}
+            fill="none"
+            stroke="var(--color-primary)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            filter="url(#glow)"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+          />
+
+          {/* Hover Dots instead of vertical bars */}
+          {points.map((p, i) => (
+            <circle
+              key={i}
+              cx={p.x}
+              cy={p.y}
+              r="4"
+              className="fill-surface stroke-primary stroke-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            />
+          ))}
+        </svg>
+
+        <div className="flex justify-between mt-4 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-text-muted border-t border-border pt-4">
+          <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-border" /> T-12 WEEKS</span>
+          <span className="flex items-center gap-2">CURRENT SIGNAL <span className="w-2 h-2 rounded-full bg-primary" /></span>
+        </div>
       </div>
     </div>
   );

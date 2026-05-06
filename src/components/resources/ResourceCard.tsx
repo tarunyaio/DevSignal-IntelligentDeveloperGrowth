@@ -1,6 +1,5 @@
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ExternalLink, Play, BookOpen, Star, Clock, Trophy } from 'lucide-react';
-import React from 'react';
 import { cn } from '@/lib/utils';
 
 export type ResourceType = 'video' | 'article' | 'repo' | 'course';
@@ -17,95 +16,78 @@ interface ResourceCardProps {
 }
 
 const typeConfig = {
-  video: { icon: Play, color: 'text-red-400' },
-  article: { icon: BookOpen, color: 'text-neo-accent-blue' },
-  repo: { icon: Star, color: 'text-neo-accent-emerald' },
-  course: { icon: Trophy, color: 'text-neo-accent-orange' },
+  video: { icon: Play, color: 'text-rose-500 bg-rose-500/10' },
+  article: { icon: BookOpen, color: 'text-blue-500 bg-blue-500/10' },
+  repo: { icon: Star, color: 'text-emerald-500 bg-emerald-500/10' },
+  course: { icon: Trophy, color: 'text-amber-500 bg-amber-500/10' },
 };
 
 export function ResourceCard({ title, description, type, category, duration, difficulty, url, rating }: ResourceCardProps) {
   const { icon: Icon, color } = typeConfig[type];
 
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-  
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["6deg", "-6deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-6deg", "6deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
   return (
     <motion.div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => { x.set(0); y.set(0); }}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="perspective-1000 h-full"
+      whileHover={{ y: -4 }}
+      className="glass-panel p-6 flex flex-col justify-between h-full relative group transition-all duration-300 hover:shadow-lg hover:border-primary/30"
     >
-      <div 
-        className="neo-flat rounded-[3rem] p-9 group relative border border-white/[0.01] flex flex-col gap-8 h-full transition-shadow duration-500 hover:shadow-2xl"
-        style={{ transform: "translateZ(20px)" }}
-      >
-        {/* Header: Type Icon aur Duration */}
-        <div className="flex justify-between items-start" style={{ transform: "translateZ(40px)" }}>
-          <div className={cn("w-14 h-14 neo-icon", color)}>
-            <Icon size={24} strokeWidth={2.5} />
+      <div className="space-y-5">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <div className="flex items-center gap-3">
+            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all", color)}>
+              <Icon size={18} strokeWidth={2} />
+            </div>
+            <span className="px-2.5 py-1 rounded-md bg-surface border border-border font-semibold text-xs text-text-muted uppercase tracking-wider">
+              {category}
+            </span>
           </div>
           
-          <div className="neo-pressed px-4 py-2 rounded-xl border border-white/[0.01] flex items-center gap-2 text-[10px] font-black tracking-widest text-slate-500 uppercase" style={{ transform: "translateZ(50px)" }}>
-            <Clock size={12} strokeWidth={3} /> {duration || 'Self-paced'}
+          <div className="flex items-center gap-1.5 text-text-muted font-semibold text-xs uppercase tracking-wider">
+            <Clock size={14} />
+            {duration || 'Self-paced'}
           </div>
         </div>
 
-        {/* Content Section */}
-        <div className="space-y-4 flex-1" style={{ transform: "translateZ(30px)" }}>
-          <div className="flex items-center gap-4">
-            <span className="neo-pressed px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest text-neo-accent-blue border border-white/[0.01]">
-              {category}
-            </span>
-            <span className="text-[9px] font-black uppercase tracking-widest text-slate-600">
-              • {difficulty}
-            </span>
-          </div>
-          
-          <h3 className="text-2xl font-black tracking-tighter text-slate-200 group-hover:text-neo-accent-blue transition-colors leading-tight italic">
+        <div className="space-y-3">
+          <h3 className="text-xl font-semibold tracking-tight text-text group-hover:text-primary transition-colors leading-tight">
             {title}
           </h3>
-          <p className="text-sm text-slate-500 font-medium leading-[1.6] italic opacity-80 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-2 text-xs font-medium text-text-muted uppercase tracking-wider">
+             <span className={cn(
+               "px-2 py-0.5 rounded-sm",
+               difficulty === 'Beginner' ? "bg-emerald-500/10 text-emerald-500" :
+               difficulty === 'Intermediate' ? "bg-amber-500/10 text-amber-500" :
+               "bg-rose-500/10 text-rose-500"
+             )}>
+               {difficulty}
+             </span>
+          </div>
+          <p className="text-sm text-text-muted font-medium line-clamp-3 leading-relaxed">
             {description}
           </p>
         </div>
+      </div>
 
-        {/* Footer: Rating aur Explore CTA */}
-        <div className="flex items-center justify-between mt-auto pt-8 border-t border-white/[0.03]" style={{ transform: "translateZ(45px)" }}>
-          <div className="flex items-center gap-1.5 grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star 
-                key={i} 
-                size={12} 
-                className={i < Math.floor(rating) ? 'text-neo-accent-orange fill-neo-accent-orange' : 'text-slate-800'} 
-                strokeWidth={3}
-              />
-            ))}
-            <span className="text-[10px] font-black text-slate-400 ml-2 tracking-tighter">{rating}</span>
-          </div>
-          
-          <a 
-            href={url} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="w-12 h-12 neo-icon hover:neo-icon-pressed text-slate-500 hover:text-neo-accent-blue transition-all border border-white/[0.01]"
-          >
-            <ExternalLink size={20} />
-          </a>
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
+        <div className="flex items-center gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star 
+              key={i} 
+              size={14} 
+              className={i < Math.floor(rating) ? 'text-amber-500 fill-amber-500' : 'text-surface-hover fill-surface-hover'} 
+              strokeWidth={1}
+            />
+          ))}
+          <span className="text-xs font-semibold text-text-muted ml-1.5">{rating.toFixed(1)}</span>
         </div>
+        
+        <a 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center text-text-muted hover:text-primary hover:bg-surface-hover transition-all shadow-sm group-hover:shadow-md"
+        >
+          <ExternalLink size={16} />
+        </a>
       </div>
     </motion.div>
   );

@@ -39,44 +39,45 @@ interface LanguageChartProps {
 export function LanguageChart({ languages }: LanguageChartProps) {
   const data = languages && languages.length > 0 ? languages : DEFAULT_LANGUAGES;
   return (
-    <div className="surgical-card p-5 bg-white relative overflow-hidden group">
-      <div className="flex justify-between items-center mb-4 border-b-2 border-black pb-3">
+    <div className="glass-panel p-6 relative overflow-hidden group">
+      <div className="flex justify-between items-center mb-6 border-b border-border pb-4">
         <div>
-          <h3 className="text-base font-black tracking-tighter text-black uppercase leading-none">Language <span className="text-accent-indigo italic">Distribution</span></h3>
-          <p className="text-[8px] text-zinc-500 uppercase tracking-[0.3em] font-black mt-1.5">Architectural_Composition</p>
+          <h3 className="text-lg font-semibold tracking-tight text-text leading-none flex items-center gap-2">
+            Language <span className="text-primary">Distribution</span>
+          </h3>
+          <p className="text-xs text-text-muted uppercase tracking-wider font-medium mt-2">Architectural Composition</p>
         </div>
-        <Terminal size={16} strokeWidth={3} className="text-zinc-200 group-hover:text-black transition-colors" />
+        <div className="w-8 h-8 rounded-lg bg-surface flex items-center justify-center border border-border">
+          <Terminal size={16} className="text-text-muted group-hover:text-primary transition-colors" />
+        </div>
       </div>
 
-      <div className="space-y-3 relative z-10">
+      <div className="space-y-4 relative z-10">
         {data.map((lang, index) => (
-          <div key={lang.name} className="space-y-1.5">
+          <div key={lang.name} className="space-y-2">
             <div className="flex justify-between items-end">
-              <span className="text-[10px] font-black text-black uppercase tracking-widest">{lang.name}</span>
-              <span className="text-[10px] font-black text-zinc-400 tracking-tighter">{lang.percentage}%</span>
+              <span className="text-xs font-semibold text-text uppercase tracking-wider">{lang.name}</span>
+              <span className="text-xs font-medium text-text-muted">{lang.percentage}%</span>
             </div>
             
-            <div className="h-2 w-full border border-black p-[1px] bg-zinc-50">
+            <div className="h-2 w-full rounded-full bg-surface-hover overflow-hidden shadow-inner">
               <motion.div
                 initial={{ width: 0 }}
                 whileInView={{ width: `${lang.percentage}%` }}
-                transition={{ duration: 1.2, delay: index * 0.08, ease: "circOut" }}
-                className="h-full relative"
-                style={{ backgroundColor: LANGUAGE_COLORS[lang.name] || '#000000' }}
+                transition={{ duration: 1.2, delay: index * 0.08, ease: "easeOut" }}
+                className="h-full relative rounded-full"
+                style={{ backgroundColor: LANGUAGE_COLORS[lang.name] || '#4f46e5', boxShadow: `0 0 8px ${LANGUAGE_COLORS[lang.name] || '#4f46e5'}40` }}
               />
             </div>
           </div>
         ))}
       </div>
 
-      <div className="mt-4 p-3 border-2 border-black bg-zinc-50 relative overflow-hidden">
-        <div className="relative z-10 text-[10px] text-zinc-500 leading-snug font-bold italic tracking-wide">
-          "Stack focused on <span className="text-black font-black not-italic border-b border-black">Modern Standards</span> &amp; <span className="text-black font-black not-italic border-b border-black">Scalability</span>."
+      <div className="mt-6 p-4 rounded-xl bg-surface border border-border relative overflow-hidden">
+        <div className="relative z-10 text-xs text-text-muted leading-relaxed font-medium">
+          Stack focused on <span className="text-text font-semibold">Modern Standards</span> &amp; <span className="text-text font-semibold">Scalability</span>.
         </div>
-        <div className="industrial-grid absolute inset-0 opacity-10" />
       </div>
-      
-      <div className="industrial-grid absolute inset-0 opacity-5 pointer-events-none" />
     </div>
   );
 }

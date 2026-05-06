@@ -18,56 +18,56 @@ export function CourseCard({ id, title, tagline, category, difficulty, duration,
 
   return (
     <motion.div 
-      className="surgical-card p-6 flex flex-col justify-between h-full bg-white relative group"
+      className="glass-panel p-6 flex flex-col justify-between h-full relative group hover:-translate-y-1 transition-all duration-300"
     >
       <div className="space-y-5">
-        <div className="flex items-center justify-between border-b-2 border-black pb-3">
-          <span className="px-2 py-0.5 bg-zinc-100 border border-black font-black text-[8px] uppercase tracking-widest">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <span className="px-2.5 py-1 rounded-md bg-surface border border-border font-semibold text-xs text-text-muted uppercase tracking-wider">
             {difficulty}
           </span>
-          <div className="flex items-center gap-1.5 text-zinc-500 font-black text-[9px] uppercase tracking-widest">
-            <Clock size={11} strokeWidth={3} />
+          <div className="flex items-center gap-1.5 text-text-muted font-semibold text-xs uppercase tracking-wider">
+            <Clock size={14} />
             {duration}
           </div>
         </div>
 
-        <div className="space-y-2.5">
-          <h4 className="text-base font-black tracking-tighter uppercase group-hover:text-accent-indigo transition-colors leading-tight">
+        <div className="space-y-3">
+          <h4 className="text-xl font-semibold tracking-tight text-text group-hover:text-primary transition-colors leading-tight">
             {title}
           </h4>
-          <p className="text-xs text-zinc-500 font-bold italic line-clamp-3 leading-relaxed border-l-2 border-black/5 pl-3">
-            "{tagline}"
+          <p className="text-sm text-text-muted font-medium line-clamp-3 leading-relaxed">
+            {tagline}
           </p>
         </div>
 
-        <div className="inline-block px-2 py-0.5 bg-black text-white text-[8px] font-black uppercase tracking-[0.2em]">
+        <div className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider border border-primary/20">
           {category}
         </div>
       </div>
 
-      <div className="mt-6 space-y-3">
+      <div className="mt-6 space-y-4">
         {/* Progress Bar */}
-        <div className="space-y-1.5">
-          <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest">
-            <span className="text-zinc-500">Integrity</span>
-            <span className="text-black">{completionPercentage}%</span>
+        <div className="space-y-2">
+          <div className="flex justify-between items-center text-xs font-semibold uppercase tracking-wider">
+            <span className="text-text-muted">Integrity</span>
+            <span className="text-primary">{completionPercentage}%</span>
           </div>
-          <div className="h-2.5 bg-zinc-100 border-2 border-black overflow-hidden p-[1px]">
+          <div className="h-2 w-full rounded-full bg-surface-hover overflow-hidden shadow-inner">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${completionPercentage}%` }}
-              transition={{ duration: 1.5, ease: "circOut" }}
-              className="h-full bg-black"
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="h-full bg-primary rounded-full shadow-[0_0_8px_rgba(79,70,229,0.4)]"
             />
           </div>
         </div>
 
         <Link 
           to={`/learning-path/${id}`}
-          className="w-full py-3 bg-white border-2 border-black font-black text-[10px] uppercase tracking-widest text-black flex items-center justify-center gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          className="w-full py-3 px-4 rounded-xl bg-surface border border-border font-semibold text-sm text-text flex items-center justify-center gap-2 hover:bg-surface-hover hover:border-primary/30 transition-all shadow-sm group-hover:shadow-md"
         >
-          {progress > 0 ? 'Resume_Module' : 'Init_Module'}
-          <ChevronRight size={12} strokeWidth={3} />
+          {progress > 0 ? 'Resume Module' : 'Init Module'}
+          <ChevronRight size={16} className="text-text-muted group-hover:text-primary transition-colors" />
         </Link>
       </div>
     </motion.div>
