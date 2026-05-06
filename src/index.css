@@ -16,25 +16,25 @@
 
 @layer base {
   :root {
-    --bg: #ffffff;
-    --surface: #fafafa;
-    --surface-hover: #f4f4f5;
-    --border: #e4e4e7;
-    --text: #18181b;
-    --text-muted: #71717a;
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
+    --bg: #fdfdfd;
+    --surface: #ffffff;
+    --surface-hover: #f3f4f6;
+    --border: #e5e7eb;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --primary: #047857; /* Emerald 700 - Rich and luxurious */
+    --primary-hover: #065f46; /* Emerald 800 */
   }
 
   .dark {
-    --bg: #09090b;
-    --surface: #18181b;
-    --surface-hover: #27272a;
-    --border: #27272a;
-    --text: #fafafa;
-    --text-muted: #a1a1aa;
-    --primary: #6366f1;
-    --primary-hover: #818cf8;
+    --bg: #030712; /* Gray 950 - Extremely deep, rich black/blue */
+    --surface: #111827; /* Gray 900 */
+    --surface-hover: #1f2937; /* Gray 800 */
+    --border: #374151; /* Gray 700 */
+    --text: #f9fafb; /* Gray 50 */
+    --text-muted: #9ca3af; /* Gray 400 */
+    --primary: #10b981; /* Emerald 500 */
+    --primary-hover: #34d399; /* Emerald 400 */
   }
 
   body {
@@ -49,11 +49,19 @@
 
 @layer utilities {
   .glass-panel {
-    @apply bg-surface/80 backdrop-blur-md border border-border shadow-sm rounded-xl transition-all duration-200;
+    @apply bg-surface/60 backdrop-blur-xl border border-border/50 shadow-[0_4px_24px_rgba(0,0,0,0.02)] rounded-2xl transition-all duration-300;
+  }
+
+  .dark .glass-panel {
+    @apply shadow-[0_4px_24px_rgba(0,0,0,0.2)] border-border/40 bg-surface/40;
   }
 
   .glass-panel:hover {
-    @apply bg-surface-hover/80 border-border/80 shadow-md;
+    @apply bg-surface-hover/60 border-primary/30 shadow-[0_8px_32px_rgba(16,185,129,0.08)];
+  }
+
+  .dark .glass-panel:hover {
+    @apply shadow-[0_8px_32px_rgba(16,185,129,0.15)];
   }
 
   /* Minimal Scrollbar */

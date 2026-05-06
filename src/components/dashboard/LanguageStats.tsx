@@ -6,10 +6,10 @@ interface LanguageStatsProps {
 }
 
 const COLORS: Record<string, string> = {
-  TypeScript: 'bg-indigo-500',
+  TypeScript: 'bg-teal-500',
   JavaScript: 'bg-amber-400',
   HTML: 'bg-orange-500',
-  CSS: 'bg-violet-500',
+  CSS: 'bg-cyan-500',
   Python: 'bg-blue-500',
   Go: 'bg-sky-500',
   Rust: 'bg-orange-600',

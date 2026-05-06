@@ -16,12 +16,12 @@ import { LanguageStats } from '@/components/dashboard/LanguageStats';
 const COLOR_MAP: Record<string, string> = {
   blue: 'text-blue-500 bg-blue-500/10',
   amber: 'text-amber-500 bg-amber-500/10',
-  violet: 'text-violet-500 bg-violet-500/10',
+  teal: 'text-teal-500 bg-teal-500/10',
   orange: 'text-orange-500 bg-orange-500/10',
   rose: 'text-rose-500 bg-rose-500/10',
   emerald: 'text-emerald-500 bg-emerald-500/10',
-  indigo: 'text-indigo-500 bg-indigo-500/10',
-  purple: 'text-purple-500 bg-purple-500/10'
+  green: 'text-green-500 bg-green-500/10',
+  cyan: 'text-cyan-500 bg-cyan-500/10'
 };
 
 function IndustrialMetric({ label, value, icon: Icon, color }: { label: string, value: string | number, icon: React.ElementType, color: string }) {
@@ -176,7 +176,7 @@ export function RepoDetail() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <IndustrialMetric label="STARS" value={repo.stars} icon={Star} color="amber" />
-              <IndustrialMetric label="FORKS" value={repo.forks} icon={GitPullRequest} color="purple" />
+              <IndustrialMetric label="FORKS" value={repo.forks} icon={GitPullRequest} color="teal" />
               <IndustrialMetric label="ISSUES" value={repo.open_issues} icon={AlertCircle} color="rose" />
             </div>
           </div>
@@ -196,9 +196,9 @@ export function RepoDetail() {
 
             {/* Metadata */}
             <div className="glass-panel p-6 md:p-8 rounded-3xl group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 blur-[40px] rounded-full pointer-events-none" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 blur-[40px] rounded-full pointer-events-none" />
               <h3 className="text-lg font-semibold mb-6 border-b border-border pb-4 flex items-center gap-3 text-text">
-                <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-500">
+                <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-500">
                   <BarChart3 size={18} />
                 </div> 
                 Metadata

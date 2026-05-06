@@ -75,7 +75,7 @@ export function NotificationsPanel() {
   const getIcon = (type: string) => {
     switch (type) {
       case 'system': return <Terminal size={16} className="text-emerald-500" />;
-      case 'github': return <GitMerge size={16} className="text-violet-500" />;
+      case 'github': return <GitMerge size={16} className="text-emerald-500" />;
       case 'success': return <Star size={16} className="text-amber-500" />;
       case 'alert': return <Activity size={16} className="text-rose-500" />;
       default: return <Bell size={16} />;

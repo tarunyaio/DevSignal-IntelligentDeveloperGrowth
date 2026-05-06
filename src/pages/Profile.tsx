@@ -206,9 +206,9 @@ export function Profile() {
 
         {/* Right: Rhythm Node */}
         <div className="glass-panel p-6 flex flex-col justify-between h-full group overflow-hidden relative">
-          <div className="absolute -top-6 -right-6 w-40 h-40 bg-purple-500/10 blur-[50px] rounded-full pointer-events-none" />
+          <div className="absolute -top-6 -right-6 w-40 h-40 bg-emerald-500/10 blur-[50px] rounded-full pointer-events-none" />
           <div className="flex justify-between items-center border-b border-border pb-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">
               <Clock size={20} strokeWidth={2} />
             </div>
             <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Temporal Sync</span>

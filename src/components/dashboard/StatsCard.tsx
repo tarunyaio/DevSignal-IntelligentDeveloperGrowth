@@ -15,11 +15,11 @@ interface StatsCardProps {
 const COLOR_MAP: Record<string, string> = {
   blue: 'text-blue-500 bg-blue-500/10',
   amber: 'text-amber-500 bg-amber-500/10',
-  violet: 'text-violet-500 bg-violet-500/10',
+  teal: 'text-teal-500 bg-teal-500/10',
   orange: 'text-orange-500 bg-orange-500/10',
   rose: 'text-rose-500 bg-rose-500/10',
   emerald: 'text-emerald-500 bg-emerald-500/10',
-  indigo: 'text-indigo-500 bg-indigo-500/10',
+  cyan: 'text-cyan-500 bg-cyan-500/10',
 };
 
 export function StatsCard({ title, value, icon: Icon, trend, color }: StatsCardProps) {

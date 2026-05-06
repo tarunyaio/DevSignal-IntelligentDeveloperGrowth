@@ -62,7 +62,7 @@ export function LandingPage() {
             
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.1] tracking-tight">
               Engineered <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">Growth.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-500">Growth.</span>
             </h1>
 
             <p className="text-lg md:text-xl font-medium max-w-xl leading-relaxed text-text-muted">
@@ -170,7 +170,7 @@ export function LandingPage() {
         {/* Large Quote */}
         <section className="max-w-5xl mx-auto px-6 py-24 md:py-40 text-center">
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight text-text">
-            Build with <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">precision.</span> <br className="hidden md:block" />
+            Build with <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-500">precision.</span> <br className="hidden md:block" />
             Measure with <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-emerald-700">science.</span>
           </h2>
         </section>
@@ -178,7 +178,7 @@ export function LandingPage() {
         {/* Call to Action */}
         <section className="max-w-5xl mx-auto px-6 pb-32">
           <div className="glass-panel relative overflow-hidden rounded-3xl p-12 md:p-20 text-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-purple-500/10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-teal-500/10 pointer-events-none" />
             <div className="relative z-10 space-y-8 max-w-2xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-text">
                 Initialize your growth phase.
